@@ -1,0 +1,16 @@
+version: 0.0.{build}
+image:
+- Visual Studio 2015
+- Visual Studio 2013
+configuration:
+- Debug
+- Release
+platform:
+- x86
+- x64
+before_build:
+- cmd: cmake .
+build:
+  project: vulkalc.sln
+  parallel: true
+  verbosity: normal

@@ -1,0 +1,8 @@
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+/build
+/build_debug
+*.cmake
+Makefile
+CMakeCache.txt

@@ -1,0 +1,11 @@
+install: cmake make
+cache: cmake make
+language: cpp
+compiler:
+  - clang
+  - gcc
+script:
+  - cmake .
+  - make vulkalc && make vulkalc-tests
+  - cd vulkalc-tests
+  - ./vulkalc-test
