@@ -7,6 +7,6 @@ compiler:
   - gcc
 script:
   - cmake .
-  - make vulkalc && make vulkalc-tests
+  - make vulkalc && make vulkalc-test
   - cd vulkalc-tests
-  - ls
+  - ./vulkalc-test
