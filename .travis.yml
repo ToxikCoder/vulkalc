@@ -9,4 +9,4 @@ script:
   - cmake .
   - make vulkalc && make vulkalc-tests
   - cd vulkalc-tests
-  - ./vulkalc-test
+  - ls
