@@ -2,6 +2,10 @@ version: 0.0.{build}
 image:
 - Visual Studio 2015
 - Visual Studio 2013
+branches:
+    only:
+        - testing
+        - stable
 before_build:
 - cmd: cmake .
 build:
@@ -9,4 +13,4 @@ build:
   parallel: true
   verbosity: minimal
 test:
-  assemblies: vulkalc-tests/Release/vulkalc-test.exe
+  assemblies: vulkalc-tests/Release/vulkalc-test.dll
