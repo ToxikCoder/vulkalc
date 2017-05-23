@@ -3,7 +3,8 @@
 /.idea/libraries
 /build
 /build_debug
-/generated
+/doc/generated
+/doc/GeneratedDoxyfile
 *.cmake
 Makefile
 CMakeCache.txt
