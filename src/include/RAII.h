@@ -22,4 +22,38 @@
 * SOFTWARE.
 */
 
-#define CATCH_CONFIG_MAIN
+/*!
+ * \file RAII.h
+ * \brief RAII pattern interface
+ * \author Lev Sizov
+ * \date 28.05.17
+ *
+ * This file contains RAII class which plays as interface for RAII pattern.
+ */
+
+#ifndef VULKALC_RAII_H
+#define VULKALC_RAII_H
+
+#include "export.h"
+
+/*!
+ * \copydoc Application
+ */
+namespace Vulkalc
+{
+    class VULKALC_API RAII
+    {
+    public:
+        /*!
+         * \brief Initializes a resource
+         */
+        virtual void init() = 0;
+
+        /*!
+         * \brief Releases a resource
+         */
+        virtual void release() = 0;
+    };
+}
+
+#endif //VULKALC_RAII_H

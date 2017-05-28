@@ -22,4 +22,11 @@
 * SOFTWARE.
 */
 
-#define CATCH_CONFIG_MAIN
+//This trick to find out system architecture is based on https://github.com/axr/solar-cmake/blob/master/TargetArch.cmake
+#if defined(i386) || defined(__i386) || defined(__i386__) || defined(_M_IX86) || defined(_X86_) || defined(__386) || defined(__X86__) || defined(__I86__)
+#error cmake_ARCH i386
+#elif defined(__x86_64) || defined(__x86_64__) || defined(__amd64) || defined(__amd64__) || defined(_M_X64) || defined(_M_AMD64)
+#error cmake_ARCH amd64
+#else
+#error cmake_ARCH unknown
+#endif

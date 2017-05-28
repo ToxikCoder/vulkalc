@@ -22,4 +22,16 @@
 * SOFTWARE.
 */
 
-#define CATCH_CONFIG_MAIN
+#include <Application.h>
+#include "catch.hpp"
+
+using namespace Vulkalc;
+
+TEST_CASE("Only one Application instance exists")
+{
+    const Application* application = Application::getInstance();
+    REQUIRE(application != nullptr);
+    const Application* anotherApplication = Application::getInstance();
+    REQUIRE(application == anotherApplication);
+}
+

@@ -22,19 +22,39 @@
 # SOFTWARE.
 #
 
-version: 0.0.{build}
-image:
-- Visual Studio 2015
-- Visual Studio 2013
-branches:
-    only:
-        - testing
-        - stable
-before_build:
-- cmd: cmake .
-build:
-  project: vulkalc.sln
-  parallel: true
-  verbosity: minimal
-test:
-  assemblies: vulkalc-tests/Release/vulkalc-test.dll
+project(vulkalc)
+set(CMAKE_CXX_STANDARD 11)
+
+#set(HEADER_FILES include/export.h include/Application.h include/RAII.h)
+set(SOURCE_FILES Application.cpp)
+
+include_directories($ENV{VULKAN_SDK}/Include)
+include_directories(include)
+
+if (ARCH_I386)
+    if (WIN32)
+        find_library(VULKAN NAMES vulkan-1 PATHS $ENV{VULKAN_SDK}/Lib32)
+    elseif (UNIX)
+        find_library(VULKAN NAMES vulkan PATHS $ENV{VULKAN_SDK}/lib32)
+    endif (WIN32)
+elseif (ARCH_AMD64)
+    if (WIN32)
+        find_library(VULKAN NAMES vulkan-1 PATHS $ENV{VULKAN_SDK}/Lib)
+    elseif (UNIX)
+        find_library(VULKAN NAMES vulkan PATHS $ENV{VULKAN_SDK}/lib)
+    endif (WIN32)
+else ()
+    message("Attempting to find Vulkan library")
+    find_library(VULKAN vulkan)
+endif ()
+
+if (VULKALC_BUILD_STATIC)
+    #add_library(vulkalc STATIC ${SOURCE_FILES} ${HEADER_FILES})
+    add_library(vulkalc STATIC ${SOURCE_FILES})
+else ()
+    #add_library(vulkalc SHARED ${SOURCE_FILES} ${HEADER_FILES})
+    add_library(vulkalc STATIC ${SOURCE_FILES})
+endif (VULKALC_BUILD_STATIC)
+
+target_link_libraries(vulkalc ${VULKAN})
+#TODO cmake install build artifacts and shaders

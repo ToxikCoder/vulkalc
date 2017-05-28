@@ -22,4 +22,34 @@
 * SOFTWARE.
 */
 
-#define CATCH_CONFIG_MAIN
+#include <Application.h>
+#include <bits/unique_ptr.h>
+
+using namespace Vulkalc;
+using namespace std;
+
+const Application* Application::getInstance()
+{
+    static const Application* p_application = new Application();
+    return p_application;
+}
+
+void Application::init()
+{
+
+}
+
+void Application::release()
+{
+
+}
+
+Application::Application()
+{
+    //Application::m_pApplication = nullptr;
+}
+
+Application::~Application()
+{
+
+}
