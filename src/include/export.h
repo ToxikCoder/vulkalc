@@ -22,4 +22,33 @@
 * SOFTWARE.
 */
 
-#define CATCH_CONFIG_MAIN
+/*!
+ * \file export.h
+ * \brief Defines platform-specific export
+ * \author Lev Sizov
+ * \date 28.05.17
+ *
+ * This file contains defines that specify platform specific way to export classes and functions
+ */
+
+#ifndef VULKALC_EXPORT_H
+#define VULKALC_EXPORT_H
+
+#if defined(_WIN32) || defined(__CYGWIN__)
+#ifdef __GNUC__
+#define VULKALC_API __attribute__ ((dllexport))
+#else
+#define VULKALC_API __declspec(dllexport)
+#endif
+#define VULKALC_LOCAL
+#else
+#if __GNUC__ >= 4
+#define VULKALC_API __attribute__ ((visibility ("default")))
+#define VULKALC_LOCAL __attribute__ ((visibility ("hidden")))
+#else
+#define VULKALC_API
+#define VULKALC_LOCAL
+#endif
+#endif
+
+#endif

@@ -23,7 +23,7 @@
 #
 
 cmake_minimum_required(VERSION 2.8.7)
-project(vulkalc)
+project(vulkalc-library)
 
 if(NOT EXISTS "$ENV{VULKAN_SDK}")
     message(FATAL_ERROR "Vulkalc requires Vulkan SDK installed.")

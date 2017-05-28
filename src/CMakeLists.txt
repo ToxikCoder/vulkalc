@@ -22,13 +22,14 @@
 # SOFTWARE.
 #
 
-project(vulkalc-library)
+project(vulkalc)
 set (CMAKE_CXX_STANDARD 11)
 
-set(HEADER_FILES include/library.h)
-set(SOURCE_FILES library.cpp)
+#set(HEADER_FILES include/export.h include/Application.h include/RAII.h)
+set(SOURCE_FILES Application.cpp)
 
 include_directories($ENV{VULKAN_SDK}/Include)
+include_directories(include)
 
 if(ARCH_I386)
     if(WIN32)
@@ -48,9 +49,12 @@ else()
 endif()
 
 if(VULKALC_BUILD_STATIC)
-    add_library(vulkalc-library STATIC ${SOURCE_FILES} ${HEADER_FILES})
+    #add_library(vulkalc STATIC ${SOURCE_FILES} ${HEADER_FILES})
+    add_library(vulkalc STATIC ${SOURCE_FILES})
 else()
-    add_library(vulkalc-library SHARED ${SOURCE_FILES} ${HEADER_FILES})
+    #add_library(vulkalc SHARED ${SOURCE_FILES} ${HEADER_FILES})
+    add_library(vulkalc STATIC ${SOURCE_FILES})
 endif(VULKALC_BUILD_STATIC)
 
-target_link_libraries(vulkalc-library VULKAN)
+target_link_libraries(vulkalc ${VULKAN})
+#TODO cmake install build artifacts and shaders
