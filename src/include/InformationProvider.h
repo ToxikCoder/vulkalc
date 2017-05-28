@@ -22,35 +22,31 @@
 * SOFTWARE.
 */
 
-#include <Application.h>
-#include <bits/unique_ptr.h>
+/*!
+ * \file InformationProvider.h
+ * \brief InformationProvider class which provides various information
+ * \author Lev Sizov
+ * \date 28.05.17
+ *
+ * This file contains InformationProvider class which provides information about system and Vulkan installation
+ *
+ */
 
-using namespace Vulkalc;
-using namespace std;
+#ifndef VULKALC_LIBRARY_INFORMATIONPROVIDER_H
+#define VULKALC_LIBRARY_INFORMATIONPROVIDER_H
 
-const Application* Application::getInstance()
+#include "RAII.h"
+#include "export.h"
+
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
 {
-    static const Application* p_application = new Application();
-    return p_application;
+    class VULKALC_API InformationProvider
+    {
+
+    };
 }
 
-void Application::init()
-{
-
-}
-
-void Application::release()
-{
-
-    Application::~Application();
-}
-
-Application::Application()
-{
-
-}
-
-Application::~Application()
-{
-
-}
+#endif //VULKALC_LIBRARY_INFORMATIONPROVIDER_H

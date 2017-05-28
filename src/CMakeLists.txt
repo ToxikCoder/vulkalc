@@ -25,8 +25,14 @@
 project(vulkalc)
 set(CMAKE_CXX_STANDARD 11)
 
-#set(HEADER_FILES include/export.h include/Application.h include/RAII.h)
-set(SOURCE_FILES Application.cpp)
+#treat all warnings as errors
+if (CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+elseif (${CMAKE_GENERATOR} MATCHES "Microsoft")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+endif (CMAKE_COMPILER_IS_GNUCXX)
+
+set(SOURCE_FILES Application.cpp VulkanInfo.cpp)
 
 include_directories($ENV{VULKAN_SDK}/Include)
 include_directories(include)

@@ -22,35 +22,40 @@
 * SOFTWARE.
 */
 
-#include <Application.h>
-#include <bits/unique_ptr.h>
+/*!
+ * \file VulkanInfo.h
+ * \brief Provides VulkanInfo class which contains information about Vulkan runtime and installation
+ * \author Lev Sizov
+ * \date 28.05.17
+ *
+ *  Provides VulkanInfo class which contains information about Vulkan runtime and installation
+ */
 
-using namespace Vulkalc;
-using namespace std;
+#ifndef VULKALC_LIBRARY_VULKANINFO_H
+#define VULKALC_LIBRARY_VULKANINFO_H
 
-const Application* Application::getInstance()
+#include "export.h"
+
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
 {
-    static const Application* p_application = new Application();
-    return p_application;
+    class VULKALC_API VulkanInfo
+    {
+    public:
+        /*!
+         * \brief Constructor for VulkanInfo
+         *
+         * Constructs VulkanInfo object and fetches information about Vulkan
+         */
+        VulkanInfo();
+
+        ~VulkanInfo();
+
+    private:
+
+    };
 }
 
-void Application::init()
-{
-
-}
-
-void Application::release()
-{
-
-    Application::~Application();
-}
-
-Application::Application()
-{
-
-}
-
-Application::~Application()
-{
-
-}
+#endif //VULKALC_LIBRARY_VULKANINFO_H

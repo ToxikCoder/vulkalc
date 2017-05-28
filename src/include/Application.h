@@ -54,7 +54,7 @@ namespace Vulkalc
      * classes and functions.
      *
      * \note Application class uses RAII and Singleton patterns. Call \code getInstance() to get pointer,
-     * call \code init() before usage and \code release() after all usage
+     * call \code init() before usage and \code release() after usage
      *
      * \warning This class is not thread-safe.
      */

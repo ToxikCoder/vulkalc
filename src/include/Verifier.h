@@ -22,35 +22,40 @@
 * SOFTWARE.
 */
 
-#include <Application.h>
-#include <bits/unique_ptr.h>
+/*!
+ * \file Verifier.h
+ * \brief Verifier class which provides interface to verify various things
+ * \author Lev Sizov
+ * \date 28.05.17
+ *
+ * This file contains Verifier class which provides interface to verify Vulkan installation, library tools and shaders
+ *
+ */
 
-using namespace Vulkalc;
-using namespace std;
+#ifndef VULKALC_LIBRARY_VERIFIER_H
+#define VULKALC_LIBRARY_VERIFIER_H
 
-const Application* Application::getInstance()
+#include "RAII.h"
+#include "export.h"
+
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
 {
-    static const Application* p_application = new Application();
-    return p_application;
+    /*!
+     * \class Verifier
+     * \brief Provides interface for specific verifiers
+     * \extends RAII
+     *
+     * \note Verifier class uses RAII pattern. Call \code init() before usage and \code release() after usage
+     *
+     * \warning This class is not thread-safe.
+     */
+    class VULKALC_API Verifier : public RAII
+    {
+
+    };
 }
 
-void Application::init()
-{
-
-}
-
-void Application::release()
-{
-
-    Application::~Application();
-}
-
-Application::Application()
-{
-
-}
-
-Application::~Application()
-{
-
-}
+#endif //VULKALC_LIBRARY_VERIFIER_H
