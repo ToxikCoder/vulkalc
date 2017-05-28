@@ -14,7 +14,22 @@ and lets you use your own calculation shaders.
 
 ## How to use
 
-Manual will be available later
+**This software is still in heavy development and not recommended for use yet**
+
+### How to download
+
+- Download stable version of Vulkalc as zip
+- Download stable version of Vulkalc from [Releases](https://github.com/ToxikCoder/vulkalc/releases) page
+- Clone stable branch with git `git clone -b stable https://github.com/ToxikCoder/vulkalc.git`
+
+### How to build
+
+TODO fix and actualize
+
+1. Make sure you have Vulkan SDK installed and `VULKAN_SDK` environment variable exported
+2. Configure with CMake
+3. Generate selected project
+4. Build desired targets
 
 ## Dependencies
 
