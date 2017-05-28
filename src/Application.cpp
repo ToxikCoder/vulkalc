@@ -42,7 +42,6 @@ void Application::init()
 void Application::release()
 {
 
-    Application::~Application();
 }
 
 Application::Application()
