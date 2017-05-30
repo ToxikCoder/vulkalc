@@ -29,7 +29,6 @@ image:
 branches:
     only:
         - testing
-        - stable
 before_build:
 - cmd: cmake .
 build:
