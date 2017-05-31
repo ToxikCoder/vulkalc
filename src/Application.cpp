@@ -47,7 +47,7 @@ void Application::init()
 void Application::configure()
 {
     if (!m_isInitialized)
-        throw new ApplicationNotInitializedException();
+        throw ApplicationNotInitializedException();
     if (m_isConfigured)
         return;
 
@@ -108,12 +108,10 @@ void Application::release()
     }
     if (m_pLogStream)
     {
-        delete m_pLogStream;
         m_pLogStream = nullptr;
     }
     if (m_pErrorStream)
     {
-        delete m_pErrorStream;
         m_pErrorStream = nullptr;
     }
 }
@@ -131,9 +129,9 @@ Application::~Application()
 void Application::log(const char* message, Application::LOG_LEVEL level)
 {
     if (!m_isInitialized)
-        throw new ApplicationNotInitializedException();
+        throw ApplicationNotInitializedException();
     if (!m_isConfigured)
-        throw new ApplicationNotConfiguredException();
+        throw ApplicationNotConfiguredException();
     if (!m_isLoggingEnabled)
         return;
 
@@ -157,12 +155,12 @@ void Application::log(const char* message, Application::LOG_LEVEL level)
     }
 }
 
-const char* Application::ApplicationNotInitializedException::what() const _GLIBCXX_USE_NOEXCEPT
+const char* Application::ApplicationNotInitializedException::what() const
 {
     return "An instance of Application is not initialized. Call Application::init() first";
 }
 
-const char* Application::ApplicationNotConfiguredException::what() const _GLIBCXX_USE_NOEXCEPT
+const char* Application::ApplicationNotConfiguredException::what() const
 {
     return "An instance of Application is not configured. Edit Configuration instance, then call Application::configure()";
 }
