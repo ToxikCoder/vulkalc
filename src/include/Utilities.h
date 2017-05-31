@@ -23,20 +23,19 @@
 */
 
 /*!
- * \file Verifier.h
- * \brief Verifier class which provides interface to verify various things
+ * \file Utilities.h
+ * \brief Contains utility functions
  * \author Lev Sizov
- * \date 28.05.17
- *
- * This file contains Verifier class which provides interface to verify Vulkan installation, library tools and shaders
- *
+ * \date 31.05.2017
  */
 
-#ifndef VULKALC_LIBRARY_VERIFIER_H
-#define VULKALC_LIBRARY_VERIFIER_H
+#ifndef VULKALC_LIBRARY_UTILITIES_H
+#define VULKALC_LIBRARY_UTILITIES_H
 
-#include "RAII.h"
-#include "export.h"
+#include "Export.hpp"
+#include <chrono>
+
+using namespace std;
 
 /*!
  * \copydoc Vulkalc
@@ -44,18 +43,15 @@
 namespace Vulkalc
 {
     /*!
-     * \class Verifier
-     * \brief Provides interface for specific verifiers
-     * \extends RAII
-     *
-     * \note Verifier class uses RAII pattern. Call \code init() before usage and \code release() after usage
-     *
-     * \warning This class is not thread-safe.
+     * Returns string representation of current date and time
+     * \return current date and time as C string.
      */
-    class VULKALC_API Verifier : public RAII
+    const char* VULKALC_API getCurrentTimeString()
     {
-
-    };
+        auto now = chrono::system_clock::now();
+        auto now_time_t = chrono::system_clock::to_time_t(now);
+        return ctime(&now_time_t);
+    }
 }
 
-#endif //VULKALC_LIBRARY_VERIFIER_H
+#endif //VULKALC_LIBRARY_UTILITIES_H

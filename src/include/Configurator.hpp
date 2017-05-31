@@ -22,34 +22,43 @@
 * SOFTWARE.
 */
 
-#include <Application.hpp>
-#include "catch.hpp"
+/*!
+ * \file Configurator.h
+ * \brief This file contains Configurator class declaration
+ * \author Lev Sizov
+ * \date 30.05.2017
+ */
 
-using namespace Vulkalc;
+#ifndef VULKALC_LIBRARY_CONFIGURATOR_H
+#define VULKALC_LIBRARY_CONFIGURATOR_H
 
-/*TEST_CASE("Only one Application instance exists")
+#include "Export.hpp"
+#include "Configuration.hpp"
+
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
 {
-    Application application = Application::getInstance();
-    Application anotherApplication = Application::getInstance();
-    REQUIRE(application == anotherApplication);
-}*/
+    /*!
+     * \class Configurator
+     * \extends RAII
+     * \brief Configurator class for configuring Application with Configuration.
+     * \warning This class is not thread-safe.
+     */
+    class VULKALC_API Configurator
+    {
+    public:
+        inline const Configuration* getConfiguration() { return m_spConfiguration; };
 
-TEST_CASE("Application is initialized when created")
-{
-    Application application = Application::getInstance();
-    REQUIRE(application.isApplicationInitialized());
+        Configurator();
+
+        ~Configurator();
+
+    private:
+        Configuration* m_spConfiguration;
+    };
 }
 
-TEST_CASE("Application is configured after calling Application::configure()")
-{
-    Application application = Application::getInstance();
-    application.configure();
-    REQUIRE(application.isApplicationConfigured());
-}
 
-TEST_CASE("Not configured Application calling log")
-{
-    Application application = Application::getInstance();
-    REQUIRE_THROWS_AS(application.log("test", Application::LOG_INFO), Application::ApplicationNotConfiguredException);
-}
-
+#endif //VULKALC_LIBRARY_CONFIGURATOR_H

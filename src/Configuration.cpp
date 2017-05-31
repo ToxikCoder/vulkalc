@@ -22,34 +22,34 @@
 * SOFTWARE.
 */
 
-#include <Application.hpp>
-#include "catch.hpp"
+/*!
+ * \file Configuration.cpp
+ * \brief This file contains Configuration class implementation
+ * \author Lev Sizov
+ * \date 31.05.2017
+ */
+
+#include "include/Configuration.hpp"
 
 using namespace Vulkalc;
 
-/*TEST_CASE("Only one Application instance exists")
+Configuration::~Configuration()
 {
-    Application application = Application::getInstance();
-    Application anotherApplication = Application::getInstance();
-    REQUIRE(application == anotherApplication);
-}*/
-
-TEST_CASE("Application is initialized when created")
-{
-    Application application = Application::getInstance();
-    REQUIRE(application.isApplicationInitialized());
+    enabledExtensionsNames.clear();
+    enabledLayersNames.clear();
+    if (devicePointer)
+    {
+        delete devicePointer;
+        devicePointer = nullptr;
+    }
+    if (logStream)
+    {
+        delete logStream;
+        logStream = nullptr;
+    }
+    if (errorStream)
+    {
+        delete errorStream;
+        errorStream = nullptr;
+    }
 }
-
-TEST_CASE("Application is configured after calling Application::configure()")
-{
-    Application application = Application::getInstance();
-    application.configure();
-    REQUIRE(application.isApplicationConfigured());
-}
-
-TEST_CASE("Not configured Application calling log")
-{
-    Application application = Application::getInstance();
-    REQUIRE_THROWS_AS(application.log("test", Application::LOG_INFO), Application::ApplicationNotConfiguredException);
-}
-

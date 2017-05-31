@@ -22,34 +22,45 @@
 * SOFTWARE.
 */
 
-#include <Application.hpp>
-#include "catch.hpp"
+/*!
+ * \file VulkanInfo.h
+ * \brief Provides VulkanInfo class which contains information about Vulkan runtime and installation
+ * \author Lev Sizov
+ * \date 28.05.17
+ *
+ *  Provides VulkanInfo class which contains information about Vulkan runtime and installation
+ */
 
-using namespace Vulkalc;
+#ifndef VULKALC_LIBRARY_VULKANINFO_H
+#define VULKALC_LIBRARY_VULKANINFO_H
 
-/*TEST_CASE("Only one Application instance exists")
+#include "Export.hpp"
+
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
 {
-    Application application = Application::getInstance();
-    Application anotherApplication = Application::getInstance();
-    REQUIRE(application == anotherApplication);
-}*/
+    class VULKALC_API VulkanInfo
+    {
+    public:
+        /*!
+         * \brief Constructor for VulkanInfo
+         *
+         * Constructs a VulkanInfo object and fetches information about Vulkan
+         */
+        VulkanInfo();
 
-TEST_CASE("Application is initialized when created")
-{
-    Application application = Application::getInstance();
-    REQUIRE(application.isApplicationInitialized());
+        /*!
+         * \brief Destructor for VulkanInfo
+         *
+         * Destroys a VUlkanInfo object
+         */
+        ~VulkanInfo();
+
+    private:
+
+    };
 }
 
-TEST_CASE("Application is configured after calling Application::configure()")
-{
-    Application application = Application::getInstance();
-    application.configure();
-    REQUIRE(application.isApplicationConfigured());
-}
-
-TEST_CASE("Not configured Application calling log")
-{
-    Application application = Application::getInstance();
-    REQUIRE_THROWS_AS(application.log("test", Application::LOG_INFO), Application::ApplicationNotConfiguredException);
-}
-
+#endif //VULKALC_LIBRARY_VULKANINFO_H

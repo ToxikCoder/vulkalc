@@ -22,34 +22,31 @@
 * SOFTWARE.
 */
 
-#include <Application.hpp>
-#include "catch.hpp"
+/*!
+ * \file InformationProvider.h
+ * \brief InformationProvider class which provides various information
+ * \author Lev Sizov
+ * \date 28.05.17
+ *
+ * This file contains InformationProvider class which provides information about system and Vulkan installation
+ *
+ */
 
-using namespace Vulkalc;
+#ifndef VULKALC_LIBRARY_INFORMATIONPROVIDER_H
+#define VULKALC_LIBRARY_INFORMATIONPROVIDER_H
 
-/*TEST_CASE("Only one Application instance exists")
+#include "RAII.hpp"
+#include "Export.hpp"
+
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
 {
-    Application application = Application::getInstance();
-    Application anotherApplication = Application::getInstance();
-    REQUIRE(application == anotherApplication);
-}*/
+    class VULKALC_API InformationProvider
+    {
 
-TEST_CASE("Application is initialized when created")
-{
-    Application application = Application::getInstance();
-    REQUIRE(application.isApplicationInitialized());
+    };
 }
 
-TEST_CASE("Application is configured after calling Application::configure()")
-{
-    Application application = Application::getInstance();
-    application.configure();
-    REQUIRE(application.isApplicationConfigured());
-}
-
-TEST_CASE("Not configured Application calling log")
-{
-    Application application = Application::getInstance();
-    REQUIRE_THROWS_AS(application.log("test", Application::LOG_INFO), Application::ApplicationNotConfiguredException);
-}
-
+#endif //VULKALC_LIBRARY_INFORMATIONPROVIDER_H

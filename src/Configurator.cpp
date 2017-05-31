@@ -22,34 +22,27 @@
 * SOFTWARE.
 */
 
-#include <Application.hpp>
-#include "catch.hpp"
+/*!
+ * \file Configurator.cpp
+ * \brief This file contains Configurator implementation
+ * \author Lev Sizov
+ * \date 30.05.2017
+ */
+
+#include "include/Configurator.hpp"
 
 using namespace Vulkalc;
 
-/*TEST_CASE("Only one Application instance exists")
+Configurator::Configurator()
 {
-    Application application = Application::getInstance();
-    Application anotherApplication = Application::getInstance();
-    REQUIRE(application == anotherApplication);
-}*/
-
-TEST_CASE("Application is initialized when created")
-{
-    Application application = Application::getInstance();
-    REQUIRE(application.isApplicationInitialized());
+    m_spConfiguration = new Configuration();
 }
 
-TEST_CASE("Application is configured after calling Application::configure()")
+Configurator::~Configurator()
 {
-    Application application = Application::getInstance();
-    application.configure();
-    REQUIRE(application.isApplicationConfigured());
+    if (m_spConfiguration)
+    {
+        delete m_spConfiguration;
+        m_spConfiguration = nullptr;
+    }
 }
-
-TEST_CASE("Not configured Application calling log")
-{
-    Application application = Application::getInstance();
-    REQUIRE_THROWS_AS(application.log("test", Application::LOG_INFO), Application::ApplicationNotConfiguredException);
-}
-
