@@ -34,16 +34,21 @@
 #ifndef VULKALC_RAII_H
 #define VULKALC_RAII_H
 
-#include "export.h"
+#include "Export.hpp"
 
 /*!
  * \copydoc Application
  */
 namespace Vulkalc
 {
+    /*!
+     * \brief RAII class which plays as interface for RAII pattern
+     *
+     * Abstract class RAII, which plays as interface to implement RAII pattern
+     */
     class VULKALC_API RAII
     {
-    public:
+    protected:
         /*!
          * \brief Initializes a resource
          */

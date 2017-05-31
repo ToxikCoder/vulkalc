@@ -23,30 +23,38 @@
 */
 
 /*!
- * \file InformationProvider.h
- * \brief InformationProvider class which provides various information
+ * \file Device.h
+ * \brief 
  * \author Lev Sizov
- * \date 28.05.17
+ * \date 30.05.2017
  *
- * This file contains InformationProvider class which provides information about system and Vulkan installation
- *
+ * 
  */
 
-#ifndef VULKALC_LIBRARY_INFORMATIONPROVIDER_H
-#define VULKALC_LIBRARY_INFORMATIONPROVIDER_H
+#ifndef VULKALC_LIBRARY_DEVICE_H
+#define VULKALC_LIBRARY_DEVICE_H
 
-#include "RAII.h"
-#include "export.h"
+#include "Export.hpp"
+#include "RAII.hpp"
+#include "vulkan.hpp"
 
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc
 {
-    class VULKALC_API InformationProvider
+    class VULKALC_API Device : public RAII
     {
+    public:
+        Device();
 
+        ~Device();
+
+        virtual void init() override;
+
+        virtual void release() override;
+
+    private:
+        VkPhysicalDevice* m_pVkPhysicalDevice;
+        VkDevice* m_pVkDevice;
     };
 }
 
-#endif //VULKALC_LIBRARY_INFORMATIONPROVIDER_H
+#endif //VULKALC_LIBRARY_DEVICE_H

@@ -23,39 +23,39 @@
 */
 
 /*!
- * \file VulkanInfo.h
- * \brief Provides VulkanInfo class which contains information about Vulkan runtime and installation
+ * \file Verifier.h
+ * \brief Verifier class which provides interface to verify various things
  * \author Lev Sizov
  * \date 28.05.17
  *
- *  Provides VulkanInfo class which contains information about Vulkan runtime and installation
+ * This file contains Verifier class which provides interface to verify Vulkan installation, library tools and shaders
+ *
  */
 
-#ifndef VULKALC_LIBRARY_VULKANINFO_H
-#define VULKALC_LIBRARY_VULKANINFO_H
+#ifndef VULKALC_LIBRARY_VERIFIER_H
+#define VULKALC_LIBRARY_VERIFIER_H
 
-#include "export.h"
+#include "RAII.hpp"
+#include "Export.hpp"
 
 /*!
  * \copydoc Vulkalc
  */
 namespace Vulkalc
 {
-    class VULKALC_API VulkanInfo
+    /*!
+     * \class Verifier
+     * \brief Provides interface for specific verifiers
+     * \extends RAII
+     *
+     * \note Verifier class uses RAII pattern. Call \code init() before usage and \code release() after usage
+     *
+     * \warning This class is not thread-safe.
+     */
+    class VULKALC_API Verifier : public RAII
     {
-    public:
-        /*!
-         * \brief Constructor for VulkanInfo
-         *
-         * Constructs VulkanInfo object and fetches information about Vulkan
-         */
-        VulkanInfo();
-
-        ~VulkanInfo();
-
-    private:
 
     };
 }
 
-#endif //VULKALC_LIBRARY_VULKANINFO_H
+#endif //VULKALC_LIBRARY_VERIFIER_H
