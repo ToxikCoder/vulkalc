@@ -34,22 +34,22 @@ using namespace Vulkalc;
     REQUIRE(application == anotherApplication);
 }*/
 
+Application application = Application::getInstance();
+
 TEST_CASE("Application is initialized when created")
 {
-    Application application = Application::getInstance();
     REQUIRE(application.isApplicationInitialized());
-}
-
-TEST_CASE("Application is configured after calling Application::configure()")
-{
-    Application application = Application::getInstance();
-    application.configure();
-    REQUIRE(application.isApplicationConfigured());
 }
 
 TEST_CASE("Not configured Application calling log")
 {
-    Application application = Application::getInstance();
+    //Application application = Application::getInstance();
     REQUIRE_THROWS_AS(application.log("test", Application::LOG_INFO), Application::ApplicationNotConfiguredException);
+}
+
+TEST_CASE("Application is configured after calling Application::configure()")
+{
+    application.configure();
+    REQUIRE(application.isApplicationConfigured());
 }
 

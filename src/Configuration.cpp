@@ -39,17 +39,18 @@ Configuration::~Configuration()
     enabledLayersNames.clear();
     if (devicePointer)
     {
-        delete devicePointer;
+        //as pointer to VkPhysicalDevice is passed from another place, we woudln't want to free this memory,
+        //just removing the pointer
         devicePointer = nullptr;
     }
     if (logStream)
     {
-        delete logStream;
+        //same as above
         logStream = nullptr;
     }
     if (errorStream)
     {
-        delete errorStream;
+        //same as above
         errorStream = nullptr;
     }
 }
