@@ -31,7 +31,7 @@ install:
   - wget https://vulkan.lunarg.com/sdk/download/1.0.39.1/linux/vulkansdk-linux-x86_64-1.0.39.1.run
   - chmod ugo+x vulkansdk-linux-x86_64-1.0.39.1.run
   - ./vulkansdk-linux-x86_64-1.0.39.1.run
-  - cd VulkanSDK
+  - cd VulkanSDK/1.0.39.1/
   - source setup-env.sh
 cache:
   - cmake make graphviz libxcb libpciaccess0 libpng-dev libx11-dev libwayland-dev libxrandr-dev
@@ -44,6 +44,7 @@ compiler:
   - clang
   - gcc
 script:
+  - cd ~/ToxikCoder/vulkalc
   - cmake . -D VULKALCTOOLS_INCLUDE_TOOLS=OFF VULKALCDOC_GENERATE_DOC=OFF VULKALCDOC_GENERATE_HTML=OFF
   - make vulkalc && make vulkalc-test
   - cd vulkalc-tests
