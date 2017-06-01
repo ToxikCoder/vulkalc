@@ -34,6 +34,7 @@
 
 #include "Export.hpp"
 #include <chrono>
+#include <time.h>
 
 using namespace std;
 
@@ -46,11 +47,17 @@ namespace Vulkalc
      * Returns string representation of current date and time
      * \return current date and time as C string.
      */
-    const char* VULKALC_API getCurrentTimeString()
+    VULKALC_API const char* getCurrentTimeString()
     {
         auto now = chrono::system_clock::now();
         auto now_time_t = chrono::system_clock::to_time_t(now);
+#ifdef _MSC_VER
+        char time[26];
+        ctime_s(time, sizeof(time), &now_time_t);
+        return time;
+#else
         return ctime(&now_time_t);
+#endif
     }
 }
 

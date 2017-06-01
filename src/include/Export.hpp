@@ -38,7 +38,7 @@
 #ifdef __GNUC__
 #define VULKALC_API __attribute__ ((dllexport))
 #else
-#define VULKALC_API __declspec(dllexport)
+#define VULKALC_API __declspec( dllexport )
 #endif
 #define VULKALC_LOCAL
 #else
