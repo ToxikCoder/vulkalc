@@ -34,7 +34,7 @@
 
 using namespace Vulkalc;
 
-const Application& Application::getInstance()
+const Application& Application::getInstance() throw(HostMemoryAllocationException)
 {
     static const Application application;
     return application;
@@ -46,12 +46,19 @@ void Application::init()
         return;
 
     m_isInitialized = true;
-    m_pConfigurator = new Configurator();
+    try
+    {
+        m_pConfigurator = new Configurator();
+    }
+    catch(bad_alloc& e)
+    {
+        throw HostMemoryAllocationException("Failed to allocate memory for Configurator");
+    }
     m_pVkApplicationInfo = nullptr;
     m_pVkInstanceCreateInfo = nullptr;
 }
 
-void Application::configure()
+void Application::configure() throw(ApplicationNotInitializedException, HostMemoryAllocationException)
 {
     if (!m_isInitialized)
         throw ApplicationNotInitializedException();
@@ -66,34 +73,13 @@ void Application::configure()
     m_isErrorLoggingEnabled = configuration->isErrorLoggingEnabled;
 
     //filling in VkApplicationInfo
-    m_pVkApplicationInfo = new VkApplicationInfo();
-    m_pVkApplicationInfo->apiVersion = configuration->apiVersion;
-    m_pVkApplicationInfo->engineVersion = configuration->engineVersion;
-    m_pVkApplicationInfo->applicationVersion = configuration->applicationVersion;
-    m_pVkApplicationInfo->pApplicationName = configuration->applicationName;
-    m_pVkApplicationInfo->pEngineName = configuration->engineName;
-    m_pVkApplicationInfo->pNext = nullptr;
-    m_pVkApplicationInfo->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    prepareVulkanApplicationInfo();
+    if(m_pVkApplicationInfo == nullptr)
+        throw HostMemoryAllocationException("Failed to allocate memory for VkApplicationInfo");
     //filling in VkInstanceCreateInfo
-    m_pVkInstanceCreateInfo = new VkInstanceCreateInfo();
-    m_pVkInstanceCreateInfo->sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    m_pVkInstanceCreateInfo->pNext = nullptr;
-    m_pVkInstanceCreateInfo->flags = 0;
-    m_pVkInstanceCreateInfo->enabledExtensionCount = static_cast<uint32_t>(configuration->enabledExtensionsNames
-            .size());
-    m_pVkInstanceCreateInfo->enabledLayerCount = static_cast<uint32_t>(configuration->enabledLayersNames.size());
-    m_pVkInstanceCreateInfo->pApplicationInfo = m_pVkApplicationInfo;
-
-    if (configuration->enabledExtensionsNames.size() > 0)
-        m_pVkInstanceCreateInfo->ppEnabledExtensionNames = &configuration->enabledExtensionsNames[0];
-    else
-        m_pVkInstanceCreateInfo->ppEnabledExtensionNames = nullptr;
-
-    if (configuration->enabledLayersNames.size() > 0)
-        m_pVkInstanceCreateInfo->ppEnabledLayerNames = &configuration->enabledLayersNames[0];
-    else
-        m_pVkInstanceCreateInfo->ppEnabledLayerNames = nullptr;
-
+    prepareVulkanInstanceInfo();
+    if(m_pVkInstanceCreateInfo == nullptr)
+        throw new HostMemoryAllocationException("Failed to allocate memory for VkInstanceCreateInfo");
 }
 
 void Application::release()
@@ -162,4 +148,57 @@ void Application::log(const char* message, Application::LOG_LEVEL level)
                           " at " << getCurrentTimeString() << " ERROR: " << message;
             break;
     }
+}
+
+void Application::prepareVulkanApplicationInfo()
+{
+    try
+    {
+        m_pVkApplicationInfo = new VkApplicationInfo();
+    }
+    catch(bad_alloc& e)
+    {
+        m_pVkApplicationInfo = nullptr;
+        return;
+    }
+
+    auto configuration = m_pConfigurator->getConfiguration();
+    m_pVkApplicationInfo->apiVersion = configuration->apiVersion;
+    m_pVkApplicationInfo->engineVersion = configuration->engineVersion;
+    m_pVkApplicationInfo->applicationVersion = configuration->applicationVersion;
+    m_pVkApplicationInfo->pApplicationName = configuration->applicationName;
+    m_pVkApplicationInfo->pEngineName = configuration->engineName;
+    m_pVkApplicationInfo->pNext = nullptr;
+    m_pVkApplicationInfo->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+}
+
+void Application::prepareVulkanInstanceInfo()
+{
+    try
+    {
+        m_pVkInstanceCreateInfo = new VkInstanceCreateInfo();
+    }
+    catch(bad_alloc& e)
+    {
+        m_pVkInstanceCreateInfo = nullptr;
+        return;
+    }
+    auto configuration = m_pConfigurator->getConfiguration();
+    m_pVkInstanceCreateInfo->sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    m_pVkInstanceCreateInfo->pNext = nullptr;
+    m_pVkInstanceCreateInfo->flags = 0;
+    m_pVkInstanceCreateInfo->enabledExtensionCount = static_cast<uint32_t>(configuration->enabledExtensionsNames
+            .size());
+    m_pVkInstanceCreateInfo->enabledLayerCount = static_cast<uint32_t>(configuration->enabledLayersNames.size());
+    m_pVkInstanceCreateInfo->pApplicationInfo = m_pVkApplicationInfo;
+
+    if(configuration->enabledExtensionsNames.size() > 0)
+        m_pVkInstanceCreateInfo->ppEnabledExtensionNames = &configuration->enabledExtensionsNames[0];
+    else
+        m_pVkInstanceCreateInfo->ppEnabledExtensionNames = nullptr;
+
+    if(configuration->enabledLayersNames.size() > 0)
+        m_pVkInstanceCreateInfo->ppEnabledLayerNames = &configuration->enabledLayersNames[0];
+    else
+        m_pVkInstanceCreateInfo->ppEnabledLayerNames = nullptr;
 }

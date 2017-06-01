@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
+# Copyright (c) 2017 Lev Sizov
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,68 @@
 # SOFTWARE.
 #
 
-before_install: sudo apt-get -qq update
-install: sudo apt-get install -y cmake make
-cache: cmake make
+matrix:
+  include:
+    # works on Precise and Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+      env:
+         - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
+
+    # works on Precise and Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env:
+         - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
+
+    # works on Precise and Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env:
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+before_install:
+  - sudo apt-get -qq update
+  - eval "${MATRIX_EVAL}"
+install:
+  - sudo apt-get install -y cmake make libglm-dev graphviz libxcb-dri3-0 libxcb-present0 libpciaccess0 libpng-dev libxcb-dri3-dev libx11-dev libmirclient-dev libwayland-dev libxrandr-dev
+  - mkdir ~/vulkan
+  - cd ~/vulkan
+  - wget https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.0.39.1/linux/vulkansdk-linux-x86_64-1.0.39.1.run
+  - chmod ugo+x vulkansdk-linux-x86_64-1.0.39.1.run
+  - ./vulkansdk-linux-x86_64-1.0.39.1.run
+  - cd VulkanSDK
+  - source setup-env.sh
+cache:
+  - cmake make libglm-dev graphviz libxcb-dri3-0 libxcb-present0 libpciaccess0 libpng-dev libxcb-dri3-dev libx11-dev libmirclient-dev libwayland-dev libxrandr-dev
+  - directories:
+    - ~/vulkan
 language: cpp
 branches:
     only:
         - testing
+        - stable
 compiler:
   - clang
   - gcc
 script:
-  - cmake .
+  - cmake . -D VULKALCTOOLS_INCLUDE_TOOLS=OFF VULKALCDOC_GENERATE_DOC=OFF VULKALCDOC_GENERATE_HTML=OFF
   - make vulkalc && make vulkalc-test
   - cd vulkalc-tests
   - ./vulkalc-test
+
+#TODO configure deployment

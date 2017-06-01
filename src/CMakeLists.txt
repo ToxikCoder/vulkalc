@@ -64,3 +64,4 @@ endif (VULKALC_BUILD_STATIC)
 
 target_link_libraries(vulkalc ${VULKAN})
 #TODO cmake install build artifacts and shaders
+#TODO copy headers to install folder
