@@ -35,17 +35,18 @@ image:
 platform:
   - x86
   - x64
+install:
+  - cmd: curl -O https://vulkan.lunarg.com/sdk/download/1.0.39.1/windows/VulkanSDK-1.0.39.1-Installer.exe
+  - cmd: VulkanSDK-1.0.39.1-Installer.exe /S
+  - cmd: set VULKAN_SDK="C:\VulkanSDK\1.0.39.1\"
+  - cmd: cd "%VULKAN_SDK%\RunTimeInstaller"
+  - cmd: VulkanRT-1.0.39.1-Installer.exe /S
 before_build:
 - cmd: set VULKALC_MAJOR=@VULKALC_MAJOR@
 - cmd: set VULKALC_MINOR=@VULKALC_MINOR@
 - cmd: set VULKALC_PATCH=@VULKALC_PATCH@
-- cmd: cmake . -D VULKALCTOOLS_INCLUDE_TOOLS=OFF VULKALCDOC_GENERATE_DOC=OFF VULKALCDOC_GENERATE_HTML=OFF
-install:
-- cmd: curl -O https://vulkan.lunarg.com/sdk/download/1.0.39.1/windows/VulkanSDK-1.0.39.1-Installer.exe
-- cmd: VulkanSDK-1.0.39.1-Installer.exe /S
-- cmd: set VULKAN_SDK="C:\VulkanSDK\1.0.39.1\"
-- cmd: cd "%VULKAN_SDK%\RunTimeInstaller"
-- cmd: VulkanRT-1.0.39.1-Installer.exe /S
+- cmd: cd C:\projects\vulkalc
+- cmd: cmake -D VULKALCTOOLS_INCLUDE_TOOLS=OFF VULKALCDOC_GENERATE_DOC=OFF VULKALCDOC_GENERATE_HTML=OFF .
 build:
   project: vulkalc.sln
   parallel: true
