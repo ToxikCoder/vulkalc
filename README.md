@@ -14,7 +14,9 @@ and lets you use your own calculation shaders.
 
 ## How to use
 
-**This software is still in heavy development and not recommended for use yet**
+**This software is still under heavy development and not recommended for use yet**
+
+**First usable version will be available under v1.0.0 tag**
 
 ### How to download
 
@@ -33,7 +35,8 @@ TODO fix and actualize
 
 ## Dependencies
 
-There is only one dependency so far - [Catch](https://github.com/philsquared/Catch) testing framework.
+- [Vulkan SDK](https://vulkan.lunarg.com/)
+ - [Catch](https://github.com/philsquared/Catch) testing framework.
 
 ## Contribution
 
