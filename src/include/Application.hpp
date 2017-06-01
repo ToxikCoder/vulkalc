@@ -107,10 +107,18 @@ namespace Vulkalc
          * \param message message to write
          * \param level logging level
          * \throws ApplicationNotInitializedException - thrown if Application instance is not initialized
-         * \throws ApplicationNotConfiguredException - thrown if Application is not explicitly configured by calling
-         * \code Application::configure()
+         * \throws ApplicationNotConf0iguredException - thrown if Application is not explicitly configured by calling \code Application::configure()
          */
         void log(const char* message, LOG_LEVEL level);
+
+        /*!
+         * \brief Returns constant pointer to Configurator
+         *
+         * Returns constant pointer to Configurator, which should be used to acquire Configuration
+         * and configure Application before calling \code Application::configure()
+         * \return constant pointer to Configurator
+         */
+        Configurator* const getConfigurator() { return m_pConfigurator; }
 
         ~Application();
 
@@ -126,8 +134,8 @@ namespace Vulkalc
         bool m_isLoggingEnabled;
         bool m_isErrorLoggingEnabled;
         Configurator* m_pConfigurator;
-        std::ostream* m_pLogStream;
-        std::ostream* m_pErrorStream;
+        std::iostream* m_pLogStream;
+        std::iostream* m_pErrorStream;
         VkApplicationInfo* m_pVkApplicationInfo;
         VkInstanceCreateInfo* m_pVkInstanceCreateInfo;
     };
