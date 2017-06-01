@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
+# Copyright (c) 2017 Lev Sizov
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -34,10 +34,10 @@ endif (CMAKE_COMPILER_IS_GNUCXX)
 
 include_directories($ENV{VULKAN_SDK}/Include/vulkan)
 
-set(SOURCE_FILES Application.cpp VulkanInfo.cpp Configurator.cpp Configuration.cpp)
-set(HEADER_FILES include/Application.hpp include/Configurator.hpp include/Device.hpp include/Export.hpp
+set(SOURCE_FILES Application.cpp VulkanInfo.cpp Configurator.cpp Configuration.cpp Exceptions.cpp)
+set(HEADER_FILES include/Application.hpp include/Configurator.hpp include/Export.hpp
         include/InformationProvider.hpp include/RAII.hpp include/Verifier.hpp include/VulkanInfo.hpp
-        include/Configuration.hpp include/Utilities.h)
+        include/Configuration.hpp include/Utilities.h include/Exceptions.h)
 
 if (ARCH_I386)
     if (WIN32)
