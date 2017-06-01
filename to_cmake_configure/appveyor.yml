@@ -36,10 +36,10 @@ platform:
   - x86
   - x64
 environment:
-  - VULKAN_SDK: C:\VulkanSDK\1.0.39.1\
-  - VULKALC_MAJOR: @VULKALC_MAJOR@
-  - VULKALC_MINOR: @VULKALC_MINOR@
-  - VULKALC_PATCH: @VULKALC_PATCH@
+  VULKAN_SDK: C:\VulkanSDK\1.0.39.1\
+  VULKALC_MAJOR: @VULKALC_MAJOR@
+  VULKALC_MINOR: @VULKALC_MINOR@
+  VULKALC_PATCH: @VULKALC_PATCH@
 install:
   - cmd: curl -O https://vulkan.lunarg.com/sdk/download/1.0.39.1/windows/VulkanSDK-1.0.39.1-Installer.exe
   - cmd: VulkanSDK-1.0.39.1-Installer.exe /S
