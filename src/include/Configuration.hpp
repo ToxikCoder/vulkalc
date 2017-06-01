@@ -1,7 +1,7 @@
 /*
 * MIT License
 *
-* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
+* Copyright (c) 2017 Lev Sizov
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,13 @@
 */
 
 /*!
- * \file Configuration.h
+ * \file Configuration.hpp
  * \brief Contains Configuration class declaration
  * \author Lev Sizov
  * \date 31.05.2017
  */
+
+#pragma once
 
 #ifndef VULKALC_LIBRARY_CONFIGURATION_H
 #define VULKALC_LIBRARY_CONFIGURATION_H

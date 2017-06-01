@@ -1,7 +1,7 @@
 /*
 * MIT License
 *
-* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
+* Copyright (c) 2017 Lev Sizov
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 */
 
 /*!
- * \file Utilities.h
+ * \file Utilities.hpp
  * \brief Contains utility functions
  * \author Lev Sizov
  * \date 31.05.2017

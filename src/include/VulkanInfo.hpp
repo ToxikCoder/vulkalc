@@ -1,7 +1,7 @@
 /*
 * MIT License
 *
-* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
+* Copyright (c) 2017 Lev Sizov
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 */
 
 /*!
- * \file VulkanInfo.h
+ * \file VulkanInfo.hpp
  * \brief Provides VulkanInfo class which contains information about Vulkan runtime and installation
  * \author Lev Sizov
  * \date 28.05.17

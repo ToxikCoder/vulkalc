@@ -22,43 +22,33 @@
 * SOFTWARE.
 */
 
-/*!
- * \file RAII.hpp
- * \brief RAII pattern interface
- * \author Lev Sizov
- * \date 28.05.17
- *
- * This file contains RAII class which plays as interface for RAII pattern.
- */
+#include <Exceptions.h>
+#include "catch.hpp"
+#include <cstring>
 
-#ifndef VULKALC_RAII_H
-#define VULKALC_RAII_H
+using namespace Vulkalc;
+using namespace std;
 
-#include "Export.hpp"
-
-/*!
- * \copydoc Application
- */
-namespace Vulkalc
+TEST_CASE("Exception message is concatenated")
 {
-    /*!
-     * \brief RAII class which plays as interface for RAII pattern
-     *
-     * Abstract class RAII, which plays as interface to implement RAII pattern
-     */
-    class VULKALC_API RAII
+    try
     {
-    protected:
-        /*!
-         * \brief Initializes a resource
-         */
-        virtual void init() = 0;
-
-        /*!
-         * \brief Releases a resource
-         */
-        virtual void release() = 0;
-    };
+        throw Exception("test");
+    }
+    catch(Exception& e)
+    {
+        REQUIRE(strcmp(e.what(), "Exception in Vulkalc Application: test") == 0);
+    }
 }
 
-#endif //VULKALC_RAII_H
+TEST_CASE("HostMemoryAllocationException exception message is polymorphic")
+{
+    try
+    {
+        throw HostMemoryAllocationException();
+    }
+    catch(HostMemoryAllocationException& e)
+    {
+        REQUIRE(strcmp(e.what(), "Failed to allocate memory in host application"));
+    }
+}

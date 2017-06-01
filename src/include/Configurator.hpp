@@ -1,7 +1,7 @@
 /*
 * MIT License
 *
-* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
+* Copyright (c) 2017 Lev Sizov
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,13 @@
 */
 
 /*!
- * \file Configurator.h
+ * \file Configurator.hpp
  * \brief This file contains Configurator class declaration
  * \author Lev Sizov
  * \date 30.05.2017
  */
+
+#pragma once
 
 #ifndef VULKALC_LIBRARY_CONFIGURATOR_H
 #define VULKALC_LIBRARY_CONFIGURATOR_H
@@ -51,6 +53,10 @@ namespace Vulkalc
     public:
         inline const Configuration* getConfiguration() { return m_spConfiguration; };
 
+        /*!
+         * \brief Configurator constructor
+         * \throws Host
+         */
         Configurator();
 
         ~Configurator();

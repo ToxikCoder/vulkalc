@@ -1,7 +1,7 @@
 /*
 * MIT License
 *
-* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
+* Copyright (c) 2017 Lev Sizov
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,38 +23,26 @@
 */
 
 /*!
- * \file Device.h
- * \brief 
+ * \file Exceptions.cpp
+ * \brief Contains excpetions implementations
  * \author Lev Sizov
- * \date 30.05.2017
- *
- * 
+ * \date 01.06.2017
  */
 
-#ifndef VULKALC_LIBRARY_DEVICE_H
-#define VULKALC_LIBRARY_DEVICE_H
+#include "include/Exceptions.h"
 
-#include "Export.hpp"
-#include "RAII.hpp"
-#include "vulkan.hpp"
+using namespace Vulkalc;
 
-namespace Vulkalc
+Exception::Exception(const char* message) : m_message(message)
 {
-    class VULKALC_API Device : public RAII
+    if(message != nullptr)
     {
-    public:
-        Device();
-
-        ~Device();
-
-        virtual void init() override;
-
-        virtual void release() override;
-
-    private:
-        VkPhysicalDevice* m_pVkPhysicalDevice;
-        VkDevice* m_pVkDevice;
-    };
+        m_exception_message.append(": ");
+        m_exception_message.append(m_message);
+    }
 }
 
-#endif //VULKALC_LIBRARY_DEVICE_H
+const char* Exception::what() const
+{
+    return m_exception_message.c_str();
+}
