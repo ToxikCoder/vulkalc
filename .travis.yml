@@ -35,8 +35,6 @@ install:
   - source setup-env.sh
 cache:
   - cmake make graphviz libxcb libpciaccess0 libpng-dev libx11-dev libwayland-dev libxrandr-dev
-  - directories:
-    - ~/vulkan
 language: cpp
 branches:
     only:
@@ -50,5 +48,4 @@ script:
   - make vulkalc && make vulkalc-test
   - cd vulkalc-tests
   - ./vulkalc-test
-
 #TODO configure deployment
