@@ -1,4 +1,5 @@
-# The MIT License (MIT)
+#
+# MIT License
 #
 # Copyright (c) 2017 Lev Sizov
 #
@@ -19,13 +20,47 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+#
 
-dist: trusty
-sudo: required
+matrix:
+  include:
+    # works on Precise and Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+      env:
+         - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
+
+    # works on Precise and Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env:
+         - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
+
+    # works on Precise and Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env:
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 before_install:
-  - sudo apt-get -qq update && sudo apt-get upgrade -y
+  - sudo apt-get -qq update
+  - eval "${MATRIX_EVAL}"
 install:
-  - sudo apt-get install -y cmake make graphviz libxcb libpciaccess0 libpng-dev libx11-dev libwayland-dev libxrandr-dev
+  - sudo apt-get install -y cmake make libglm-dev graphviz libxcb-dri3-0 libxcb-present0 libpciaccess0 libpng-dev libxcb-dri3-dev libx11-dev libmirclient-dev libwayland-dev libxrandr-dev
   - mkdir ~/vulkan
   - cd ~/vulkan
   - wget https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.0.39.1/linux/vulkansdk-linux-x86_64-1.0.39.1.run
@@ -34,7 +69,7 @@ install:
   - cd VulkanSDK
   - source setup-env.sh
 cache:
-  - cmake make graphviz libxcb libpciaccess0 libpng-dev libx11-dev libwayland-dev libxrandr-dev
+  - cmake make libglm-dev graphviz libxcb-dri3-0 libxcb-present0 libpciaccess0 libpng-dev libxcb-dri3-dev libx11-dev libmirclient-dev libwayland-dev libxrandr-dev
   - directories:
     - ~/vulkan
 language: cpp

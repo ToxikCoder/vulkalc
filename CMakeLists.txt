@@ -1,4 +1,5 @@
-# The MIT License (MIT)
+#
+# MIT License
 #
 # Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 #
@@ -19,7 +20,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
+#
 cmake_minimum_required(VERSION 2.8.7)
 cmake_policy(SET CMP0048 NEW)
 project(vulkalc-library VERSION 0.0.1)
