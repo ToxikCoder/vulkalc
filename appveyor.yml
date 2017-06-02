@@ -54,7 +54,7 @@ build:
   parallel: true
   verbosity: minimal
 after_build:
-  - cmd: vulkalc-tests/Release/vulkalc-test.exe
+  - vulkalc-tests/Release/vulkalc-test.exe
 notifications:
 - provider: Email
   to:
