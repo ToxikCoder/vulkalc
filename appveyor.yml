@@ -37,10 +37,10 @@ environment:
   VULKALC_MAJOR: 0
   VULKALC_MINOR: 0
   VULKALC_PATCH: 1
-  appveyor_rdp_password:
+  APPVEYOR_RDP_PASSWORD:
       secure: gCM5roOouUwE5vdVxAiOnQ==
-#init:
-#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 install:
   - cmd: curl -O https://vulkan.lunarg.com/sdk/download/1.0.39.1/windows/VulkanSDK-1.0.39.1-Installer.exe
   - cmd: VulkanSDK-1.0.39.1-Installer.exe /S
@@ -53,8 +53,10 @@ build:
   project: vulkalc-library.sln
   parallel: true
   verbosity: minimal
-after_build:
-  - vulkalc-tests/Release/vulkalc-test.exe
+test:
+  assemblies:
+    only:
+    - vulkalc-tests/Release/vulkalc-test.exe
 notifications:
 - provider: Email
   to:
@@ -63,8 +65,8 @@ notifications:
   on_build_success: false
   on_build_failure: false
   on_build_status_changed: true
-#on_finish:
-#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #deploy:
 #  - provider: GitHub
 #    release:
