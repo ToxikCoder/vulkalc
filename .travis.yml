@@ -34,6 +34,8 @@ install:
   - ./vulkansdk-linux-x86_64-1.0.39.1.run
   - cd VulkanSDK/1.0.39.1/
   - source setup-env.sh
+cache:
+  - cmake make graphviz libpciaccess0 libpng-dev libx11-dev libwayland-dev libxrandr-dev
 language: cpp
 branches:
     only:
@@ -43,15 +45,9 @@ compiler:
   - clang
   - gcc
 script:
-  - cd $ROOT
+  - cd $ROOT/ToxikCoder/vulkalc
   - cmake -D VULKALCTOOLS_INCLUDE_TOOLS=0 VULKALCDOC_GENERATE_DOC=0 VULKALCDOC_GENERATE_HTML=0 .
   - make vulkalc && make vulkalc-test
   - cd vulkalc-tests
   - ./vulkalc-test
-notifications:
-  email:
-    recipients:
-      - levsizov2015@outlook.com
-    on_success: change
-    on_failure: change
 #TODO configure deployment
