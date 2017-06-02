@@ -29,7 +29,7 @@
  * \date 01.06.2017
  */
 
-#include "include/Exceptions.h"
+#include "include/Exceptions.hpp"
 
 using namespace Vulkalc;
 

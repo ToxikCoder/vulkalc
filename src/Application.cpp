@@ -30,15 +30,9 @@
  */
 
 #include "include/Application.hpp"
-#include "include/Utilities.h"
+#include "include/Utilities.hpp"
 
 using namespace Vulkalc;
-
-Application* const Application::getInstance() throw(HostMemoryAllocationException)
-{
-    static Application* const application = new Application();
-    return application;
-}
 
 void Application::init()
 {
@@ -46,7 +40,11 @@ void Application::init()
         return;
 
     m_isInitialized = true;
+	m_isLoggingEnabled = false;
+	m_isErrorLoggingEnabled = false;
     m_pConfigurator = new Configurator();
+	m_pErrorStream = nullptr;
+	m_pLogStream = nullptr;
     m_pVkApplicationInfo = nullptr;
     m_pVkInstanceCreateInfo = nullptr;
 }
@@ -104,7 +102,7 @@ void Application::release()
     }
 }
 
-Application::Application()
+Application::Application() throw(HostMemoryAllocationException)
 {
     init();
 }
@@ -123,22 +121,30 @@ void Application::log(const char* message, Application::LOG_LEVEL level)
     if (!m_isLoggingEnabled)
         return;
 
+	if (m_pErrorStream == nullptr)
+		return;
+	if (m_pLogStream == nullptr)
+		return;
+
     switch (level)
     {
         case LOG_INFO:
             *m_pLogStream << m_pVkApplicationInfo->pApplicationName << " from " << m_pVkApplicationInfo->pEngineName <<
-                          " at " << getCurrentTimeString() << " INFO: " << message;
+                          " at " << getCurrentTimeString() << " INFO: " << message << std::endl;
+			(*m_pLogStream).flush();
             break;
         case LOG_WARN:
             *m_pLogStream << m_pVkApplicationInfo->pApplicationName << " from " << m_pVkApplicationInfo->pEngineName <<
-                          " at " << getCurrentTimeString() << " WARNING: " << message;
+                          " at " << getCurrentTimeString() << " WARNING: " << message << std::endl;
+			(*m_pLogStream).flush();
             break;
         case LOG_ERROR:
             if (!m_isErrorLoggingEnabled)
                 break;
 
-            *m_pLogStream << m_pVkApplicationInfo->pApplicationName << " from " << m_pVkApplicationInfo->pEngineName <<
-                          " at " << getCurrentTimeString() << " ERROR: " << message;
+            *m_pErrorStream << m_pVkApplicationInfo->pApplicationName << " from " << m_pVkApplicationInfo->pEngineName <<
+                          " at " << getCurrentTimeString() << " ERROR: " << message << std::endl;
+			(*m_pErrorStream).flush();
             break;
     }
 }
@@ -149,7 +155,7 @@ void Application::prepareVulkanApplicationInfo()
     {
         m_pVkApplicationInfo = new VkApplicationInfo();
     }
-    catch(bad_alloc& e)
+    catch(bad_alloc&)
     {
         m_pVkApplicationInfo = nullptr;
         return;
@@ -171,7 +177,7 @@ void Application::prepareVulkanInstanceInfo()
     {
         m_pVkInstanceCreateInfo = new VkInstanceCreateInfo();
     }
-    catch(bad_alloc& e)
+    catch(bad_alloc&)
     {
         m_pVkInstanceCreateInfo = nullptr;
         return;

@@ -22,7 +22,7 @@
 
 cmake_minimum_required(VERSION 2.8.7)
 cmake_policy(SET CMP0048 NEW)
-project(vulkalc-library VERSION 0.0.1)
+project(vulkalc-library VERSION 0.0.2)
 set(VULKALC_MAJOR ${PROJECT_VERSION_MAJOR})
 set(VULKALC_MINOR ${PROJECT_VERSION_MINOR})
 set(VULKALC_PATCH ${PROJECT_VERSION_PATCH})

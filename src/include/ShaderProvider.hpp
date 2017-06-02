@@ -23,42 +23,38 @@
 */
 
 /*!
- * \file Utilities.hpp
- * \brief Contains utility functions
+ * \file ShaderProvider.h
+ * \brief This file contains ShaderProvider class declaration
  * \author Lev Sizov
- * \date 31.05.2017
+ * \date 02.06.2017
  */
 
-#ifndef VULKALC_LIBRARY_UTILITIES_H
-#define VULKALC_LIBRARY_UTILITIES_H
+#pragma once
+
+#ifndef VULKALC_LIBRARY_SHADERPROVIDER_H
+#define VULKALC_LIBRARY_SHADERPROVIDER_H
 
 #include "Export.hpp"
-#include <chrono>
-#include <time.h>
+#include "Shader.hpp"
+#include "VerifiedShader.hpp"
+#include <vector>
 
-using namespace std;
-
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc
 {
-    /*!
-     * Returns string representation of current date and time
-     * \return current date and time as C string.
-     */
-    VULKALC_API const char* getCurrentTimeString()
+    class VULKALC_API ShaderProvider
     {
-        auto now = chrono::system_clock::now();
-        auto now_time_t = chrono::system_clock::to_time_t(now);
-#ifdef _MSC_VER
-        char time[26];
-        ctime_s(time, sizeof(time), &now_time_t);
-        return time;
-#else
-        return ctime(&now_time_t);
-#endif
-    }
+    public:
+        std::vector<Shader> loadShaders(const char* directory = "shaders");
+        std::vector<VerifiedShader> verifyShaders(const std::vector<Shader>& shaders);
+
+        ~ShaderProvider();
+    private:
+        friend class Application;
+
+        ShaderProvider();
+        ShaderProvider(const ShaderProvider&);
+
+    };
 }
 
-#endif //VULKALC_LIBRARY_UTILITIES_H
+#endif //VULKALC_LIBRARY_SHADERPROVIDER_H

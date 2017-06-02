@@ -37,7 +37,7 @@ Configuration::~Configuration()
 {
     if (devicePointer)
     {
-        //as pointer to VkPhysicalDevice is passed from another place, we woudln't want to free this memory,
+        //as pointer to VkPhysicalDevice is passed from another place, we wouldn't want to free this memory,
         //just removing the pointer
         devicePointer = nullptr;
     }

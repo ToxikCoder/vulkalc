@@ -23,34 +23,42 @@
 */
 
 /*!
- * \file Configurator.cpp
- * \brief This file contains Configurator implementation
+ * \file Utilities.hpp
+ * \brief Contains utility functions
  * \author Lev Sizov
- * \date 30.05.2017
+ * \date 31.05.2017
  */
 
-#include "include/Configurator.hpp"
-#include "include/Exceptions.h"
+#ifndef VULKALC_LIBRARY_UTILITIES_H
+#define VULKALC_LIBRARY_UTILITIES_H
 
-using namespace Vulkalc;
+#include "Export.hpp"
+#include <chrono>
+#include <time.h>
 
-Configurator::Configurator()
+using namespace std;
+
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
 {
-    try
+    /*!
+     * Returns string representation of current date and time
+     * \return current date and time as C string.
+     */
+    VULKALC_API const char* getCurrentTimeString()
     {
-        m_spConfiguration = new Configuration();
-    }
-    catch(std::bad_alloc& e)
-    {
-        throw HostMemoryAllocationException("Failed to allocate Configuration in Configurator");
+        auto now = chrono::system_clock::now();
+        auto now_time_t = chrono::system_clock::to_time_t(now);
+#ifdef _MSC_VER
+		std::shared_ptr<char*> time = std::make_shared<char*>((char*)malloc(sizeof(char) * 26));
+        ctime_s(*time.get(), sizeof(char) * 26, &now_time_t);
+        return *time.get();
+#else
+        return ctime(&now_time_t);
+#endif
     }
 }
 
-Configurator::~Configurator()
-{
-    if (m_spConfiguration)
-    {
-        delete m_spConfiguration;
-        m_spConfiguration = nullptr;
-    }
-}
+#endif //VULKALC_LIBRARY_UTILITIES_H

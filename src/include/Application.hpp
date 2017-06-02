@@ -43,7 +43,7 @@
 #include "RAII.hpp"
 #include "Export.hpp"
 #include "Configurator.hpp"
-#include "Exceptions.h"
+#include "Exceptions.hpp"
 
 #include <vulkan/vulkan.hpp>
 
@@ -74,13 +74,10 @@ namespace Vulkalc
     public:
 
         /*!
-         * \brief Returns instance of Application.
-         * \return constant pointer to Application.
-         * \note Uses lazy initialization, but doesn't call \code Init().
+         * \brief constructor of Application.
          * \throws HostMemoryAllocationException - is thrown if Application fails to allocate memory in heap
-         * for Configurator when calling internal init()
          */
-        static Application* const getInstance() throw(HostMemoryAllocationException);
+        Application() throw(HostMemoryAllocationException);
 
         /*!
          * \brief Checks if Application is initialized with init().
@@ -129,7 +126,11 @@ namespace Vulkalc
          */
         Configurator* const getConfigurator() { return m_pConfigurator; }
 
-        ~Application();
+		std::iostream* const getLoggingStream() { return m_pLogStream; }
+
+		std::iostream* const getErrorStream() { return m_pErrorStream; }
+
+        virtual ~Application();
 
     private:
         virtual void init() override;
@@ -141,8 +142,6 @@ namespace Vulkalc
 
         bool m_isInitialized = false;
         bool m_isConfigured = false;
-
-        Application();
 
         bool m_isLoggingEnabled;
         bool m_isErrorLoggingEnabled;

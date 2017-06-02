@@ -45,7 +45,7 @@ namespace Vulkalc
         /*!
          * \brief Exception constructor
          */
-        Exception() {};
+        Exception() : m_message(nullptr) {};
 
         /*!
          * \brief Exception constructor with exception message

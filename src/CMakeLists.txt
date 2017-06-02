@@ -45,12 +45,12 @@ elseif (UNIX)
 else ()
     find_library(VULKAN vulkan)
 endif ()
-message(${VULKAN})
 
-set(SOURCE_FILES Application.cpp VulkanInfo.cpp Configurator.cpp Configuration.cpp Exceptions.cpp)
+set(SOURCE_FILES Application.cpp VulkanInfo.cpp Configuration.cpp Exceptions.cpp)
 set(HEADER_FILES include/Application.hpp include/Configurator.hpp include/Export.hpp
         include/InformationProvider.hpp include/RAII.hpp include/Verifier.hpp include/VulkanInfo.hpp
-        include/Configuration.hpp include/Utilities.h include/Exceptions.h)
+        include/Configuration.hpp include/Utilities.hpp include/Exceptions.hpp include/ShaderProvider.hpp
+        include/Shader.hpp include/VerifiedShader.hpp)
 
 if (VULKALC_BUILD_STATIC)
     add_library(vulkalc STATIC ${SOURCE_FILES} ${HEADER_FILES})
@@ -58,6 +58,10 @@ else ()
     add_library(vulkalc SHARED ${SOURCE_FILES} ${HEADER_FILES})
 endif (VULKALC_BUILD_STATIC)
 
-target_link_libraries(vulkalc ${VULKAN})
+if (WIN32)
+    target_link_libraries(vulkalc ${VULKAN})
+else()
+    target_link_libraries(vulkalc ${VULKAN})
+endif(WIN32)
 #TODO cmake install build artifacts and shaders
 #TODO copy headers to install folder

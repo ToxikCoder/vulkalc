@@ -114,21 +114,23 @@ namespace Vulkalc
          * \brief Output stream for error logging.
          */
         std::iostream* errorStream = nullptr;
+        /*!
+         * \brief Configuration destructor
+         */
+
+    private:
+        friend class Configurator;
 
         /*!
          * \brief Configuration constructor
          */
         Configuration() {};
 
-        /*!
-         * \brief Configuration destructor
-         */
-        ~Configuration();
-
-    private:
         Configuration(const Configuration&);
 
         void operator=(const Configuration&);
+
+        ~Configuration();
     };
 }
 

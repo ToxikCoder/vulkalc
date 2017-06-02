@@ -36,6 +36,7 @@
 
 #include "Export.hpp"
 #include "Configuration.hpp"
+#include "Exceptions.hpp"
 
 /*!
  * \copydoc Vulkalc
@@ -47,21 +48,44 @@ namespace Vulkalc
      * \extends RAII
      * \brief Configurator class for configuring Application with Configuration.
      * \warning This class is not thread-safe.
+     * \warning Do not create or destroy Configurator object by hands
      */
     class VULKALC_API Configurator
     {
     public:
+        /*!
+         * \brief Returns constant pointer to Configuration
+         * \return constant pointer to Configuration
+         */
         Configuration* const getConfiguration() { return m_spConfiguration; };
 
+    private:
+        friend class Application;
         /*!
          * \brief Configurator constructor
          * \throws HostHostMemoryAllocationException - thrown if failed to allocate memory in heap for Configuration
          */
-        Configurator();
+        Configurator()
+        {
+            try
+            {
+                m_spConfiguration = new Configuration();
+            }
+            catch(std::bad_alloc&)
+            {
+                throw HostMemoryAllocationException("Failed to allocate Configuration in Configurator");
+            }
+        };
 
-        ~Configurator();
+        ~Configurator()
+        {
+            if (m_spConfiguration)
+            {
+                delete m_spConfiguration;
+                m_spConfiguration = nullptr;
+            }
+        };
 
-    private:
         Configuration* m_spConfiguration;
     };
 }
