@@ -1,5 +1,5 @@
 /*
-* MIT License
+* The MIT License (MIT)
 *
 * Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 *

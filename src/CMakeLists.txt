@@ -1,7 +1,7 @@
 #
-# MIT License
+# The MIT License (MIT)
 #
-# Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
+# Copyright (c) 2017 Lev Sizov
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -32,35 +32,32 @@ elseif (${CMAKE_GENERATOR} MATCHES "Microsoft")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
-set(SOURCE_FILES Application.cpp VulkanInfo.cpp)
-
-include_directories($ENV{VULKAN_SDK}/Include)
-include_directories(include)
-
-if (ARCH_I386)
-    if (WIN32)
-        find_library(VULKAN NAMES vulkan-1 PATHS $ENV{VULKAN_SDK}/Lib32)
-    elseif (UNIX)
-        find_library(VULKAN NAMES vulkan PATHS $ENV{VULKAN_SDK}/lib32)
-    endif (WIN32)
-elseif (ARCH_AMD64)
-    if (WIN32)
-        find_library(VULKAN NAMES vulkan-1 PATHS $ENV{VULKAN_SDK}/Lib)
-    elseif (UNIX)
-        find_library(VULKAN NAMES vulkan PATHS $ENV{VULKAN_SDK}/lib)
-    endif (WIN32)
+if (WIN32)
+    include_directories($ENV{VULKAN_SDK}/Include/)
+    if (ARCH_I386)
+        find_library(VULKAN NAMES vulkan-1 PATHS $ENV{VULKAN_SDK}/Source/lib32 C:/Windows/System32)
+    elseif (ARCH_AMD64)
+        find_library(VULKAN NAMES vulkan-1 PATHS $ENV{VULKAN_SDK}/Source/lib C:/Windows/SysWOW64)
+    endif (ARCH_I386)
+elseif (UNIX)
+    include_directories($ENV{VULKAN_SDK}/include/)
+    find_library(VULKAN NAMES vulkan PATHS $ENV{VULKAN_SDK}/lib)
 else ()
-    message("Attempting to find Vulkan library")
     find_library(VULKAN vulkan)
 endif ()
+message(${VULKAN})
+
+set(SOURCE_FILES Application.cpp VulkanInfo.cpp Configurator.cpp Configuration.cpp Exceptions.cpp)
+set(HEADER_FILES include/Application.hpp include/Configurator.hpp include/Export.hpp
+        include/InformationProvider.hpp include/RAII.hpp include/Verifier.hpp include/VulkanInfo.hpp
+        include/Configuration.hpp include/Utilities.h include/Exceptions.h)
 
 if (VULKALC_BUILD_STATIC)
-    #add_library(vulkalc STATIC ${SOURCE_FILES} ${HEADER_FILES})
-    add_library(vulkalc STATIC ${SOURCE_FILES})
+    add_library(vulkalc STATIC ${SOURCE_FILES} ${HEADER_FILES})
 else ()
-    #add_library(vulkalc SHARED ${SOURCE_FILES} ${HEADER_FILES})
-    add_library(vulkalc STATIC ${SOURCE_FILES})
+    add_library(vulkalc SHARED ${SOURCE_FILES} ${HEADER_FILES})
 endif (VULKALC_BUILD_STATIC)
 
 target_link_libraries(vulkalc ${VULKAN})
 #TODO cmake install build artifacts and shaders
+#TODO copy headers to install folder

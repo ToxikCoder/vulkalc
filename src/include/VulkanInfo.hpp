@@ -21,3 +21,46 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
+
+/*!
+ * \file VulkanInfo.hpp
+ * \brief Provides VulkanInfo class which contains information about Vulkan runtime and installation
+ * \author Lev Sizov
+ * \date 28.05.17
+ *
+ *  Provides VulkanInfo class which contains information about Vulkan runtime and installation
+ */
+
+#ifndef VULKALC_LIBRARY_VULKANINFO_H
+#define VULKALC_LIBRARY_VULKANINFO_H
+
+#include "Export.hpp"
+
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
+{
+    class VULKALC_API VulkanInfo
+    {
+    public:
+        /*!
+         * \brief Constructor for VulkanInfo
+         *
+         * Constructs a VulkanInfo object and fetches information about Vulkan
+         */
+        VulkanInfo();
+
+        /*!
+         * \brief Destructor for VulkanInfo
+         *
+         * Destroys a VUlkanInfo object
+         */
+        ~VulkanInfo();
+
+    private:
+
+    };
+}
+
+#endif //VULKALC_LIBRARY_VULKANINFO_H

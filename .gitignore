@@ -1,10 +1,13 @@
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
+/.idea/.name
+/.idea/vcs.xml
 /build
 /build_debug
-/doc/generated
 /doc/GeneratedDoxyfile
+/doc/README.md
+/doc/doc
 *.cmake
 Makefile
 CMakeCache.txt

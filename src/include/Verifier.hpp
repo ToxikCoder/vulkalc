@@ -21,3 +21,41 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
+
+/*!
+ * \file Verifier.hpp
+ * \brief Verifier class which provides interface to verify various things
+ * \author Lev Sizov
+ * \date 28.05.17
+ *
+ * This file contains Verifier class which provides interface to verify Vulkan installation, library tools and shaders
+ *
+ */
+
+#ifndef VULKALC_LIBRARY_VERIFIER_H
+#define VULKALC_LIBRARY_VERIFIER_H
+
+#include "RAII.hpp"
+#include "Export.hpp"
+
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
+{
+    /*!
+     * \class Verifier
+     * \brief Provides interface for specific verifiers
+     * \extends RAII
+     *
+     * \note Verifier class uses RAII pattern. Call \code init() before usage and \code release() after usage
+     *
+     * \warning This class is not thread-safe.
+     */
+    class VULKALC_API Verifier : public RAII
+    {
+
+    };
+}
+
+#endif //VULKALC_LIBRARY_VERIFIER_H

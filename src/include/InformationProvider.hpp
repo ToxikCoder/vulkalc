@@ -21,3 +21,32 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
+
+/*!
+ * \file InformationProvider.hpp
+ * \brief InformationProvider class which provides various information
+ * \author Lev Sizov
+ * \date 28.05.17
+ *
+ * This file contains InformationProvider class which provides information about system and Vulkan installation
+ *
+ */
+
+#ifndef VULKALC_LIBRARY_INFORMATIONPROVIDER_H
+#define VULKALC_LIBRARY_INFORMATIONPROVIDER_H
+
+#include "RAII.hpp"
+#include "Export.hpp"
+
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
+{
+    class VULKALC_API InformationProvider
+    {
+
+    };
+}
+
+#endif //VULKALC_LIBRARY_INFORMATIONPROVIDER_H
