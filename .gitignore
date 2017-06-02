@@ -3,6 +3,7 @@
 /.idea/libraries
 /build
 /build_debug
+/doc/generated
 /doc/GeneratedDoxyfile
 *.cmake
 Makefile

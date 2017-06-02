@@ -29,6 +29,7 @@ language: cpp
 branches:
     only:
         - testing
+        - stable
 compiler:
   - clang
   - gcc
