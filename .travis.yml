@@ -45,7 +45,7 @@ compiler:
   - gcc
 script:
   - cd ~/ToxikCoder/vulkalc
-  - cmake -D VULKALCTOOLS_INCLUDE_TOOLS=OFF VULKALCDOC_GENERATE_DOC=OFF VULKALCDOC_GENERATE_HTML=OFF .
+  - cmake . -D VULKALCTOOLS_INCLUDE_TOOLS=OFF VULKALCDOC_GENERATE_DOC=OFF VULKALCDOC_GENERATE_HTML=OFF
   - make vulkalc && make vulkalc-test
   - cd vulkalc-tests
   - ./vulkalc-test
