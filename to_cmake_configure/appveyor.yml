@@ -29,9 +29,7 @@ branches:
   only:
     - testing
     - stable
-image:
-  - Visual Studio 2015
-  - Visual Studio 2013
+image: Visual Studio 2015
 configuration: Release
 environment:
   VULKAN_SDK: C:\VulkanSDK\1.0.39.1\
