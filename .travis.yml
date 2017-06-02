@@ -46,7 +46,7 @@ script:
   - cd $ROOT
   - cmake -D VULKALCTOOLS_INCLUDE_TOOLS=0 VULKALCDOC_GENERATE_DOC=0 VULKALCDOC_GENERATE_HTML=0 CMAKE_CONFIGURATION_TYPES="Release" .
   - make vulkalc && make vulkalc-test
-  - /vulkalc-tests/vulkalc-test
+  - if [ "$?" -eq "0" ]; then ./vulkalc-tests/vulkalc-test; fi
 notifications:
   email:
     recipients:
