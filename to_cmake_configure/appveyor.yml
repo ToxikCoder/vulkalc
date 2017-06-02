@@ -35,6 +35,7 @@ image:
 matrix:
   - platform: x86
   - platform: x64
+  fast-finish: true
 before_build:
 - cmd: cmake . -D VULKALCTOOLS_INCLUDE_TOOLS=OFF VULKALCDOC_GENERATE_DOC=OFF VULKALCDOC_GENERATE_HTML=OFF
 install:
