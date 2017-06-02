@@ -26,7 +26,6 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y cmake make gcc g++ graphviz libpciaccess0 libpng-dev libx11-dev libwayland-dev libxrandr-dev
 install:
-  - export ROOT=`pwd`
   - mkdir ~/vulkan
   - cd ~/vulkan
   - wget https://vulkan.lunarg.com/sdk/download/1.0.39.1/linux/vulkansdk-linux-x86_64-1.0.39.1.run
@@ -35,7 +34,7 @@ install:
   - cd VulkanSDK/1.0.39.1/
   - source setup-env.sh
 cache:
-  - cmake make graphviz libpciaccess0 libpng-dev libx11-dev libwayland-dev libxrandr-dev
+  - cmake make graphviz libxcb libpciaccess0 libpng-dev libx11-dev libwayland-dev libxrandr-dev
 language: cpp
 branches:
     only:
@@ -45,8 +44,8 @@ compiler:
   - clang
   - gcc
 script:
-  - cd $ROOT/ToxikCoder/vulkalc
-  - cmake -D VULKALCTOOLS_INCLUDE_TOOLS=0 VULKALCDOC_GENERATE_DOC=0 VULKALCDOC_GENERATE_HTML=0 .
+  - cd ~/ToxikCoder/vulkalc
+  - cmake -D VULKALCTOOLS_INCLUDE_TOOLS=OFF VULKALCDOC_GENERATE_DOC=OFF VULKALCDOC_GENERATE_HTML=OFF .
   - make vulkalc && make vulkalc-test
   - cd vulkalc-tests
   - ./vulkalc-test
