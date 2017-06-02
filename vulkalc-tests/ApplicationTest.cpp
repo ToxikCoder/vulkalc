@@ -22,34 +22,16 @@
 * SOFTWARE.
 */
 
-#include <Application.hpp>
+#include <Application.h>
 #include "catch.hpp"
 
 using namespace Vulkalc;
 
-/*TEST_CASE("Only one Application instance exists")
+TEST_CASE("Only one Application instance exists")
 {
-    Application application = Application::getInstance();
-    Application anotherApplication = Application::getInstance();
+    const Application* application = Application::getInstance();
+    REQUIRE(application != nullptr);
+    const Application* anotherApplication = Application::getInstance();
     REQUIRE(application == anotherApplication);
-}*/
-
-TEST_CASE("Application is initialized when created")
-{
-    Application application = Application::getInstance();
-    REQUIRE(application.isApplicationInitialized());
-}
-
-TEST_CASE("Application is configured after calling Application::configure()")
-{
-    Application application = Application::getInstance();
-    application.configure();
-    REQUIRE(application.isApplicationConfigured());
-}
-
-TEST_CASE("Not configured Application calling log")
-{
-    Application application = Application::getInstance();
-    REQUIRE_THROWS_AS(application.log("test", Application::LOG_INFO), Application::ApplicationNotConfiguredException);
 }
 

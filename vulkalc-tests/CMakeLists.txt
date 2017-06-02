@@ -25,7 +25,5 @@
 project(vulkalc-tests)
 set(CMAKE_CXX_STANDARD 11)
 include_directories(../src/include)
-include_directories($ENV{VULKAN_SDK}/Include/vulkan)
-
 add_executable(vulkalc-test catch.hpp Test.cpp ApplicationTest.cpp)
 target_link_libraries(vulkalc-test vulkalc)

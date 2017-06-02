@@ -32,12 +32,10 @@ elseif (${CMAKE_GENERATOR} MATCHES "Microsoft")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
-include_directories($ENV{VULKAN_SDK}/Include/vulkan)
+set(SOURCE_FILES Application.cpp VulkanInfo.cpp)
 
-set(SOURCE_FILES Application.cpp VulkanInfo.cpp Configurator.cpp Configuration.cpp)
-set(HEADER_FILES include/Application.hpp include/Configurator.hpp include/Device.hpp include/Export.hpp
-        include/InformationProvider.hpp include/RAII.hpp include/Verifier.hpp include/VulkanInfo.hpp
-        include/Configuration.hpp include/Utilities.h)
+include_directories($ENV{VULKAN_SDK}/Include)
+include_directories(include)
 
 if (ARCH_I386)
     if (WIN32)
@@ -57,9 +55,11 @@ else ()
 endif ()
 
 if (VULKALC_BUILD_STATIC)
-    add_library(vulkalc STATIC ${SOURCE_FILES} ${HEADER_FILES})
+    #add_library(vulkalc STATIC ${SOURCE_FILES} ${HEADER_FILES})
+    add_library(vulkalc STATIC ${SOURCE_FILES})
 else ()
-    add_library(vulkalc STATIC ${SOURCE_FILES} ${HEADER_FILES})
+    #add_library(vulkalc SHARED ${SOURCE_FILES} ${HEADER_FILES})
+    add_library(vulkalc STATIC ${SOURCE_FILES})
 endif (VULKALC_BUILD_STATIC)
 
 target_link_libraries(vulkalc ${VULKAN})
