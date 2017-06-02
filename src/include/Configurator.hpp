@@ -51,7 +51,7 @@ namespace Vulkalc
     class VULKALC_API Configurator
     {
     public:
-        Configuration* const getConfiguration() { return m_spConfiguration; };
+        inline const Configuration* getConfiguration() { return m_spConfiguration; };
 
         /*!
          * \brief Configurator constructor

@@ -35,6 +35,8 @@ using namespace Vulkalc;
 
 Configuration::~Configuration()
 {
+    enabledExtensionsNames.clear();
+    enabledLayersNames.clear();
     if (devicePointer)
     {
         //as pointer to VkPhysicalDevice is passed from another place, we woudln't want to free this memory,

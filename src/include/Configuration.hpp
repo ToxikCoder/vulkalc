@@ -107,13 +107,13 @@ namespace Vulkalc
          */
         bool isErrorLoggingEnabled = true;
         /*!
-         * \brief Output stream for general logging.
+         * \brief Output stream for general logging. stdout stream is used by default.
          */
-        std::iostream* logStream = nullptr;
+        std::ostream* logStream = &std::cout;
         /*!
-         * \brief Output stream for error logging.
+         * \brief Output stream for error logging. stderr stream is used by default.
          */
-        std::iostream* errorStream = nullptr;
+        std::ostream* errorStream = &std::cerr;
 
         /*!
          * \brief Configuration constructor

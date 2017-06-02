@@ -61,7 +61,6 @@ void Application::configure()
     m_isConfigured = true;
     auto configuration = m_pConfigurator->getConfiguration();
     m_pLogStream = configuration->logStream;
-    m_pErrorStream = configuration->errorStream;
     m_isLoggingEnabled = configuration->isLoggingEnabled;
     m_isErrorLoggingEnabled = configuration->isErrorLoggingEnabled;
 
@@ -147,18 +146,18 @@ void Application::log(const char* message, Application::LOG_LEVEL level)
     switch (level)
     {
         case LOG_INFO:
-            *m_pLogStream << m_pVkApplicationInfo->pApplicationName << " from " << m_pVkApplicationInfo->pEngineName <<
+            *m_pLogStream << m_pVkApplicationInfo->pApplicationName << "from" << m_pVkApplicationInfo->pEngineName <<
                           " at " << getCurrentTimeString() << " INFO: " << message;
             break;
         case LOG_WARN:
-            *m_pLogStream << m_pVkApplicationInfo->pApplicationName << " from " << m_pVkApplicationInfo->pEngineName <<
+            *m_pLogStream << m_pVkApplicationInfo->pApplicationName << "from" << m_pVkApplicationInfo->pEngineName <<
                           " at " << getCurrentTimeString() << " WARNING: " << message;
             break;
         case LOG_ERROR:
             if (!m_isErrorLoggingEnabled)
                 break;
 
-            *m_pLogStream << m_pVkApplicationInfo->pApplicationName << " from " << m_pVkApplicationInfo->pEngineName <<
+            *m_pLogStream << m_pVkApplicationInfo->pApplicationName << "from" << m_pVkApplicationInfo->pEngineName <<
                           " at " << getCurrentTimeString() << " ERROR: " << message;
             break;
     }

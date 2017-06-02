@@ -41,52 +41,14 @@ TEST_CASE("Exception message is concatenated")
     }
 }
 
-TEST_CASE("Exception messages are polymorphic")
+TEST_CASE("HostMemoryAllocationException exception message is polymorphic")
 {
-    SECTION("ApplicationNotInitializedException")
+    try
     {
-        try
-        {
-            throw ApplicationNotInitializedException();
-        }
-        catch(ApplicationNotInitializedException& e)
-        {
-            REQUIRE(strcmp(e.what(), "ApplicationNotInitializedException in Vulkalc Application: "
-                    "An instance of Application is not initialized. Call Application::init() first"));
-        }
+        throw HostMemoryAllocationException();
     }
-
-    SECTION("ApplicationNotConfiguredException")
+    catch(HostMemoryAllocationException& e)
     {
-        try
-        {
-            throw ApplicationNotConfiguredException();
-        }
-        catch(ApplicationNotConfiguredException& e)
-        {
-            REQUIRE(strcmp(e.what(), "ApplicationNotConfiguredException in Vulkalc Application: "
-                    "An instance of Application is not configured. "
-                    "Edit Configuration instance, then call Application::configure()"));
-        }
-    }
-
-    SECTION("HostMemoryAllocationException")
-    {
-        try
-        {
-            throw HostMemoryAllocationException();
-        }
-        catch(HostMemoryAllocationException& e)
-        {
-            REQUIRE(strcmp(e.what(), "Failed to allocate memory in host application"));
-        }
-        try
-        {
-            throw HostMemoryAllocationException("test");
-        }
-        catch(HostMemoryAllocationException& e)
-        {
-            REQUIRE(strcmp(e.what(), "Failed to allocate memory in host application: test"));
-        }
+        REQUIRE(strcmp(e.what(), "Failed to allocate memory in host application"));
     }
 }
