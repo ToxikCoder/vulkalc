@@ -29,39 +29,50 @@
 using namespace Vulkalc;
 using namespace std;
 
-Application application = Application::getInstance();
+Application* application = nullptr;
 
-/*TEST_CASE("Only one Application instance exists")
+TEST_CASE("Application doesn't throw anything on init()")
 {
-    Application anotherApplication = Application::getInstance();
+    REQUIRE_NOTHROW(application = Application::getInstance());
+}
+
+TEST_CASE("Only one Application instance exists")
+{
+    Application* anotherApplication = nullptr;
+    REQUIRE_NOTHROW(anotherApplication = Application::getInstance());
     REQUIRE(application == anotherApplication);
-}*/
+    anotherApplication = nullptr;
+    REQUIRE(application != nullptr);
+}
 
 TEST_CASE("Application is initialized when created")
 {
-    REQUIRE(application.isApplicationInitialized());
-    REQUIRE(application.getConfigurator() != nullptr);
+    REQUIRE(application->isApplicationInitialized());
+    REQUIRE(application->getConfigurator() != nullptr);
 }
 
 TEST_CASE("Not configured Application calling log")
 {
-    REQUIRE_THROWS_AS(application.log("test", Application::LOG_INFO), ApplicationNotConfiguredException);
+    REQUIRE_THROWS_AS(application->log("test", Application::LOG_INFO), ApplicationNotConfiguredException);
 }
 
 TEST_CASE("Application is configured")
 {
     stringstream* ss = new stringstream();
-    SECTION("Application is really configured")
+    Configuration* configuration = application->getConfigurator()->getConfiguration();
+    SECTION("Configuration is created")
     {
-        Configuration* configuration = application.getConfigurator()->getConfiguration();
-        configuration->logStream = ss;
-        application.configure();
-        REQUIRE(application.isApplicationConfigured());
-
+        REQUIRE(configuration != nullptr);
+    }
+    configuration->logStream = ss;
+    SECTION("Calling configure() doesn't throw exception")
+    {
+        REQUIRE_NOTHROW(application->configure());
+        REQUIRE(application->isApplicationConfigured());
     }
     SECTION("Configured Application doesn't throw exceptions")
     {
-        REQUIRE_NOTHROW(application.log("Test", Application::LOG_INFO));
+        REQUIRE_NOTHROW(application->log("Test", Application::LOG_INFO));
     }
     SECTION("Calling log() on configured Application writes to stream")
     {
@@ -76,3 +87,14 @@ TEST_CASE("Application is configured")
     }
 }
 
+TEST_CASE("Application is being destroyed")
+{
+    REQUIRE_NOTHROW(delete application);
+    REQUIRE_THROWS(application->log("Application is deleted and this shouldn't be printed", Application::LOG_ERROR));
+    application = nullptr;
+}
+
+TEST_CASE("New instance of Application is possible to create after deleting old one")
+{
+    REQUIRE_NOTHROW(application = Application::getInstance());
+}

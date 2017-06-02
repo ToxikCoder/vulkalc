@@ -33,7 +33,7 @@ elseif (${CMAKE_GENERATOR} MATCHES "Microsoft")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
 if (WIN32)
-    include_directories($ENV{VULKAN_SDK}/Include/vulkan)
+    include_directories($ENV{VULKAN_SDK}/Include/)
     if (ARCH_I386)
         find_library(VULKAN NAMES vulkan-1 PATHS $ENV{VULKAN_SDK}/Source/lib32 C:/Windows/System32)
     elseif (ARCH_AMD64)
