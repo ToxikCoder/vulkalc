@@ -55,7 +55,7 @@ namespace Vulkalc
 
         /*!
          * \brief Configurator constructor
-         * \throws HostHostMemoryAllocationException - thrown if failed to allocate memory in heap for Configuration
+         * \throws Host
          */
         Configurator();
 

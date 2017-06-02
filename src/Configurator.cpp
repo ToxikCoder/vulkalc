@@ -42,7 +42,7 @@ Configurator::Configurator()
     }
     catch(std::bad_alloc& e)
     {
-        throw HostMemoryAllocationException("Failed to allocate Configuration in Configurator");
+        throw HostMemoryAllocationException("Failed to allocate Configuration");
     }
 }
 

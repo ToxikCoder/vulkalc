@@ -45,8 +45,12 @@
 #include "Configurator.hpp"
 #include "Exceptions.h"
 
+#if defined(__linux)
 #include <vulkan/vulkan.hpp>
+#elif defined(_WIN32)
+#include <vulkan.hpp>
 
+#endif
 
 /*!
  * \namespace Vulkalc
@@ -75,12 +79,12 @@ namespace Vulkalc
 
         /*!
          * \brief Returns instance of Application.
-         * \return constant pointer to Application.
+         * \return pointer to instance of Application.
          * \note Uses lazy initialization, but doesn't call \code Init().
          * \throws HostMemoryAllocationException - is thrown if Application fails to allocate memory in heap
          * for Configurator when calling internal init()
          */
-        static Application* const getInstance() throw(HostMemoryAllocationException);
+        static const Application& getInstance() throw(HostMemoryAllocationException);
 
         /*!
          * \brief Checks if Application is initialized with init().

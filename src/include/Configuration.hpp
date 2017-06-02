@@ -36,7 +36,12 @@
 
 #include "Export.hpp"
 
+#if defined(__linux)
 #include <vulkan/vulkan.hpp>
+#elif defined(_WIN32)
+#include <vulkan.hpp>
+
+#endif
 #include <string>
 #include <vector>
 #include <iostream>
