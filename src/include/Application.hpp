@@ -36,10 +36,6 @@
 #ifndef VULKALC_APPLICATION_H
 #define VULKALC_APPLICATION_H
 
-#define VULKALC_MAJOR_VERSION @PROJECT_VERSION_MAJOR@
-#define VULKALC_MINOR_VERSION @PROJECT_VRESION_MINOR@
-#define VULKALC_PATCH_VERSION @PROJECT_VERSION_PATCH@
-
 #include "RAII.hpp"
 #include "Export.hpp"
 #include "Configurator.hpp"
@@ -75,10 +71,8 @@ namespace Vulkalc
          * \brief Returns instance of Application.
          * \return pointer to instance of Application.
          * \note Uses lazy initialization, but doesn't call \code Init().
-         * \throws HostMemoryAllocationException - is thrown if Application fails to allocate memory in heap
-         * for Configurator when calling internal init()
          */
-        static const Application& getInstance() throw(HostMemoryAllocationException);
+        static const Application& getInstance();
 
         /*!
          * \brief Checks if Application is initialized with init().
@@ -100,9 +94,8 @@ namespace Vulkalc
          * \note This method would use Configuration available at the moment. So you have to change your Configuration
          * before-hand, otherwise default values will be used.
          * \throws ApplicationNotInitializedException - thrown if Application instance is not initialized
-         * \throws HostMemoryAllocationException - thrown if failed to allocate memory in heap
          */
-        void configure() throw(ApplicationNotInitializedException, HostMemoryAllocationException);
+        void configure();
 
         /*!
          * \brief Enumeration for logging levels
@@ -132,10 +125,6 @@ namespace Vulkalc
     private:
         virtual void init() override;
         virtual void release() override;
-
-        void prepareVulkanApplicationInfo();
-
-        void prepareVulkanInstanceInfo();
 
         bool m_isInitialized = false;
         bool m_isConfigured = false;
