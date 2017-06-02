@@ -1,7 +1,7 @@
 /*
 * MIT License
 *
-* Copyright (c) 2017 Lev Sizov
+* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,6 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-
-/*!
- * \file Application.cpp
- * \brief Contains Application class implementation
- * \author Lev Sizov
- * \date 28.05.2017
- */
 
 #include "include/Application.hpp"
 #include "include/Utilities.h"
@@ -161,4 +154,14 @@ void Application::log(const char* message, Application::LOG_LEVEL level)
                           " at " << getCurrentTimeString() << " ERROR: " << message;
             break;
     }
+}
+
+const char* Application::ApplicationNotInitializedException::what() const
+{
+    return "An instance of Application is not initialized. Call Application::init() first";
+}
+
+const char* Application::ApplicationNotConfiguredException::what() const
+{
+    return "An instance of Application is not configured. Edit Configuration instance, then call Application::configure()";
 }

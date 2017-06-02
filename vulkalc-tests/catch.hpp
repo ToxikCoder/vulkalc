@@ -459,7 +459,7 @@ namespace Catch {
 
 namespace Catch {
 
-    class NotImplementedException : public std::exception //-V690
+    class NotImplementedException : public std::exception
     {
     public:
         NotImplementedException( SourceLineInfo const& lineInfo );
@@ -875,7 +875,7 @@ namespace Catch {
 
     struct AssertionInfo
     {
-        AssertionInfo() {} //-V730
+        AssertionInfo() {}
         AssertionInfo(  std::string const& _macroName,
                         SourceLineInfo const& _lineInfo,
                         std::string const& _capturedExpression,
@@ -998,8 +998,7 @@ namespace Matchers {
 
     namespace Generic {
         template<typename ExpressionT>
-        class Not : public MatcherImpl<Not<ExpressionT>, ExpressionT>
-        { //-V690
+        class Not : public MatcherImpl<Not<ExpressionT>, ExpressionT> {
         public:
             explicit Not( Matcher<ExpressionT> const& matcher ) : m_matcher(matcher.clone()) {}
             Not( Not const& other ) : m_matcher( other.m_matcher ) {}
@@ -1016,8 +1015,7 @@ namespace Matchers {
         };
 
         template<typename ExpressionT>
-        class AllOf : public MatcherImpl<AllOf<ExpressionT>, ExpressionT>
-        { //-V690
+        class AllOf : public MatcherImpl<AllOf<ExpressionT>, ExpressionT> {
         public:
 
             AllOf() {}
@@ -1057,8 +1055,7 @@ namespace Matchers {
         };
 
         template<typename ExpressionT>
-        class AnyOf : public MatcherImpl<AnyOf<ExpressionT>, ExpressionT>
-        { //-V690
+        class AnyOf : public MatcherImpl<AnyOf<ExpressionT>, ExpressionT> {
         public:
 
             AnyOf() {}
@@ -1147,8 +1144,7 @@ namespace Matchers {
             std::string m_str;
         };
 
-        struct Equals : MatcherImpl<Equals, std::string>
-        { //-V690
+        struct Equals : MatcherImpl<Equals, std::string> {
             Equals( std::string const& str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes )
             :   m_data( str, caseSensitivity )
             {}
@@ -1166,8 +1162,7 @@ namespace Matchers {
             CasedString m_data;
         };
 
-        struct Contains : MatcherImpl<Contains, std::string>
-        { //-V690
+        struct Contains : MatcherImpl<Contains, std::string> {
             Contains( std::string const& substr, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes )
             : m_data( substr, caseSensitivity ){}
             Contains( Contains const& other ) : m_data( other.m_data ){}
@@ -1184,8 +1179,7 @@ namespace Matchers {
             CasedString m_data;
         };
 
-        struct StartsWith : MatcherImpl<StartsWith, std::string>
-        { //-V690
+        struct StartsWith : MatcherImpl<StartsWith, std::string> {
             StartsWith( std::string const& substr, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes )
             : m_data( substr, caseSensitivity ){}
 
@@ -1203,8 +1197,7 @@ namespace Matchers {
             CasedString m_data;
         };
 
-        struct EndsWith : MatcherImpl<EndsWith, std::string>
-        { //-V690
+        struct EndsWith : MatcherImpl<EndsWith, std::string> {
             EndsWith( std::string const& substr, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes )
             : m_data( substr, caseSensitivity ){}
             EndsWith( EndsWith const& other ) : m_data( other.m_data ){}
@@ -1449,8 +1442,7 @@ namespace Internal {
 
     // "base" overload
     template<Operator Op, typename T1, typename T2>
-    bool compare(T1 const& lhs, T2 const& rhs)
-    { //-V524
+    bool compare( T1 const& lhs, T2 const& rhs ) {
         return Evaluator<T1, T2, Op>::evaluate( lhs, rhs );
     }
 
@@ -2089,8 +2081,7 @@ namespace Catch {
         std::ostringstream m_stream;
     };
 
-    class ScopedMessage
-    { //-V690
+    class ScopedMessage {
     public:
         ScopedMessage( MessageBuilder const& builder );
         ScopedMessage( ScopedMessage const& other );
@@ -2592,8 +2583,7 @@ private:
 };
 
 template<typename T>
-class CompositeGenerator
-{ //-V690
+class CompositeGenerator {
 public:
     CompositeGenerator() : m_totalSize( 0 ) {}
 
@@ -2788,7 +2778,7 @@ namespace Catch {
             virtual std::string translate( ExceptionTranslators::const_iterator it, ExceptionTranslators::const_iterator itEnd ) const CATCH_OVERRIDE {
                 try {
                     if( it == itEnd )
-                        throw; //-V667
+                        throw;
                     else
                         return (*it)->translate( it+1, itEnd );
                 }
@@ -2831,8 +2821,7 @@ namespace Catch {
 namespace Catch {
 namespace Detail {
 
-    class Approx
-    { //-V690
+    class Approx {
     public:
         explicit Approx ( double value )
         :   m_epsilon( std::numeric_limits<float>::epsilon()*100 ),
@@ -3090,8 +3079,7 @@ namespace Catch {
 
     struct ITestCase;
 
-    struct TestCaseInfo
-    { //-V690
+    struct TestCaseInfo {
         enum SpecialProperties{
             None = 0,
             IsHidden = 1 << 1,
@@ -3546,7 +3534,7 @@ namespace Catch {
         ITagAliasRegistry const* m_tagAliases;
 
     public:
-        TestSpecParser( ITagAliasRegistry const& tagAliases ) : m_tagAliases( &tagAliases ) {} //-V730
+        TestSpecParser( ITagAliasRegistry const& tagAliases ) : m_tagAliases( &tagAliases ) {}
 
         TestSpecParser& parse( std::string const& arg ) {
             m_mode = None;
@@ -4546,7 +4534,7 @@ namespace Clara {
     };
 
     template<typename ConfigT>
-    class CommandLine { //-V690
+    class CommandLine {
 
         struct Arg : CommonArgProperties<ConfigT>, OptionArgProperties, PositionalArgProperties {
             Arg() {}
@@ -5324,7 +5312,7 @@ namespace Catch {
 
 namespace Catch {
 
-    struct Colour { //-V690
+    struct Colour {
         enum Code {
             None = 0,
 
@@ -6612,7 +6600,7 @@ namespace Catch {
                 }
                 duration = timer.getElapsedSeconds();
             }
-            catch( TestFailureException& ) { //-V565
+            catch( TestFailureException& ) {
                 // This just means the test was aborted due to failure
             }
             catch(...) {
@@ -6693,7 +6681,7 @@ namespace Catch {
 namespace Catch {
 
     // Versioning information
-    struct Version { //-V690
+    struct Version {
         Version(    unsigned int _majorVersion,
                     unsigned int _minorVersion,
                     unsigned int _patchNumber,
@@ -7204,7 +7192,7 @@ namespace Catch {
 
         std::string tryTranslators() const {
             if( m_translators.empty() )
-                throw; //-V667
+                throw;
             else
                 return m_translators[0]->translate( m_translators.begin()+1, m_translators.end() );
         }
@@ -9493,7 +9481,7 @@ namespace Catch {
     class XmlWriter {
     public:
 
-        class ScopedElement { //-V690
+        class ScopedElement {
         public:
             ScopedElement( XmlWriter* writer )
             :   m_writer( writer )
@@ -9904,7 +9892,7 @@ namespace Catch {
 
     class JunitReporter : public CumulativeReporterBase {
     public:
-        JunitReporter( ReporterConfig const& _config ) //-V730
+        JunitReporter( ReporterConfig const& _config )
         :   CumulativeReporterBase( _config ),
             xml( _config.stream() )
         {
@@ -10195,7 +10183,7 @@ namespace Catch {
 
     private:
 
-        class AssertionPrinter { //-V690
+        class AssertionPrinter {
             void operator= ( AssertionPrinter const& );
         public:
             AssertionPrinter( std::ostream& _stream, AssertionStats const& _stats, bool _printInfoMessages )
@@ -10592,7 +10580,7 @@ namespace Catch {
         }
 
     private:
-        class AssertionPrinter { //-V690
+        class AssertionPrinter {
             void operator= ( AssertionPrinter const& );
         public:
             AssertionPrinter( std::ostream& _stream, AssertionStats const& _stats, bool _printInfoMessages )

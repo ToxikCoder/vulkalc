@@ -1,7 +1,7 @@
 /*
 * MIT License
 *
-* Copyright (c) 2017 Lev Sizov
+* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
 */
 
 #include <Application.hpp>
-#include <Exceptions.h>
 #include "catch.hpp"
 
 using namespace Vulkalc;
@@ -44,7 +43,8 @@ TEST_CASE("Application is initialized when created")
 
 TEST_CASE("Not configured Application calling log")
 {
-    REQUIRE_THROWS_AS(application.log("test", Application::LOG_INFO), ApplicationNotConfiguredException);
+    //Application application = Application::getInstance();
+    REQUIRE_THROWS_AS(application.log("test", Application::LOG_INFO), Application::ApplicationNotConfiguredException);
 }
 
 TEST_CASE("Application is configured after calling Application::configure()")

@@ -1,7 +1,7 @@
 /*
 * MIT License
 *
-* Copyright (c) 2017 Lev Sizov
+* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 */
 
 /*!
- * \file Application.hpp
+ * \file Application.h
  * \brief Vulkalc entry point class
  * \author Lev Sizov
  * \date 28.05.17
@@ -31,16 +31,14 @@
  * This file contains Application class definition which is the entry point for the Vulkalc library
  */
 
-#pragma once
-
 #ifndef VULKALC_APPLICATION_H
 #define VULKALC_APPLICATION_H
 
 #include "RAII.hpp"
 #include "Export.hpp"
 #include "Configurator.hpp"
-#include "Exceptions.h"
 #include <vulkan.hpp>
+#include <exception>
 
 /*!
  * \namespace Vulkalc
@@ -112,15 +110,49 @@ namespace Vulkalc
          */
         void log(const char* message, LOG_LEVEL level);
 
+        /*!
+         * \brief This exception is thrown, when Application is not initialized, but used.
+         */
+        class VULKALC_API ApplicationNotInitializedException
+        {
+        public:
+            ApplicationNotInitializedException() {};
+
+            /*!
+             * Returns the message of exception
+             * \return C-way string with exception message
+             */
+            const char* what() const;
+        };
+
+        /*!
+         * \brief This exception is thrown, when Application is not configured
+         *
+         * Some Application functions require instance to be configured. If it's not, this exception is thrown.
+         */
+        class VULKALC_API ApplicationNotConfiguredException
+        {
+        public:
+            ApplicationNotConfiguredException() {};
+
+            /*!
+             * Returns the message of exception
+             * \return C-way string with exception message
+             */
+            const char* what() const;
+        };
+
         ~Application();
 
     private:
         virtual void init() override;
+
         virtual void release() override;
 
         bool m_isInitialized = false;
         bool m_isConfigured = false;
 
+        //hiding constructors and destructor
         Application();
 
         bool m_isLoggingEnabled;

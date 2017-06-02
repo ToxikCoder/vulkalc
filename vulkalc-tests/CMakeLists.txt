@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017 Lev Sizov
+# Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -27,5 +27,5 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories(../src/include)
 include_directories($ENV{VULKAN_SDK}/Include/vulkan)
 
-add_executable(vulkalc-test catch.hpp Test.cpp ApplicationTest.cpp ExceptionsTest.cpp)
+add_executable(vulkalc-test catch.hpp Test.cpp ApplicationTest.cpp)
 target_link_libraries(vulkalc-test vulkalc)

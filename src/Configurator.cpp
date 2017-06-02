@@ -1,7 +1,7 @@
 /*
 * MIT License
 *
-* Copyright (c) 2017 Lev Sizov
+* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -30,20 +30,12 @@
  */
 
 #include "include/Configurator.hpp"
-#include "include/Exceptions.h"
 
 using namespace Vulkalc;
 
 Configurator::Configurator()
 {
-    try
-    {
-        m_spConfiguration = new Configuration();
-    }
-    catch(std::bad_alloc& e)
-    {
-        throw HostMemoryAllocationException("Failed to allocate Configuration");
-    }
+    m_spConfiguration = new Configuration();
 }
 
 Configurator::~Configurator()
