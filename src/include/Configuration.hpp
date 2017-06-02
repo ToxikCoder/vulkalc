@@ -78,11 +78,11 @@ namespace Vulkalc
         /*!
          * \brief Vector of names of enabled Vulkan Layers. Feel free to add or remove them.
          */
-        std::vector<const char*> enabledLayersNames = std::vector<const char*>();
+        std::vector<const char*> enabledLayersNames;
         /*!
          * \brief Vector of names of enabled Vulkan extensions. Feel free to add or remove them.
          */
-        std::vector<const char*> enabledExtensionsNames = std::vector<const char*>();
+        std::vector<const char*> enabledExtensionsNames;
         /*!
          * \brief Index number of physical device to use. First device by default.
          * \note Enumeration starts from 0.

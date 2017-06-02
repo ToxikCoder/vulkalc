@@ -113,16 +113,9 @@ namespace Vulkalc
         /*!
          * \brief This exception is thrown, when Application is not initialized, but used.
          */
-        class VULKALC_API ApplicationNotInitializedException
+        class VULKALC_API ApplicationNotInitializedException : public std::exception
         {
-        public:
-            ApplicationNotInitializedException() {};
-
-            /*!
-             * Returns the message of exception
-             * \return C-way string with exception message
-             */
-            const char* what() const;
+            virtual const char* what() const _GLIBCXX_USE_NOEXCEPT override;
         };
 
         /*!
@@ -130,16 +123,9 @@ namespace Vulkalc
          *
          * Some Application functions require instance to be configured. If it's not, this exception is thrown.
          */
-        class VULKALC_API ApplicationNotConfiguredException
+        class VULKALC_API ApplicationNotConfiguredException : public std::exception
         {
-        public:
-            ApplicationNotConfiguredException() {};
-
-            /*!
-             * Returns the message of exception
-             * \return C-way string with exception message
-             */
-            const char* what() const;
+            virtual const char* what() const _GLIBCXX_USE_NOEXCEPT override;
         };
 
         ~Application();
