@@ -32,7 +32,6 @@ branches:
 image:
   - Visual Studio 2015
   - Visual Studio 2013
-configuration: Release
 environment:
   VULKAN_SDK: C:\VulkanSDK\1.0.39.1\
   VULKALC_MAJOR: 0
@@ -55,7 +54,7 @@ build:
   parallel: true
   verbosity: minimal
 after_build:
-  - cmd: C:\projects\vulkalc\vulkalc-tests\Release\vulkalc-test.exe
+  - cmd: vulkalc-tests/Release/vulkalc-test.exe
 notifications:
 - provider: Email
   to:
