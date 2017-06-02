@@ -4,6 +4,7 @@
 
 [![Build status](https://travis-ci.org/ToxikCoder/vulkalc.svg?branch=master)](https://travis-ci.org/ToxikCoder/vulkalc)
 [![Build status](https://ci.appveyor.com/api/projects/status/jqmebpw0uisopf2n?svg=true)](https://ci.appveyor.com/project/ToxikCoder/vulkalc)
+[![Releases](http://github-release-version.herokuapp.com/github/ToxikCoder/vulkalc/release.svg?style=flat)](https://github.com/ToxikCoder/vulkalc/releases)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1015/badge)](https://bestpractices.coreinfrastructure.org/projects/1015)
 
 **Vulkalc** is a cross-platform library for easy GPU calculations with the use of **Vulkan**(developed by [Khronos Group](https://www.khronos.org/)).
