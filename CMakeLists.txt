@@ -1,5 +1,4 @@
-#
-# MIT License
+# The MIT License (MIT)
 #
 # Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 #
@@ -20,10 +19,13 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-#
 
 cmake_minimum_required(VERSION 2.8.7)
-project(vulkalc-library)
+cmake_policy(SET CMP0048 NEW)
+project(vulkalc-library VERSION 0.0.1)
+set(VULKALC_MAJOR ${PROJECT_VERSION_MAJOR})
+set(VULKALC_MINOR ${PROJECT_VERSION_MINOR})
+set(VULKALC_PATCH ${PROJECT_VERSION_PATCH})
 
 if (NOT EXISTS "$ENV{VULKAN_SDK}")
     message(FATAL_ERROR "Vulkalc requires Vulkan SDK installed.")
@@ -60,6 +62,9 @@ option(VULKALCDOC_GENERATE_RTF "Generate RTF file with documentation" 0)
 
 enable_language(CXX)
 
+#configuring files with version numbers
+configure_file(to_cmake_configure/appveyor.yml ../ @ONLY)
+
 if (VULKALC_BUILD_VULKALC)
     add_subdirectory(src)
 endif (VULKALC_BUILD_VULKALC)
@@ -72,5 +77,3 @@ endif (VULKALCTOOLS_INCLUDE_TOOLS)
 if (VULKALCDOC_GENERATE_DOC)
     add_subdirectory(doc)
 endif (VULKALCDOC_GENERATE_DOC)
-
-

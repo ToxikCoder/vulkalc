@@ -21,3 +21,28 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
+
+/*!
+ * \file Exceptions.cpp
+ * \brief Contains excpetions implementations
+ * \author Lev Sizov
+ * \date 01.06.2017
+ */
+
+#include "include/Exceptions.h"
+
+using namespace Vulkalc;
+
+Exception::Exception(const char* message) : m_message(message)
+{
+    if(message != nullptr)
+    {
+        m_exception_message.append(": ");
+        m_exception_message.append(m_message);
+    }
+}
+
+const char* Exception::what() const
+{
+    return m_exception_message.c_str();
+}

@@ -1,7 +1,7 @@
 /*
-* MIT License
+* The MIT License (MIT)
 *
-* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
+* Copyright (c) 2017 Lev Sizov
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,4 +23,5 @@
 */
 
 #define CATCH_CONFIG_MAIN
+#define CATCH_CONFIG_FAST_COMPILE
 #include "catch.hpp"

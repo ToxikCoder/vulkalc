@@ -1,7 +1,6 @@
+# The MIT License (MIT)
 #
-# MIT License
-#
-# Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
+# Copyright (c) 2017 Lev Sizov
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +19,21 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-#
 
-before_install: sudo apt-get -qq update
-install: sudo apt-get install -y cmake make
-cache: cmake make
+dist: trusty
+sudo: required
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y cmake make gcc g++ graphviz libpciaccess0 libpng-dev libx11-dev libwayland-dev libxrandr-dev
+install:
+  - export ROOT=`pwd`
+  - mkdir ~/vulkan
+  - cd ~/vulkan
+  - wget https://vulkan.lunarg.com/sdk/download/1.0.39.1/linux/vulkansdk-linux-x86_64-1.0.39.1.run
+  - chmod ugo+x vulkansdk-linux-x86_64-1.0.39.1.run
+  - ./vulkansdk-linux-x86_64-1.0.39.1.run
+  - cd VulkanSDK/1.0.39.1/
+  - source setup-env.sh
 language: cpp
 branches:
     only:
@@ -34,7 +43,14 @@ compiler:
   - clang
   - gcc
 script:
-  - cmake .
+  - cd $ROOT
+  - cmake -D VULKALCTOOLS_INCLUDE_TOOLS=0 VULKALCDOC_GENERATE_DOC=0 VULKALCDOC_GENERATE_HTML=0 CMAKE_CONFIGURATION_TYPES="Release" .
   - make vulkalc && make vulkalc-test
-  - cd vulkalc-tests
-  - ./vulkalc-test
+  - ./vulkalc-tests/vulkalc-test
+notifications:
+  email:
+    recipients:
+      - levsizov2015@outlook.com
+    on_success: change
+    on_failure: change
+#TODO configure deployment

@@ -1,7 +1,7 @@
 /*
-* MIT License
+* The MIT License (MIT)
 *
-* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
+* Copyright (c) 2017 Lev Sizov
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,37 +23,34 @@
 */
 
 /*!
- * \file RAII.h
- * \brief RAII pattern interface
+ * \file Configurator.cpp
+ * \brief This file contains Configurator implementation
  * \author Lev Sizov
- * \date 28.05.17
- *
- * This file contains RAII class which plays as interface for RAII pattern.
+ * \date 30.05.2017
  */
 
-#ifndef VULKALC_RAII_H
-#define VULKALC_RAII_H
+#include "include/Configurator.hpp"
+#include "include/Exceptions.h"
 
-#include "export.h"
+using namespace Vulkalc;
 
-/*!
- * \copydoc Application
- */
-namespace Vulkalc
+Configurator::Configurator()
 {
-    class VULKALC_API RAII
+    try
     {
-    public:
-        /*!
-         * \brief Initializes a resource
-         */
-        virtual void init() = 0;
-
-        /*!
-         * \brief Releases a resource
-         */
-        virtual void release() = 0;
-    };
+        m_spConfiguration = new Configuration();
+    }
+    catch(std::bad_alloc& e)
+    {
+        throw HostMemoryAllocationException("Failed to allocate Configuration in Configurator");
+    }
 }
 
-#endif //VULKALC_RAII_H
+Configurator::~Configurator()
+{
+    if (m_spConfiguration)
+    {
+        delete m_spConfiguration;
+        m_spConfiguration = nullptr;
+    }
+}

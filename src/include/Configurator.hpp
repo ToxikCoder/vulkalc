@@ -21,3 +21,50 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
+
+/*!
+ * \file Configurator.hpp
+ * \brief This file contains Configurator class declaration
+ * \author Lev Sizov
+ * \date 30.05.2017
+ */
+
+#pragma once
+
+#ifndef VULKALC_LIBRARY_CONFIGURATOR_H
+#define VULKALC_LIBRARY_CONFIGURATOR_H
+
+#include "Export.hpp"
+#include "Configuration.hpp"
+
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
+{
+    /*!
+     * \class Configurator
+     * \extends RAII
+     * \brief Configurator class for configuring Application with Configuration.
+     * \warning This class is not thread-safe.
+     */
+    class VULKALC_API Configurator
+    {
+    public:
+        Configuration* const getConfiguration() { return m_spConfiguration; };
+
+        /*!
+         * \brief Configurator constructor
+         * \throws HostHostMemoryAllocationException - thrown if failed to allocate memory in heap for Configuration
+         */
+        Configurator();
+
+        ~Configurator();
+
+    private:
+        Configuration* m_spConfiguration;
+    };
+}
+
+
+#endif //VULKALC_LIBRARY_CONFIGURATOR_H
