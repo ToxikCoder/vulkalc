@@ -25,7 +25,7 @@ sudo: required
 before_install:
   - sudo apt-get -qq update
 install:
-  - sudo apt-get install -y cmake make gcc g++ graphviz libpciaccess0 libpng-dev libx11-dev libwayland-dev libxrandr-dev
+  - sudo apt-get install -y cmake make gcc g++ graphviz libxcb libpciaccess0 libpng-dev libx11-dev libwayland-dev libxrandr-dev
   - mkdir ~/vulkan
   - cd ~/vulkan
   - wget https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.0.39.1/linux/vulkansdk-linux-x86_64-1.0.39.1.run
