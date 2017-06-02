@@ -32,6 +32,9 @@ branches:
 image:
   - Visual Studio 2015
   - Visual Studio 2013
+platform:
+  - x86
+  - x64
 environment:
   VULKAN_SDK: C:\VulkanSDK\1.0.39.1\
   VULKALC_MAJOR: 0
@@ -44,7 +47,7 @@ install:
   - cmd: VulkanRT-1.0.39.1-Installer.exe /S
 before_build:
 - cmd: cd C:\projects\vulkalc
-- cmd: cmake -D VULKALCTOOLS_INCLUDE_TOOLS=0 VULKALCDOC_GENERATE_DOC=0 VULKALCDOC_GENERATE_HTML=0 CMAKE_CONFIGURATION_TYPES="Release" .
+- cmd: cmake -D VULKALCTOOLS_INCLUDE_TOOLS=0 VULKALCDOC_GENERATE_DOC=0 VULKALCDOC_GENERATE_HTML=0 .
 build:
   project: vulkalc-library.sln
   parallel: true
@@ -52,7 +55,7 @@ build:
 test:
   assemblies:
     only:
-    - vulkalc-tests/Release/vulkalc-test.exe
+    - build/vulkalc-tests/Release/vulkalc-test.exe
 notifications:
 - provider: Email
   to:
