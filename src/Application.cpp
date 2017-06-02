@@ -34,9 +34,9 @@
 
 using namespace Vulkalc;
 
-const Application& Application::getInstance() throw(HostMemoryAllocationException)
+Application* const Application::getInstance() throw(HostMemoryAllocationException)
 {
-    static const Application application;
+    static Application* const application = new Application();
     return application;
 }
 
@@ -46,14 +46,7 @@ void Application::init()
         return;
 
     m_isInitialized = true;
-    try
-    {
-        m_pConfigurator = new Configurator();
-    }
-    catch(bad_alloc& e)
-    {
-        throw HostMemoryAllocationException("Failed to allocate memory for Configurator");
-    }
+    m_pConfigurator = new Configurator();
     m_pVkApplicationInfo = nullptr;
     m_pVkInstanceCreateInfo = nullptr;
 }
