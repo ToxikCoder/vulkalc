@@ -62,8 +62,8 @@ void Application::configure()
     m_pVkApplicationInfo->apiVersion = configuration->apiVersion;
     m_pVkApplicationInfo->engineVersion = configuration->engineVersion;
     m_pVkApplicationInfo->applicationVersion = configuration->applicationVersion;
-    m_pVkApplicationInfo->pApplicationName = configuration->applicationName;
-    m_pVkApplicationInfo->pEngineName = configuration->engineName;
+    m_pVkApplicationInfo->pApplicationName = configuration->applicationName.c_str();
+    m_pVkApplicationInfo->pEngineName = configuration->engineName.c_str();
     m_pVkApplicationInfo->pNext = nullptr;
     m_pVkApplicationInfo->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     //filling in VkInstanceCreateInfo
@@ -71,9 +71,8 @@ void Application::configure()
     m_pVkInstanceCreateInfo->sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     m_pVkInstanceCreateInfo->pNext = nullptr;
     m_pVkInstanceCreateInfo->flags = 0;
-    m_pVkInstanceCreateInfo->enabledExtensionCount = static_cast<uint32_t>(configuration->enabledExtensionsNames
-            .size());
-    m_pVkInstanceCreateInfo->enabledLayerCount = static_cast<uint32_t>(configuration->enabledLayersNames.size());
+    m_pVkInstanceCreateInfo->enabledExtensionCount = configuration->enabledExtensionsNames.size();
+    m_pVkInstanceCreateInfo->enabledLayerCount = configuration->enabledLayersNames.size();
     m_pVkInstanceCreateInfo->pApplicationInfo = m_pVkApplicationInfo;
 
     if (configuration->enabledExtensionsNames.size() > 0)

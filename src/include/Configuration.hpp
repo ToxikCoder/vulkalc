@@ -57,7 +57,7 @@ namespace Vulkalc
         /*!
          * \brief Name of the application, which uses Vulkalc library. Feel free to change.
          */
-        const char* applicationName = "Vulkalc Application";
+        std::string applicationName = "Vulkalc Application";
         /*!
          * \brief Version of application. Feel free to change
          */
@@ -65,7 +65,7 @@ namespace Vulkalc
         /*!
          * \brief Engine name. Feel free to change.
          */
-        const char* engineName = "Vulkalc";
+        std::string engineName = "Vulkalc";
         /*!
          * \brief Engine version. Feel free to change.
          */
