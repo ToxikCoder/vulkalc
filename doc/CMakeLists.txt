@@ -1,5 +1,5 @@
 #
-# The MIT License (MIT)
+# MIT License
 #
 # Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 #
@@ -27,9 +27,9 @@ project(vulkalc-doc)
 find_package(Doxygen)
 if (DOXYGEN_FOUND)
     set(DOC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-    set(ROOT_DIR ${CMAKE_SOURCE_DIR})
-    configure_file(${ROOT_DIR}/GeneratedDoxyfile ${DOC_DIR} @ONLY)
-    configure_file(${ROOT_DIR}/README.md ${DOC_DIR} COPYONLY)
+    set(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
+    configure_file(${ROOT_DIR}/GeneratedDoxyfile ${DOC_DIR} COPYONLY)
+    configure_file(${ROOT_DIR}/README.MD ${DOC_DIR} COPYONLY)
 
     if (VULKALCDOC_GENERATE_HTML)
         file(APPEND ${DOC_DIR}/GeneratedDoxyfile "GENERATE_HTML          = YES\n")

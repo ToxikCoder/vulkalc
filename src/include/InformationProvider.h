@@ -1,7 +1,7 @@
 /*
-* The MIT License (MIT)
+* MIT License
 *
-* Copyright (c) 2017 Lev Sizov
+* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,32 +23,30 @@
 */
 
 /*!
- * \file Configuration.cpp
- * \brief This file contains Configuration class implementation
+ * \file InformationProvider.h
+ * \brief InformationProvider class which provides various information
  * \author Lev Sizov
- * \date 31.05.2017
+ * \date 28.05.17
+ *
+ * This file contains InformationProvider class which provides information about system and Vulkan installation
+ *
  */
 
-#include "include/Configuration.hpp"
+#ifndef VULKALC_LIBRARY_INFORMATIONPROVIDER_H
+#define VULKALC_LIBRARY_INFORMATIONPROVIDER_H
 
-using namespace Vulkalc;
+#include "RAII.h"
+#include "export.h"
 
-Configuration::~Configuration()
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
 {
-    if (devicePointer)
+    class VULKALC_API InformationProvider
     {
-        //as pointer to VkPhysicalDevice is passed from another place, we woudln't want to free this memory,
-        //just removing the pointer
-        devicePointer = nullptr;
-    }
-    if (logStream)
-    {
-        //same as above
-        logStream = nullptr;
-    }
-    if (errorStream)
-    {
-        //same as above
-        errorStream = nullptr;
-    }
+
+    };
 }
+
+#endif //VULKALC_LIBRARY_INFORMATIONPROVIDER_H

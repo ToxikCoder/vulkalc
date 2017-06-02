@@ -1,7 +1,7 @@
 /*
-* The MIT License (MIT)
+* MIT License
 *
-* Copyright (c) 2017 Lev Sizov
+* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,42 +23,39 @@
 */
 
 /*!
- * \file RAII.hpp
- * \brief RAII pattern interface
+ * \file Verifier.h
+ * \brief Verifier class which provides interface to verify various things
  * \author Lev Sizov
  * \date 28.05.17
  *
- * This file contains RAII class which plays as interface for RAII pattern.
+ * This file contains Verifier class which provides interface to verify Vulkan installation, library tools and shaders
+ *
  */
 
-#ifndef VULKALC_RAII_H
-#define VULKALC_RAII_H
+#ifndef VULKALC_LIBRARY_VERIFIER_H
+#define VULKALC_LIBRARY_VERIFIER_H
 
-#include "Export.hpp"
+#include "RAII.h"
+#include "export.h"
 
 /*!
- * \copydoc Application
+ * \copydoc Vulkalc
  */
 namespace Vulkalc
 {
     /*!
-     * \brief RAII class which plays as interface for RAII pattern
+     * \class Verifier
+     * \brief Provides interface for specific verifiers
+     * \extends RAII
      *
-     * Abstract class RAII, which plays as interface to implement RAII pattern
+     * \note Verifier class uses RAII pattern. Call \code init() before usage and \code release() after usage
+     *
+     * \warning This class is not thread-safe.
      */
-    class VULKALC_API RAII
+    class VULKALC_API Verifier : public RAII
     {
-    protected:
-        /*!
-         * \brief Initializes a resource
-         */
-        virtual void init() = 0;
 
-        /*!
-         * \brief Releases a resource
-         */
-        virtual void release() = 0;
     };
 }
 
-#endif //VULKALC_RAII_H
+#endif //VULKALC_LIBRARY_VERIFIER_H

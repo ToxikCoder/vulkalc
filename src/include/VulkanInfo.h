@@ -1,7 +1,7 @@
 /*
-* The MIT License (MIT)
+* MIT License
 *
-* Copyright (c) 2017 Lev Sizov
+* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,32 +23,39 @@
 */
 
 /*!
- * \file Export.hpp
- * \brief Defines platform-specific export
+ * \file VulkanInfo.h
+ * \brief Provides VulkanInfo class which contains information about Vulkan runtime and installation
  * \author Lev Sizov
  * \date 28.05.17
  *
- * This file contains defines that specify platform specific way to export classes and functions
+ *  Provides VulkanInfo class which contains information about Vulkan runtime and installation
  */
 
-#ifndef VULKALC_EXPORT_H
-#define VULKALC_EXPORT_H
+#ifndef VULKALC_LIBRARY_VULKANINFO_H
+#define VULKALC_LIBRARY_VULKANINFO_H
 
-#if defined(_WIN32) || defined(__CYGWIN__)
-#ifdef __GNUC__
-#define VULKALC_API __attribute__ ((dllexport))
-#else
-#define VULKALC_API __declspec( dllexport )
-#endif
-#define VULKALC_LOCAL
-#else
-#if __GNUC__ >= 4
-#define VULKALC_API __attribute__ ((visibility ("default")))
-#define VULKALC_LOCAL __attribute__ ((visibility ("hidden")))
-#else
-#define VULKALC_API
-#define VULKALC_LOCAL
-#endif
-#endif
+#include "export.h"
 
-#endif
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
+{
+    class VULKALC_API VulkanInfo
+    {
+    public:
+        /*!
+         * \brief Constructor for VulkanInfo
+         *
+         * Constructs VulkanInfo object and fetches information about Vulkan
+         */
+        VulkanInfo();
+
+        ~VulkanInfo();
+
+    private:
+
+    };
+}
+
+#endif //VULKALC_LIBRARY_VULKANINFO_H

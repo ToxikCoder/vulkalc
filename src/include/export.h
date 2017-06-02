@@ -1,7 +1,7 @@
 /*
-* The MIT License (MIT)
+* MIT License
 *
-* Copyright (c) 2017 Lev Sizov
+* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,42 +23,32 @@
 */
 
 /*!
- * \file Utilities.hpp
- * \brief Contains utility functions
+ * \file export.h
+ * \brief Defines platform-specific export
  * \author Lev Sizov
- * \date 31.05.2017
+ * \date 28.05.17
+ *
+ * This file contains defines that specify platform specific way to export classes and functions
  */
 
-#ifndef VULKALC_LIBRARY_UTILITIES_H
-#define VULKALC_LIBRARY_UTILITIES_H
+#ifndef VULKALC_EXPORT_H
+#define VULKALC_EXPORT_H
 
-#include "Export.hpp"
-#include <chrono>
-#include <time.h>
-
-using namespace std;
-
-/*!
- * \copydoc Vulkalc
- */
-namespace Vulkalc
-{
-    /*!
-     * Returns string representation of current date and time
-     * \return current date and time as C string.
-     */
-    VULKALC_API const char* getCurrentTimeString()
-    {
-        auto now = chrono::system_clock::now();
-        auto now_time_t = chrono::system_clock::to_time_t(now);
-#ifdef _MSC_VER
-        char time[26];
-        ctime_s(time, sizeof(time), &now_time_t);
-        return time;
+#if defined(_WIN32) || defined(__CYGWIN__)
+#ifdef __GNUC__
+#define VULKALC_API __attribute__ ((dllexport))
 #else
-        return ctime(&now_time_t);
+#define VULKALC_API __declspec(dllexport)
 #endif
-    }
-}
+#define VULKALC_LOCAL
+#else
+#if __GNUC__ >= 4
+#define VULKALC_API __attribute__ ((visibility ("default")))
+#define VULKALC_LOCAL __attribute__ ((visibility ("hidden")))
+#else
+#define VULKALC_API
+#define VULKALC_LOCAL
+#endif
+#endif
 
-#endif //VULKALC_LIBRARY_UTILITIES_H
+#endif
