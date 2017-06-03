@@ -57,7 +57,7 @@ namespace Vulkalc
          * \brief Returns constant shared pointer to Configuration
          * \return constant shared pointer to Configuration
          */
-        const SharedConfiguration getConfiguration() { return m_spConfiguration; };
+        const SharedConfiguration getConfiguration() const { return m_spConfiguration; };
 
         /*!
          * \brief Resets Configuration to default values

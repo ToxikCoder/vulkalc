@@ -33,22 +33,55 @@
 
 using namespace Vulkalc;
 
-void Application::init()
+Application::Application() throw(HostMemoryAllocationException)
 {
     if (m_isInitialized)
         return;
 
     m_isInitialized = true;
-	m_isLoggingEnabled = false;
-	m_isErrorLoggingEnabled = false;
+    m_isLoggingEnabled = false;
+    m_isErrorLoggingEnabled = false;
     m_spConfigurator = std::make_shared<Configurator>();
-    m_spErrorStream = nullptr;
-    m_spLogStream = nullptr;
-    m_spVkApplicationInfo = nullptr;
-    m_spVkInstanceCreateInfo = nullptr;
 }
 
-void Application::configure(bool reconfigure) throw(ApplicationNotInitializedException, HostMemoryAllocationException)
+Application::~Application()
+{
+    m_isInitialized = false;
+    m_isConfigured = false;
+    if(m_spConfigurator)
+        m_spConfigurator.reset();
+
+    if(m_spVkApplicationInfo)
+        m_spVkApplicationInfo.reset();
+
+    if(m_spVkInstanceCreateInfo)
+        m_spVkInstanceCreateInfo.reset();
+
+    if(m_spLogStream)
+        m_spLogStream.reset();
+
+    if(m_spErrorStream)
+        m_spErrorStream.reset();
+
+    if(m_spPhysicalDevice)
+        m_spPhysicalDevice.reset();
+
+    if(m_spDevice)
+    {
+        VkDevice device = *m_spDevice;
+        m_spDevice.reset();
+        vkDestroyDevice(device, nullptr);
+    }
+
+    //this should be last
+    if(isApplicationConfigured())
+        vkDestroyInstance(m_VkInstance, nullptr);
+}
+
+void Application::configure(bool reconfigure)
+throw(ApplicationNotInitializedException,
+HostMemoryAllocationException,
+VulkanOperationException)
 {
     if (!m_isInitialized)
         throw ApplicationNotInitializedException();
@@ -57,12 +90,11 @@ void Application::configure(bool reconfigure) throw(ApplicationNotInitializedExc
     if(!reconfigure && m_isConfigured)
         return;
 
-    configure();
+    _configure();
 }
 
-void Application::configure() throw(HostMemoryAllocationException)
+void Application::_configure() throw(HostMemoryAllocationException, VulkanOperationException)
 {
-    m_isConfigured = true;
     auto configuration = m_spConfigurator->getConfiguration();
     m_spLogStream = configuration->logStream;
     m_spErrorStream = configuration->errorStream;
@@ -70,57 +102,27 @@ void Application::configure() throw(HostMemoryAllocationException)
     m_isErrorLoggingEnabled = configuration->isErrorLoggingEnabled;
 
     //filling in VkApplicationInfo
-    prepareVulkanApplicationInfo();
+    _prepareVulkanApplicationInfo();
     if(m_spVkApplicationInfo == nullptr)
         throw HostMemoryAllocationException("Failed to allocate memory for VkApplicationInfo");
+
+    _checkAvailableExtensions();
+
     //filling in VkInstanceCreateInfo
-    prepareVulkanInstanceInfo();
+    _prepareVulkanInstanceInfo();
     if(m_spVkInstanceCreateInfo == nullptr)
         throw HostMemoryAllocationException("Failed to allocate memory for VkInstanceCreateInfo");
+
+    //creating VkInstance
+    VkResult result;
+    result = vkCreateInstance(m_spVkInstanceCreateInfo.get(), nullptr, &m_VkInstance);
+    if(result != VK_SUCCESS)
+        throw VulkanOperationException("Failed to create VkInstance");
+
+    m_isConfigured = true;
 }
 
-void Application::release()
-{
-    m_isInitialized = false;
-    m_isConfigured = false;
-    if(m_spConfigurator)
-    {
-        m_spConfigurator.reset();
-        m_spConfigurator = nullptr;
-    }
-    if(m_spVkApplicationInfo)
-    {
-        m_spVkApplicationInfo.reset();
-        m_spVkApplicationInfo = nullptr;
-    }
-    if(m_spVkInstanceCreateInfo)
-    {
-        m_spVkInstanceCreateInfo.reset();
-        m_spVkInstanceCreateInfo = nullptr;
-    }
-    if(m_spLogStream)
-    {
-        m_spLogStream.reset();
-        m_spLogStream = nullptr;
-    }
-    if(m_spErrorStream)
-    {
-        m_spErrorStream.reset();
-        m_spErrorStream = nullptr;
-    }
-}
-
-Application::Application() throw(HostMemoryAllocationException)
-{
-    init();
-}
-
-Application::~Application()
-{
-    release();
-}
-
-void Application::log(const char* message, Application::LOG_LEVEL level)
+void Application::log(const char* message, Application::LOG_LEVEL level) const
 {
     if (!m_isInitialized)
         throw ApplicationNotInitializedException();
@@ -134,33 +136,38 @@ void Application::log(const char* message, Application::LOG_LEVEL level)
     if(m_spLogStream == nullptr)
 		return;
 
+    *m_spLogStream << m_spVkApplicationInfo->pApplicationName
+                   << " from "
+                   << m_spVkApplicationInfo->pEngineName
+                   << " at "
+                   << getCurrentTimeString();
     switch (level)
     {
         case LOG_INFO:
-            *m_spLogStream << m_spVkApplicationInfo->pApplicationName << " from " << m_spVkApplicationInfo->pEngineName
-                           <<
-                           " at " << getCurrentTimeString() << " INFO: " << message << std::endl;
-            (*m_spLogStream).flush();
+            *m_spLogStream << " INFO: "
+                           << message
+                           << std::endl;
+            m_spLogStream->flush();
             break;
         case LOG_WARN:
-            *m_spLogStream << m_spVkApplicationInfo->pApplicationName << " from " << m_spVkApplicationInfo->pEngineName
-                           <<
-                           " at " << getCurrentTimeString() << " WARNING: " << message << std::endl;
-            (*m_spLogStream).flush();
+            *m_spLogStream << " WARNING: "
+                           << message
+                           << std::endl;
+            m_spLogStream->flush();
             break;
         case LOG_ERROR:
             if (!m_isErrorLoggingEnabled)
                 break;
 
-            *m_spErrorStream << m_spVkApplicationInfo->pApplicationName << " from "
-                             << m_spVkApplicationInfo->pEngineName <<
-                             " at " << getCurrentTimeString() << " ERROR: " << message << std::endl;
-            (*m_spErrorStream).flush();
+            *m_spErrorStream << " ERROR: "
+                             << message
+                             << std::endl;
+            m_spErrorStream->flush();
             break;
     }
 }
 
-void Application::prepareVulkanApplicationInfo()
+void Application::_prepareVulkanApplicationInfo()
 {
     try
     {
@@ -182,7 +189,7 @@ void Application::prepareVulkanApplicationInfo()
     m_spVkApplicationInfo->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 }
 
-void Application::prepareVulkanInstanceInfo()
+void Application::_prepareVulkanInstanceInfo()
 {
     try
     {
@@ -211,4 +218,204 @@ void Application::prepareVulkanInstanceInfo()
         m_spVkInstanceCreateInfo->ppEnabledLayerNames = &configuration->enabledLayersNames[0];
     else
         m_spVkInstanceCreateInfo->ppEnabledLayerNames = nullptr;
+}
+
+void Application::_checkAvailableExtensions()
+{
+    auto configuration = m_spConfigurator->getConfiguration();
+    if(configuration->enabledExtensionsNames.size() == 0)
+        return; //no extensions are enabled, so nothing to check
+
+    uint32_t extensionCount = 0;
+    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+    std::vector<VkExtensionProperties> extensions(extensionCount);
+    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
+    auto it = configuration->enabledExtensionsNames.begin();
+    for(const VkExtensionProperties extension : extensions)
+    {
+        for(; it != configuration->enabledExtensionsNames.end(); ++it)
+        {
+            if(strcmp(*it, extension.extensionName) != 0)
+            {
+                configuration->enabledExtensionsNames.erase(it);
+                std::string message = "Extension removed as unsupported - ";
+                message.append(*it);
+                log(message.c_str(), LOG_INFO);
+            }
+        }
+    }
+}
+
+std::vector<SharedPhysicalDevice> Application::enumeratePhysicalDevices()
+{
+    if(m_VkInstance == nullptr)
+        throw ApplicationNotConfiguredException();
+    std::vector<SharedPhysicalDevice> physicalDevices;
+    uint32_t deviceCount = 0;
+    vkEnumeratePhysicalDevices(m_VkInstance, &deviceCount, nullptr);
+    if(deviceCount == 0)
+        return physicalDevices;
+
+    vkEnumeratePhysicalDevices(m_VkInstance, &deviceCount, m_devices.data());
+    for(VkPhysicalDevice device : m_devices)
+    {
+        SharedVkPhysicalDevice physicalVkDevice = std::make_shared<VkPhysicalDevice>(device);
+        SharedPhysicalDevice physicalDevice = std::make_shared<PhysicalDevice>(physicalVkDevice);
+        physicalDevices.push_back(physicalDevice);
+    }
+    return physicalDevices;
+}
+
+VkResult Application::_vkGetBestTransferQueueNPH(VkPhysicalDevice* physicalDevice, uint32_t* queueFamilyIndex)
+{
+    uint32_t queueFamilyPropertiesCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(*physicalDevice, &queueFamilyPropertiesCount, 0);
+
+    VkQueueFamilyProperties* const queueFamilyProperties = (VkQueueFamilyProperties*) malloc(
+            sizeof(VkQueueFamilyProperties) * queueFamilyPropertiesCount);
+
+    vkGetPhysicalDeviceQueueFamilyProperties(*physicalDevice, &queueFamilyPropertiesCount, queueFamilyProperties);
+
+    // first try and find a queue that has just the transfer bit set
+    for(uint32_t i = 0; i < queueFamilyPropertiesCount; i++)
+    {
+        // mask out the sparse binding bit that we aren't caring about (yet!)
+        const VkQueueFlags maskedFlags = (~VK_QUEUE_SPARSE_BINDING_BIT & queueFamilyProperties[i].queueFlags);
+
+        if(!((VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT) & maskedFlags) &&
+           (VK_QUEUE_TRANSFER_BIT & maskedFlags))
+        {
+            *queueFamilyIndex = i;
+            return VK_SUCCESS;
+        }
+    }
+
+    // otherwise we'll prefer using a compute-only queue,
+    // remember that having compute on the queue implicitly enables transfer!
+    for(uint32_t i = 0; i < queueFamilyPropertiesCount; i++)
+    {
+        // mask out the sparse binding bit that we aren't caring about (yet!)
+        const VkQueueFlags maskedFlags = (~VK_QUEUE_SPARSE_BINDING_BIT & queueFamilyProperties[i].queueFlags);
+
+        if(!(VK_QUEUE_GRAPHICS_BIT & maskedFlags) && (VK_QUEUE_COMPUTE_BIT & maskedFlags))
+        {
+            *queueFamilyIndex = i;
+            return VK_SUCCESS;
+        }
+    }
+
+    // lastly get any queue that'll work for us (graphics, compute or transfer bit set)
+    for(uint32_t i = 0; i < queueFamilyPropertiesCount; i++)
+    {
+        // mask out the sparse binding bit that we aren't caring about (yet!)
+        const VkQueueFlags maskedFlags = (~VK_QUEUE_SPARSE_BINDING_BIT & queueFamilyProperties[i].queueFlags);
+
+        if((VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT) & maskedFlags)
+        {
+            *queueFamilyIndex = i;
+            return VK_SUCCESS;
+        }
+    }
+
+    return VK_ERROR_INITIALIZATION_FAILED;
+}
+
+VkResult Application::_vkGetBestComputeQueueNPH(VkPhysicalDevice* physicalDevice, uint32_t* queueFamilyIndex)
+{
+    uint32_t queueFamilyPropertiesCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(*physicalDevice, &queueFamilyPropertiesCount, 0);
+
+    VkQueueFamilyProperties* const queueFamilyProperties = (VkQueueFamilyProperties*) malloc(
+            sizeof(VkQueueFamilyProperties) * queueFamilyPropertiesCount);
+
+    vkGetPhysicalDeviceQueueFamilyProperties(*physicalDevice, &queueFamilyPropertiesCount, queueFamilyProperties);
+
+    // first try and find a queue that has just the compute bit set
+    for(uint32_t i = 0; i < queueFamilyPropertiesCount; i++)
+    {
+        // mask out the sparse binding bit that we aren't caring about (yet!) and the transfer bit
+        const VkQueueFlags maskedFlags = (~(VK_QUEUE_TRANSFER_BIT | VK_QUEUE_SPARSE_BINDING_BIT) &
+                                          queueFamilyProperties[i].queueFlags);
+
+        if(!(VK_QUEUE_GRAPHICS_BIT & maskedFlags) && (VK_QUEUE_COMPUTE_BIT & maskedFlags))
+        {
+            *queueFamilyIndex = i;
+            return VK_SUCCESS;
+        }
+    }
+
+    // lastly get any queue that'll work for us
+    for(uint32_t i = 0; i < queueFamilyPropertiesCount; i++)
+    {
+        // mask out the sparse binding bit that we aren't caring about (yet!) and the transfer bit
+        const VkQueueFlags maskedFlags = (~(VK_QUEUE_TRANSFER_BIT | VK_QUEUE_SPARSE_BINDING_BIT) &
+                                          queueFamilyProperties[i].queueFlags);
+
+        if(VK_QUEUE_COMPUTE_BIT & maskedFlags)
+        {
+            *queueFamilyIndex = i;
+            return VK_SUCCESS;
+        }
+    }
+
+    return VK_ERROR_INITIALIZATION_FAILED;
+}
+
+void Application::_continueConfiguring()
+{
+    uint32_t queueFamilyIndex = 0;
+    const float queuePriority = 1.0f;
+    VkResult result = _vkGetBestComputeQueueNPH(m_spPhysicalDevice->getVkPhysicalDevice().get(), &queueFamilyIndex);
+    if(result != VK_SUCCESS)
+        throw VulkanOperationException("Failed to find QueueFamily suitable for computing");
+
+    VkDeviceQueueCreateInfo vkDeviceQueueCreateInfo;
+    vkDeviceQueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    vkDeviceQueueCreateInfo.pNext = nullptr;
+    vkDeviceQueueCreateInfo.queueFamilyIndex = queueFamilyIndex;
+    vkDeviceQueueCreateInfo.pQueuePriorities = &queuePriority;
+    vkDeviceQueueCreateInfo.queueCount = 1;
+    vkDeviceQueueCreateInfo.flags = 0;
+
+    SharedConfiguration configuration = getConfigurator()->getConfiguration();
+    VkDeviceCreateInfo deviceCreateInfo;
+    deviceCreateInfo.flags = 0;
+    deviceCreateInfo.pNext = nullptr;
+    deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    deviceCreateInfo.enabledLayerCount = static_cast<uint32_t>(configuration->enabledLayersNames.size());
+    if(configuration->enabledLayersNames.size() > 0)
+        deviceCreateInfo.ppEnabledLayerNames = &(configuration->enabledLayersNames[0]);
+    else
+        deviceCreateInfo.ppEnabledLayerNames = nullptr;
+
+    deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(configuration->enabledExtensionsNames.size());
+    if(configuration->enabledExtensionsNames.size() > 0)
+        deviceCreateInfo.ppEnabledExtensionNames = &(configuration->enabledExtensionsNames[0]);
+    else
+        deviceCreateInfo.ppEnabledExtensionNames = nullptr;
+
+    deviceCreateInfo.queueCreateInfoCount = 1;
+    deviceCreateInfo.pEnabledFeatures = getPhysicalDevice()->getPhysicalDeviceFeatures().get();
+    deviceCreateInfo.pQueueCreateInfos = &vkDeviceQueueCreateInfo;
+
+    result = vkCreateDevice(*(getPhysicalDevice()->getVkPhysicalDevice()), &deviceCreateInfo, nullptr,
+                            m_spDevice.get());
+    if(result != VK_SUCCESS)
+        throw VulkanOperationException("Failed to create VkDevice");
+
+
+}
+
+void
+Application::setPhysicalDevice(const SharedPhysicalDevice& physicalDevice) throw(Exception, VulkanOperationException)
+{
+    if(physicalDevice != nullptr)
+    {
+        m_spPhysicalDevice = physicalDevice;
+        _continueConfiguring();
+    }
+    else
+    {
+        throw Exception("Passed physical device is null");
+    }
 }

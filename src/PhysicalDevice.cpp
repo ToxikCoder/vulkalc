@@ -23,42 +23,45 @@
 */
 
 /*!
- * \file RAII.hpp
- * \brief RAII pattern interface
+ * \file PhysicalDevice.cpp
+ * \brief 
  * \author Lev Sizov
- * \date 28.05.17
- *
- * This file contains RAII class which plays as interface for RAII pattern.
+ * \date 03.06.2017
  */
 
-#ifndef VULKALC_RAII_H
-#define VULKALC_RAII_H
+#include "include/PhysicalDevice.hpp"
 
-#include "Export.hpp"
+using namespace Vulkalc;
 
-/*!
- * \copydoc Application
- */
-namespace Vulkalc
+PhysicalDevice::PhysicalDevice(SharedVkPhysicalDevice device)
 {
-    /*!
-     * \brief RAII class which plays as interface for RAII pattern
-     *
-     * Abstract class RAII, which plays as interface to implement RAII pattern
-     */
-    class VULKALC_API RAII
-    {
-    protected:
-        /*!
-         * \brief Initializes a resource
-         */
-        virtual void init() = 0;
-
-        /*!
-         * \brief Releases a resource
-         */
-        virtual void release() = 0;
-    };
+    m_spDevice = device;
+    vkGetPhysicalDeviceProperties(*m_spDevice, m_spProperties.get());
+    vkGetPhysicalDeviceFeatures(*m_spDevice, m_spFeatures.get());
 }
 
-#endif //VULKALC_RAII_H
+bool PhysicalDevice::isSuitableForComputing() const
+{
+    return m_spProperties->deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
+}
+
+PhysicalDevice::~PhysicalDevice()
+{
+    if(m_spFeatures)
+        m_spFeatures.reset();
+
+    if(m_spProperties)
+        m_spProperties.reset();
+
+    if(m_spDevice)
+        m_spDevice.reset();
+}
+
+std::string PhysicalDevice::getDeviceName() const
+{
+    std::string name;
+    name = m_spProperties->deviceName;
+    return name;
+}
+
+

@@ -35,7 +35,6 @@
 #ifndef VULKALC_LIBRARY_INFORMATIONPROVIDER_H
 #define VULKALC_LIBRARY_INFORMATIONPROVIDER_H
 
-#include "RAII.hpp"
 #include "Export.hpp"
 
 /*!

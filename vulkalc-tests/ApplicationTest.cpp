@@ -144,3 +144,23 @@ TEST_CASE("Application is configured")
     application = nullptr; //-V773
     ss.reset();
 }
+
+TEST_CASE("Creating Device")
+{
+    Application* application = new Application();
+    SharedConfiguration configuration = application->getConfigurator()->getConfiguration();
+    shared_ptr<stringstream> ss = make_shared<stringstream>();
+    configuration->logStream = ss;
+    configuration->errorStream = ss;
+    application->configure(false);
+    std::vector<SharedPhysicalDevice> devices = application->enumeratePhysicalDevices();
+    REQUIRE(devices.size() != 0);
+    for(uint32_t i = 0; i < devices.size(); ++i)
+    {
+        cout << "Device " << i << ": " << devices[i]->getDeviceName() << endl;
+    }
+    devices.clear();
+    ss.reset();
+    configuration.reset();
+    delete application;
+}

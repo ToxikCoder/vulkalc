@@ -37,8 +37,8 @@ VULKALC_API const char* Vulkalc::getCurrentTimeString()
     auto now_time_t = chrono::system_clock::to_time_t(now);
 #ifdef _MSC_VER
     std::shared_ptr<char*> time = std::make_shared<char*>((char*)malloc(sizeof(char) * 26));
-        ctime_s(*time.get(), sizeof(char) * 26, &now_time_t);
-        return *time.get();
+    ctime_s(*time.get(), sizeof(char) * 26, &now_time_t);
+    return *time.get();
 #else
     return ctime(&now_time_t);
 #endif

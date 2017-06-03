@@ -94,20 +94,6 @@ namespace Vulkalc
         std::vector<const char*> enabledExtensionsNames = std::vector<const char*>();
 
         /*!
-         * \brief Index number of physical device to use. First device by default.
-         * \note Enumeration starts from 0.
-         * \note Either index number of device or devicePointer should be specified.
-         * \warning If deviceSetting is set, it overrides this setting.
-         */
-        uint32_t deviceToUse = 0;
-
-        /*!
-         * \brief Shared pointer to VkPhysicalDevice to use.
-         * \warning If set, this setting overrides deviceToUse.
-         */
-        SharedPhysicalDevice devicePointer;
-
-        /*!
          * \brief Boolean flag for general logging. Enabled by default.
          */
         bool isLoggingEnabled = true;
@@ -138,11 +124,6 @@ namespace Vulkalc
          */
         ~Configuration()
         {
-            if(devicePointer)
-            {
-                devicePointer.reset();
-                devicePointer = nullptr;
-            }
             if(logStream)
             {
                 logStream.reset();

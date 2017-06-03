@@ -35,7 +35,6 @@
 #ifndef VULKALC_LIBRARY_VERIFIER_H
 #define VULKALC_LIBRARY_VERIFIER_H
 
-#include "RAII.hpp"
 #include "Export.hpp"
 
 /*!
