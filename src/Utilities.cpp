@@ -23,32 +23,23 @@
 */
 
 /*!
- * \file Configuration.cpp
- * \brief This file contains Configuration class implementation
+ * \file Utilities.cpp
+ * \brief 
  * \author Lev Sizov
- * \date 31.05.2017
+ * \date 03.06.2017
  */
 
-#include "include/Configuration.hpp"
+#include "include/Utilities.hpp"
 
-using namespace Vulkalc;
-
-Configuration::~Configuration()
+VULKALC_API const char* Vulkalc::getCurrentTimeString()
 {
-    if (devicePointer)
-    {
-        //as pointer to VkPhysicalDevice is passed from another place, we wouldn't want to free this memory,
-        //just removing the pointer
-        devicePointer = nullptr;
-    }
-    if (logStream)
-    {
-        //same as above
-        logStream = nullptr;
-    }
-    if (errorStream)
-    {
-        //same as above
-        errorStream = nullptr;
-    }
+    auto now = chrono::system_clock::now();
+    auto now_time_t = chrono::system_clock::to_time_t(now);
+#ifdef _MSC_VER
+    std::shared_ptr<char*> time = std::make_shared<char*>((char*)malloc(sizeof(char) * 26));
+        ctime_s(*time.get(), sizeof(char) * 26, &now_time_t);
+        return *time.get();
+#else
+    return ctime(&now_time_t);
+#endif
 }

@@ -44,6 +44,7 @@
 #include "Export.hpp"
 #include "Configurator.hpp"
 #include "Exceptions.hpp"
+#include "Utilities.hpp"
 
 #include <vulkan/vulkan.hpp>
 
@@ -95,13 +96,15 @@ namespace Vulkalc
          * \brief Configures Application.
          *
          * Configures Application with Configuration, fetched from Configurator.
-         * \note You should explicitly call \code configure() after \code init() and before anything else.
-         * \note This method would use Configuration available at the moment. So you have to change your Configuration
+         * \param reconfigure flag for allowing or not allowing to reconfigure Application
+         * \note You should explicitly call \code configure() after creating Application and before anything else.
+         * \note This method uses Configuration available at the moment. So you have to change your Configuration
          * before-hand, otherwise default values will be used.
+         * \warning calling configure(true) recreates almost everything inside Application
          * \throws ApplicationNotInitializedException - thrown if Application instance is not initialized
          * \throws HostMemoryAllocationException - thrown if failed to allocate memory in heap
          */
-        void configure() throw(ApplicationNotInitializedException, HostMemoryAllocationException);
+        void configure(bool reconfigure) throw(ApplicationNotInitializedException, HostMemoryAllocationException);
 
         /*!
          * \brief Enumeration for logging levels
@@ -113,22 +116,35 @@ namespace Vulkalc
          * \param message message to write
          * \param level logging level
          * \throws ApplicationNotInitializedException - thrown if Application instance is not initialized
-         * \throws ApplicationNotConf0iguredException - thrown if Application is not explicitly configured by calling \code Application::configure()
+         * \throws ApplicationNotConfiguredException - thrown if Application is not explicitly configured by
+         * calling \code Application::configure()
          */
         void log(const char* message, LOG_LEVEL level);
 
         /*!
-         * \brief Returns constant pointer to Configurator
+         * \brief Returns shared pointer to Configurator
          *
-         * Returns constant pointer to Configurator, which should be used to acquire Configuration
+         * Returns shared pointer to Configurator, which should be used to acquire Configuration
          * and configure Application before calling \code Application::configure()
-         * \return constant pointer to Configurator
+         * \return shared pointer to Configurator
          */
-        Configurator* const getConfigurator() { return m_pConfigurator; }
+        const SharedConfigurator getConfigurator() { return m_spConfigurator; }
 
-		std::iostream* const getLoggingStream() { return m_pLogStream; }
+        /*!
+         * \brief Returns shared pointer to logging stream.
+         * \return shared pointer to logging stream
+         *
+         * \note This stream is equal to Configuration.logStream after calling \code Application::configure()
+         */
+        const SharedIOStream getLoggingStream() { return m_spLogStream; }
 
-		std::iostream* const getErrorStream() { return m_pErrorStream; }
+        /*!
+         * \brief Returns constant shared pointer to error logging stream.
+         * \return constant shared pointer to error logging stream
+         *
+         * \note This stream is equal to Configuration.errorStream after calling \code Application::configure()
+         */
+        const SharedIOStream getErrorStream() { return m_spErrorStream; }
 
         virtual ~Application();
 
@@ -137,19 +153,21 @@ namespace Vulkalc
         virtual void release() override;
 
         void prepareVulkanApplicationInfo();
-
         void prepareVulkanInstanceInfo();
+
+        void configure() throw(HostMemoryAllocationException);
 
         bool m_isInitialized = false;
         bool m_isConfigured = false;
 
         bool m_isLoggingEnabled;
         bool m_isErrorLoggingEnabled;
-        Configurator* m_pConfigurator;
-        std::iostream* m_pLogStream;
-        std::iostream* m_pErrorStream;
-        VkApplicationInfo* m_pVkApplicationInfo;
-        VkInstanceCreateInfo* m_pVkInstanceCreateInfo;
+        SharedConfigurator m_spConfigurator;
+        SharedIOStream m_spLogStream;
+        SharedIOStream m_spErrorStream;
+        SharedVkApplicationInfo m_spVkApplicationInfo;
+        SharedInstanceCreateInfo m_spVkInstanceCreateInfo;
+        SharedVkInstance m_spVkInstance;
     };
 }
 

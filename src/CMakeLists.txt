@@ -46,7 +46,7 @@ else ()
     find_library(VULKAN vulkan)
 endif ()
 
-set(SOURCE_FILES Application.cpp VulkanInfo.cpp Configuration.cpp Exceptions.cpp)
+set(SOURCE_FILES Application.cpp VulkanInfo.cpp Exceptions.cpp Utilities.cpp)
 set(HEADER_FILES include/Application.hpp include/Configurator.hpp include/Export.hpp
         include/InformationProvider.hpp include/RAII.hpp include/Verifier.hpp include/VulkanInfo.hpp
         include/Configuration.hpp include/Utilities.hpp include/Exceptions.hpp include/ShaderProvider.hpp

@@ -24,7 +24,6 @@
 
 #include <Application.hpp>
 #include "catch.hpp"
-#include <sstream>
 
 using namespace Vulkalc;
 using namespace std;
@@ -70,36 +69,36 @@ TEST_CASE("Application is initialized")
 	SECTION("Initialized Application is destroyed without exceptions")
 	{
 		REQUIRE_NOTHROW(delete application);
-		application = nullptr;
+        application = nullptr; //-V773
 	}
 }
 
 TEST_CASE("Application is configured")
 {
 	Application* application = new Application();
-    stringstream* ss = new stringstream();
-    Configuration* configuration = application->getConfigurator()->getConfiguration();
+    shared_ptr<stringstream> ss = make_shared<stringstream>();
+    SharedConfiguration configuration = application->getConfigurator()->getConfiguration();
     configuration->logStream = ss;
 	configuration->errorStream = ss;
     SECTION("Calling configure() doesn't throw exception")
     {
-        REQUIRE_NOTHROW(application->configure());
+        REQUIRE_NOTHROW(application->configure(false));
         REQUIRE(application->isApplicationConfigured());
     }
 	SECTION("Streams are not NULL after configuring")
 	{
-		application->configure();
+        application->configure(false);
 		REQUIRE(application->getLoggingStream() != nullptr);
 		REQUIRE(application->getErrorStream() != nullptr);
 	}
     SECTION("Configured Application doesn't throw exceptions")
     {
-		application->configure();
+        application->configure(false);
         REQUIRE_NOTHROW(application->log("Test", Application::LOG_INFO));
     }
     SECTION("Calling log() on configured Application writes to stream")
     {
-		application->configure();
+        application->configure(false);
 		application->log("Test", Application::LOG_INFO);
         string stream_content;
         getline(*ss, stream_content);
@@ -108,13 +107,40 @@ TEST_CASE("Application is configured")
 		string str = stream_content.substr(0, 35);
         REQUIRE(str == "Vulkalc Application from Vulkalc at");
     }
+    SECTION("Resetting Configuration resets Configuration")
+    {
+        configuration.reset();
+        application->getConfigurator()->resetConfiguration();
+        configuration = application->getConfigurator()->getConfiguration();
+        REQUIRE(configuration->logStream == nullptr);
+        REQUIRE(configuration->errorStream == nullptr);
+    }
+    SECTION("Calling configure(false) doesn't change configuration")
+    {
+        configuration->logStream = ss;
+        configuration->errorStream = ss;
+        application->configure(false);
+        configuration->logStream.reset();
+        application->configure(false);
+        REQUIRE(application->getLoggingStream() != nullptr);
+    }
+    SECTION("Calling configure(true) changes configuration")
+    {
+        configuration->logStream = ss;
+        configuration->errorStream = ss;
+        application->configure(false);
+        configuration->logStream.reset();
+        configuration->errorStream.reset();
+        application->configure(true);
+        REQUIRE(application->getLoggingStream() == nullptr);
+        REQUIRE(application->getErrorStream() == nullptr);
+    }
 	SECTION("Configured Application is safely destroyed")
 	{
-		application->configure();
+        application->configure(false);
 		REQUIRE_NOTHROW(delete application);
 	}
-	delete ss;
-	configuration = nullptr;
-	application = nullptr;
-	ss = nullptr;
+    configuration.reset();
+    application = nullptr; //-V773
+    ss.reset();
 }

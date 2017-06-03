@@ -54,13 +54,20 @@ namespace Vulkalc
     {
     public:
         /*!
-         * \brief Returns constant pointer to Configuration
-         * \return constant pointer to Configuration
+         * \brief Returns constant shared pointer to Configuration
+         * \return constant shared pointer to Configuration
          */
-        Configuration* const getConfiguration() { return m_spConfiguration; };
+        const SharedConfiguration getConfiguration() { return m_spConfiguration; };
 
-    private:
-        friend class Application;
+        /*!
+         * \brief Resets Configuration to default values
+         */
+        inline void resetConfiguration()
+        {
+            m_spConfiguration.reset();
+            m_spConfiguration = std::make_shared<Configuration>();
+        }
+
         /*!
          * \brief Configurator constructor
          * \throws HostHostMemoryAllocationException - thrown if failed to allocate memory in heap for Configuration
@@ -69,7 +76,7 @@ namespace Vulkalc
         {
             try
             {
-                m_spConfiguration = new Configuration();
+                m_spConfiguration = std::make_shared<Configuration>();
             }
             catch(std::bad_alloc&)
             {
@@ -81,13 +88,15 @@ namespace Vulkalc
         {
             if (m_spConfiguration)
             {
-                delete m_spConfiguration;
+                m_spConfiguration.reset();
                 m_spConfiguration = nullptr;
             }
         };
-
-        Configuration* m_spConfiguration;
+    private:
+        SharedConfiguration m_spConfiguration;
     };
+
+    typedef std::shared_ptr<Configurator> SharedConfigurator;
 }
 
 

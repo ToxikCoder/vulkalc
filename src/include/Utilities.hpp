@@ -29,12 +29,17 @@
  * \date 31.05.2017
  */
 
+#pragma once
+
 #ifndef VULKALC_LIBRARY_UTILITIES_H
 #define VULKALC_LIBRARY_UTILITIES_H
 
 #include "Export.hpp"
 #include <chrono>
 #include <time.h>
+#include <iostream>
+#include <memory>
+#include <vulkan/vulkan.hpp>
 
 using namespace std;
 
@@ -43,22 +48,18 @@ using namespace std;
  */
 namespace Vulkalc
 {
+    typedef std::shared_ptr<std::iostream> SharedIOStream;
+    typedef std::shared_ptr<VkApplicationInfo> SharedVkApplicationInfo;
+    typedef std::shared_ptr<VkInstanceCreateInfo> SharedInstanceCreateInfo;
+    typedef std::shared_ptr<VkInstance> SharedVkInstance;
+    typedef std::shared_ptr<VkPhysicalDevice> SharedPhysicalDevice;
+    typedef std::shared_ptr<VkDevice> SharedDevice;
+
     /*!
      * Returns string representation of current date and time
      * \return current date and time as C string.
      */
-    VULKALC_API const char* getCurrentTimeString()
-    {
-        auto now = chrono::system_clock::now();
-        auto now_time_t = chrono::system_clock::to_time_t(now);
-#ifdef _MSC_VER
-		std::shared_ptr<char*> time = std::make_shared<char*>((char*)malloc(sizeof(char) * 26));
-        ctime_s(*time.get(), sizeof(char) * 26, &now_time_t);
-        return *time.get();
-#else
-        return ctime(&now_time_t);
-#endif
-    }
+    VULKALC_API const char* getCurrentTimeString();
 }
 
 #endif //VULKALC_LIBRARY_UTILITIES_H

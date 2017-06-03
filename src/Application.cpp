@@ -30,7 +30,6 @@
  */
 
 #include "include/Application.hpp"
-#include "include/Utilities.hpp"
 
 using namespace Vulkalc;
 
@@ -42,63 +41,72 @@ void Application::init()
     m_isInitialized = true;
 	m_isLoggingEnabled = false;
 	m_isErrorLoggingEnabled = false;
-    m_pConfigurator = new Configurator();
-	m_pErrorStream = nullptr;
-	m_pLogStream = nullptr;
-    m_pVkApplicationInfo = nullptr;
-    m_pVkInstanceCreateInfo = nullptr;
+    m_spConfigurator = std::make_shared<Configurator>();
+    m_spErrorStream = nullptr;
+    m_spLogStream = nullptr;
+    m_spVkApplicationInfo = nullptr;
+    m_spVkInstanceCreateInfo = nullptr;
 }
 
-void Application::configure() throw(ApplicationNotInitializedException, HostMemoryAllocationException)
+void Application::configure(bool reconfigure) throw(ApplicationNotInitializedException, HostMemoryAllocationException)
 {
     if (!m_isInitialized)
         throw ApplicationNotInitializedException();
-    if (m_isConfigured)
+
+    //allowing reconfiguring only if reconfigure flag is true
+    if(!reconfigure && m_isConfigured)
         return;
 
+    configure();
+}
+
+void Application::configure() throw(HostMemoryAllocationException)
+{
     m_isConfigured = true;
-    auto configuration = m_pConfigurator->getConfiguration();
-    m_pLogStream = configuration->logStream;
-    m_pErrorStream = configuration->errorStream;
+    auto configuration = m_spConfigurator->getConfiguration();
+    m_spLogStream = configuration->logStream;
+    m_spErrorStream = configuration->errorStream;
     m_isLoggingEnabled = configuration->isLoggingEnabled;
     m_isErrorLoggingEnabled = configuration->isErrorLoggingEnabled;
 
     //filling in VkApplicationInfo
     prepareVulkanApplicationInfo();
-    if(m_pVkApplicationInfo == nullptr)
+    if(m_spVkApplicationInfo == nullptr)
         throw HostMemoryAllocationException("Failed to allocate memory for VkApplicationInfo");
     //filling in VkInstanceCreateInfo
     prepareVulkanInstanceInfo();
-    if(m_pVkInstanceCreateInfo == nullptr)
-        throw new HostMemoryAllocationException("Failed to allocate memory for VkInstanceCreateInfo");
+    if(m_spVkInstanceCreateInfo == nullptr)
+        throw HostMemoryAllocationException("Failed to allocate memory for VkInstanceCreateInfo");
 }
 
 void Application::release()
 {
     m_isInitialized = false;
     m_isConfigured = false;
-    if (m_pConfigurator)
+    if(m_spConfigurator)
     {
-        delete m_pConfigurator;
-        m_pConfigurator = nullptr;
+        m_spConfigurator.reset();
+        m_spConfigurator = nullptr;
     }
-    if (m_pVkApplicationInfo)
+    if(m_spVkApplicationInfo)
     {
-        delete m_pVkApplicationInfo;
-        m_pVkApplicationInfo = nullptr;
+        m_spVkApplicationInfo.reset();
+        m_spVkApplicationInfo = nullptr;
     }
-    if (m_pVkInstanceCreateInfo)
+    if(m_spVkInstanceCreateInfo)
     {
-        delete m_pVkInstanceCreateInfo;
-        m_pVkInstanceCreateInfo = nullptr;
+        m_spVkInstanceCreateInfo.reset();
+        m_spVkInstanceCreateInfo = nullptr;
     }
-    if (m_pLogStream)
+    if(m_spLogStream)
     {
-        m_pLogStream = nullptr;
+        m_spLogStream.reset();
+        m_spLogStream = nullptr;
     }
-    if (m_pErrorStream)
+    if(m_spErrorStream)
     {
-        m_pErrorStream = nullptr;
+        m_spErrorStream.reset();
+        m_spErrorStream = nullptr;
     }
 }
 
@@ -121,30 +129,33 @@ void Application::log(const char* message, Application::LOG_LEVEL level)
     if (!m_isLoggingEnabled)
         return;
 
-	if (m_pErrorStream == nullptr)
+    if(m_spErrorStream == nullptr)
 		return;
-	if (m_pLogStream == nullptr)
+    if(m_spLogStream == nullptr)
 		return;
 
     switch (level)
     {
         case LOG_INFO:
-            *m_pLogStream << m_pVkApplicationInfo->pApplicationName << " from " << m_pVkApplicationInfo->pEngineName <<
-                          " at " << getCurrentTimeString() << " INFO: " << message << std::endl;
-			(*m_pLogStream).flush();
+            *m_spLogStream << m_spVkApplicationInfo->pApplicationName << " from " << m_spVkApplicationInfo->pEngineName
+                           <<
+                           " at " << getCurrentTimeString() << " INFO: " << message << std::endl;
+            (*m_spLogStream).flush();
             break;
         case LOG_WARN:
-            *m_pLogStream << m_pVkApplicationInfo->pApplicationName << " from " << m_pVkApplicationInfo->pEngineName <<
-                          " at " << getCurrentTimeString() << " WARNING: " << message << std::endl;
-			(*m_pLogStream).flush();
+            *m_spLogStream << m_spVkApplicationInfo->pApplicationName << " from " << m_spVkApplicationInfo->pEngineName
+                           <<
+                           " at " << getCurrentTimeString() << " WARNING: " << message << std::endl;
+            (*m_spLogStream).flush();
             break;
         case LOG_ERROR:
             if (!m_isErrorLoggingEnabled)
                 break;
 
-            *m_pErrorStream << m_pVkApplicationInfo->pApplicationName << " from " << m_pVkApplicationInfo->pEngineName <<
-                          " at " << getCurrentTimeString() << " ERROR: " << message << std::endl;
-			(*m_pErrorStream).flush();
+            *m_spErrorStream << m_spVkApplicationInfo->pApplicationName << " from "
+                             << m_spVkApplicationInfo->pEngineName <<
+                             " at " << getCurrentTimeString() << " ERROR: " << message << std::endl;
+            (*m_spErrorStream).flush();
             break;
     }
 }
@@ -153,51 +164,51 @@ void Application::prepareVulkanApplicationInfo()
 {
     try
     {
-        m_pVkApplicationInfo = new VkApplicationInfo();
+        m_spVkApplicationInfo = std::make_shared<VkApplicationInfo>();
     }
     catch(bad_alloc&)
     {
-        m_pVkApplicationInfo = nullptr;
+        m_spVkApplicationInfo = nullptr;
         return;
     }
 
-    auto configuration = m_pConfigurator->getConfiguration();
-    m_pVkApplicationInfo->apiVersion = configuration->apiVersion;
-    m_pVkApplicationInfo->engineVersion = configuration->engineVersion;
-    m_pVkApplicationInfo->applicationVersion = configuration->applicationVersion;
-    m_pVkApplicationInfo->pApplicationName = configuration->applicationName;
-    m_pVkApplicationInfo->pEngineName = configuration->engineName;
-    m_pVkApplicationInfo->pNext = nullptr;
-    m_pVkApplicationInfo->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    auto configuration = m_spConfigurator->getConfiguration();
+    m_spVkApplicationInfo->apiVersion = configuration->apiVersion;
+    m_spVkApplicationInfo->engineVersion = configuration->engineVersion;
+    m_spVkApplicationInfo->applicationVersion = configuration->applicationVersion;
+    m_spVkApplicationInfo->pApplicationName = configuration->applicationName;
+    m_spVkApplicationInfo->pEngineName = configuration->engineName;
+    m_spVkApplicationInfo->pNext = nullptr;
+    m_spVkApplicationInfo->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 }
 
 void Application::prepareVulkanInstanceInfo()
 {
     try
     {
-        m_pVkInstanceCreateInfo = new VkInstanceCreateInfo();
+        m_spVkInstanceCreateInfo = std::make_shared<VkInstanceCreateInfo>();
     }
     catch(bad_alloc&)
     {
-        m_pVkInstanceCreateInfo = nullptr;
+        m_spVkInstanceCreateInfo = nullptr;
         return;
     }
-    auto configuration = m_pConfigurator->getConfiguration();
-    m_pVkInstanceCreateInfo->sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    m_pVkInstanceCreateInfo->pNext = nullptr;
-    m_pVkInstanceCreateInfo->flags = 0;
-    m_pVkInstanceCreateInfo->enabledExtensionCount = static_cast<uint32_t>(configuration->enabledExtensionsNames
+    auto configuration = m_spConfigurator->getConfiguration();
+    m_spVkInstanceCreateInfo->sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    m_spVkInstanceCreateInfo->pNext = nullptr;
+    m_spVkInstanceCreateInfo->flags = 0;
+    m_spVkInstanceCreateInfo->enabledExtensionCount = static_cast<uint32_t>(configuration->enabledExtensionsNames
             .size());
-    m_pVkInstanceCreateInfo->enabledLayerCount = static_cast<uint32_t>(configuration->enabledLayersNames.size());
-    m_pVkInstanceCreateInfo->pApplicationInfo = m_pVkApplicationInfo;
+    m_spVkInstanceCreateInfo->enabledLayerCount = static_cast<uint32_t>(configuration->enabledLayersNames.size());
+    m_spVkInstanceCreateInfo->pApplicationInfo = m_spVkApplicationInfo.get();
 
     if(configuration->enabledExtensionsNames.size() > 0)
-        m_pVkInstanceCreateInfo->ppEnabledExtensionNames = &configuration->enabledExtensionsNames[0];
+        m_spVkInstanceCreateInfo->ppEnabledExtensionNames = &configuration->enabledExtensionsNames[0];
     else
-        m_pVkInstanceCreateInfo->ppEnabledExtensionNames = nullptr;
+        m_spVkInstanceCreateInfo->ppEnabledExtensionNames = nullptr;
 
     if(configuration->enabledLayersNames.size() > 0)
-        m_pVkInstanceCreateInfo->ppEnabledLayerNames = &configuration->enabledLayersNames[0];
+        m_spVkInstanceCreateInfo->ppEnabledLayerNames = &configuration->enabledLayersNames[0];
     else
-        m_pVkInstanceCreateInfo->ppEnabledLayerNames = nullptr;
+        m_spVkInstanceCreateInfo->ppEnabledLayerNames = nullptr;
 }
