@@ -89,7 +89,7 @@ namespace Vulkalc
         PhysicalDevice(const VkPhysicalDevice& physicalDevice);
 
         /*!
-         * PhysicalDevice destructor
+         * \brief PhysicalDevice destructor
          */
         virtual ~PhysicalDevice();
 

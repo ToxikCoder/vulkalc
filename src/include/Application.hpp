@@ -165,7 +165,7 @@ namespace Vulkalc
         void setPhysicalDevice(const SharedPhysicalDevice& physicalDevice) throw(Exception, VulkanOperationException);
 
         /*!
-         * \brief Returns VkDevice object, wrapped info shared_ptr
+         * \brief Returns VkDevice object, wrapped into shared_ptr
          * \return constant shared pointer to VkDevice
          */
         const SharedDevice getVkDevice() const { return m_spDevice; };

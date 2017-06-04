@@ -38,22 +38,42 @@
 #include "Shader.hpp"
 #include "VerifiedShader.hpp"
 #include <vector>
+#include <string>
 
+/*!
+ * \copydoc Vulkalc
+ */
 namespace Vulkalc
 {
+    /*!
+     * \class ShaderProvider
+     * \brief Provides interface for loading and compiling shaders from disk
+     */
     class VULKALC_API ShaderProvider
     {
     public:
+        /*!
+         * \brief Loads compute shaders from directory
+         * \param directory where to search shaders
+         * \return loaded compute shaders
+         */
         std::vector<Shader> loadShaders(const char* directory = "shaders");
-        std::vector<VerifiedShader> verifyShaders(const std::vector<Shader>& shaders);
 
-        ~ShaderProvider();
-    private:
-        friend class Application;
+        /*!
+         * \brief Tries to compile provided shaders with glslangValidator from Vulkan SDK
+         * \param shaders list of shaders to try and compile
+         * \return compiled and loaded shaders
+         */
+        std::vector<VerifiedShader> compileShaders(const std::vector<Shader>& shaders);
+
+        VerifiedShader tryCompile
 
         ShaderProvider();
-        ShaderProvider(const ShaderProvider&);
 
+        virtual ~ShaderProvider();
+
+    private:
+        std::vector<std::string> _discoverShaders(const char* directory);
     };
 }
 

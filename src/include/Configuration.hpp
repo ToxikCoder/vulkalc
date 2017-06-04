@@ -122,7 +122,7 @@ namespace Vulkalc
         /*!
          * \brief Configuration destructor
          */
-        ~Configuration()
+        virtual ~Configuration()
         {
             if(logStream)
             {

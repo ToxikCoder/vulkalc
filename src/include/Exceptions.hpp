@@ -86,6 +86,8 @@ namespace Vulkalc
         ApplicationNotInitializedException() : Exception("An instance of Application is not initialized. "
                                                                  "Call Application::init() first") {};
 
+        virtual ~ApplicationNotInitializedException() {};
+
     private:
         std::string m_exception_message = "ApplicationNotInitializedException in Vulkalc Application";
     };
@@ -107,6 +109,9 @@ namespace Vulkalc
         ApplicationNotConfiguredException() : Exception("An instance of Application is not configured. "
                                                                 "Edit Configuration instance, then call "
                                                                 "Application::configure()") {};
+
+        virtual ~ApplicationNotConfiguredException() {};
+
     private:
         std::string m_exception_message = "ApplicationNotConfiguredException in Vulkalc Application";
     };
@@ -123,6 +128,8 @@ namespace Vulkalc
          * \brief HostMemoryAllocationException constructor
          */
         HostMemoryAllocationException() {};
+
+        virtual ~HostMemoryAllocationException() {};
 
         /*!
          * \brief HostMemoryAllocationException constructor with message parameter
@@ -146,6 +153,8 @@ namespace Vulkalc
          * VulkanOperationException constructor
          */
         VulkanOperationException() {};
+
+        virtual ~VulkanOperationException() {};
 
         /*!
          * \brief VulkanOperationException constructor with message parameter

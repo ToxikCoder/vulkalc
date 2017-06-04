@@ -84,7 +84,7 @@ namespace Vulkalc
             }
         };
 
-        ~Configurator()
+        virtual ~Configurator()
         {
             if (m_spConfiguration)
             {

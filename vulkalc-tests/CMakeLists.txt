@@ -30,6 +30,5 @@ if (WIN32)
 elseif (UNIX)
     include_directories($ENV{VULKAN_SDK}/include/)
 endif ()
-
 add_executable(vulkalc-test catch.hpp Test.cpp ApplicationTest.cpp ExceptionsTest.cpp)
 target_link_libraries(vulkalc-test vulkalc)
