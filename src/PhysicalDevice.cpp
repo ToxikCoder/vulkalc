@@ -33,11 +33,15 @@
 
 using namespace Vulkalc;
 
-PhysicalDevice::PhysicalDevice(SharedVkPhysicalDevice device)
+PhysicalDevice::PhysicalDevice(const VkPhysicalDevice& device)
 {
-    m_spDevice = device;
-    vkGetPhysicalDeviceProperties(*m_spDevice, m_spProperties.get());
-    vkGetPhysicalDeviceFeatures(*m_spDevice, m_spFeatures.get());
+    m_spDevice = std::make_shared<VkPhysicalDevice>(device);
+    VkPhysicalDeviceProperties properties;
+    vkGetPhysicalDeviceProperties(*m_spDevice, &properties);
+    m_spProperties = std::make_shared<VkPhysicalDeviceProperties>(properties);
+    VkPhysicalDeviceFeatures features;
+    vkGetPhysicalDeviceFeatures(*m_spDevice, &features);
+    m_spFeatures = std::make_shared<VkPhysicalDeviceFeatures>(features);
 }
 
 bool PhysicalDevice::isSuitableForComputing() const

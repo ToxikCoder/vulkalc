@@ -58,10 +58,7 @@ else ()
     add_library(vulkalc SHARED ${SOURCE_FILES} ${HEADER_FILES})
 endif (VULKALC_BUILD_STATIC)
 
-if (WIN32)
-    target_link_libraries(vulkalc ${VULKAN})
-else()
-    target_link_libraries(vulkalc ${VULKAN})
-endif(WIN32)
+message(${VULKAN})
+target_link_libraries(vulkalc ${VULKAN})
 #TODO cmake install build artifacts and shaders
 #TODO copy headers to install folder

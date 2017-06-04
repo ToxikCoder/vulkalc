@@ -36,7 +36,7 @@
 
 #include "Export.hpp"
 #include "Utilities.hpp"
-#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan.h>
 
 /*!
  * \copydoc Vulkalc
@@ -86,7 +86,7 @@ namespace Vulkalc
          * \brief PhysicalDevice constructor
          * \param physicalDevice Vulkan physical device to use
          */
-        PhysicalDevice(SharedVkPhysicalDevice physicalDevice);
+        PhysicalDevice(const VkPhysicalDevice& physicalDevice);
 
         /*!
          * PhysicalDevice destructor

@@ -42,11 +42,11 @@ TEST_CASE("Every Application instance is unique")
     Application* anotherApplication = nullptr;
     REQUIRE_NOTHROW(anotherApplication = new Application());
     REQUIRE(application != anotherApplication);
+    delete anotherApplication;
     anotherApplication = nullptr;
     REQUIRE(application != nullptr);
 	delete application;
-	delete anotherApplication;
-	application = anotherApplication = nullptr;
+    application = nullptr;
 }
 
 TEST_CASE("Application is initialized")
@@ -145,6 +145,7 @@ TEST_CASE("Application is configured")
     ss.reset();
 }
 
+//This test expects at least one GPU to be installed
 TEST_CASE("Creating Device")
 {
     Application* application = new Application();
@@ -159,6 +160,8 @@ TEST_CASE("Creating Device")
     {
         cout << "Device " << i << ": " << devices[i]->getDeviceName() << endl;
     }
+    REQUIRE_NOTHROW(application->setPhysicalDevice(devices[0]));
+    REQUIRE(application->getVkDevice() != nullptr);
     devices.clear();
     ss.reset();
     configuration.reset();

@@ -39,7 +39,7 @@
 #include <time.h>
 #include <iostream>
 #include <memory>
-#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan.h>
 
 using namespace std;
 

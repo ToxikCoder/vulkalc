@@ -37,7 +37,7 @@
 #include "Export.hpp"
 #include "Utilities.hpp"
 
-#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan.h>
 #include <string>
 #include <vector>
 #include <iostream>

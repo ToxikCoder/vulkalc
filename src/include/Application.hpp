@@ -46,7 +46,7 @@
 #include "Utilities.hpp"
 #include "PhysicalDevice.hpp"
 
-#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan.h>
 
 
 /*!
@@ -163,6 +163,12 @@ namespace Vulkalc
          * \param physicalDevice physical device to use for computing
          */
         void setPhysicalDevice(const SharedPhysicalDevice& physicalDevice) throw(Exception, VulkanOperationException);
+
+        /*!
+         * \brief Returns VkDevice object, wrapped info shared_ptr
+         * \return constant shared pointer to VkDevice
+         */
+        const SharedDevice getVkDevice() const { return m_spDevice; };
 
         /*!
          * \brief Application destructor

@@ -30,6 +30,8 @@
  */
 
 #include "include/Application.hpp"
+#include <stdlib.h>
+#include <cstring>
 
 using namespace Vulkalc;
 
@@ -256,11 +258,11 @@ std::vector<SharedPhysicalDevice> Application::enumeratePhysicalDevices()
     if(deviceCount == 0)
         return physicalDevices;
 
+    m_devices = std::vector<VkPhysicalDevice>(deviceCount);
     vkEnumeratePhysicalDevices(m_VkInstance, &deviceCount, m_devices.data());
     for(VkPhysicalDevice device : m_devices)
     {
-        SharedVkPhysicalDevice physicalVkDevice = std::make_shared<VkPhysicalDevice>(device);
-        SharedPhysicalDevice physicalDevice = std::make_shared<PhysicalDevice>(physicalVkDevice);
+        SharedPhysicalDevice physicalDevice = std::make_shared<PhysicalDevice>(device);
         physicalDevices.push_back(physicalDevice);
     }
     return physicalDevices;
@@ -398,12 +400,13 @@ void Application::_continueConfiguring()
     deviceCreateInfo.pEnabledFeatures = getPhysicalDevice()->getPhysicalDeviceFeatures().get();
     deviceCreateInfo.pQueueCreateInfos = &vkDeviceQueueCreateInfo;
 
+    VkDevice device;
     result = vkCreateDevice(*(getPhysicalDevice()->getVkPhysicalDevice()), &deviceCreateInfo, nullptr,
-                            m_spDevice.get());
+                            &device);
     if(result != VK_SUCCESS)
         throw VulkanOperationException("Failed to create VkDevice");
 
-
+    m_spDevice = std::make_shared<VkDevice>(device);
 }
 
 void
