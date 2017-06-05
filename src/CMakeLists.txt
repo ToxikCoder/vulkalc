@@ -27,9 +27,9 @@ set(CMAKE_CXX_STANDARD 11)
 
 #treat all warnings as errors
 if (CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-elseif (${CMAKE_GENERATOR} MATCHES "Microsoft")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -fopenmp")
+elseif (${CMAKE_GENERATOR} MATCHES "^Visual")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall /openmp")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
 if (WIN32)
@@ -46,7 +46,7 @@ else ()
     find_library(VULKAN vulkan)
 endif ()
 
-set(SOURCE_FILES Application.cpp VulkanInfo.cpp Exceptions.cpp Utilities.cpp PhysicalDevice.cpp ShaderProvider.cpp)
+set(SOURCE_FILES Application.cpp VulkanInfo.cpp Exceptions.cpp Utilities.cpp PhysicalDevice.cpp ShaderProvider.cpp VerifiedShader.cpp Shader.cpp)
 set(HEADER_FILES include/Application.hpp include/Configurator.hpp include/Export.hpp
         include/InformationProvider.hpp include/Verifier.hpp include/VulkanInfo.hpp
         include/Configuration.hpp include/Utilities.hpp include/Exceptions.hpp include/ShaderProvider.hpp

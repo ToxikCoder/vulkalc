@@ -57,16 +57,21 @@ namespace Vulkalc
          * \param directory where to search shaders
          * \return loaded compute shaders
          */
-        std::vector<Shader> loadShaders(const char* directory = "shaders");
+        std::vector<Shader> loadShaders(const char* directory = "shaders") const;
 
         /*!
          * \brief Tries to compile provided shaders with glslangValidator from Vulkan SDK
          * \param shaders list of shaders to try and compile
          * \return compiled and loaded shaders
          */
-        std::vector<VerifiedShader> compileShaders(const std::vector<Shader>& shaders);
+        std::vector<VerifiedShader> tryCompileShaders(const std::vector<Shader>& shaders) const;
 
-        VerifiedShader tryCompile
+        /*!
+         * \brief tries to compile one shader
+         * \param shader shader to compile
+         * \return
+         */
+        VerifiedShader tryCompile(const Shader& shader) const;
 
         ShaderProvider();
 

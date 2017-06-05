@@ -51,17 +51,27 @@ namespace Vulkalc
     typedef std::shared_ptr<std::iostream> SharedIOStream;
     typedef std::shared_ptr<VkApplicationInfo> SharedVkApplicationInfo;
     typedef std::shared_ptr<VkInstanceCreateInfo> SharedInstanceCreateInfo;
-    typedef std::shared_ptr<VkInstance> SharedVkInstance;
     typedef std::shared_ptr<VkPhysicalDevice> SharedVkPhysicalDevice;
     typedef std::shared_ptr<VkDevice> SharedDevice;
     typedef std::shared_ptr<VkPhysicalDeviceProperties> SharedPhysicalDeviceProperties;
     typedef std::shared_ptr<VkPhysicalDeviceFeatures> SharedPhysicalDeviceFeatures;
+    typedef std::shared_ptr<VkShaderModule> SharedShaderModule;
 
     /*!
      * Returns string representation of current date and time
      * \return current date and time as C string.
      */
     VULKALC_API const char* getCurrentTimeString();
+
+    /*!
+     * Checks if extension is really extension in fileName, not part of the name
+     * \param fileName just a string with name of file
+     * \param extenstion string without dot, which specifies extension
+     * \return is extension really extension in fileName, not part of the name.
+     * Returns false, if any of parameters is empty
+     * \note this function doesn't read any files, just works with strings
+     */
+    VULKALC_API bool checkFileNameExtension(std::string fileName, std::string extension);
 }
 
 #endif //VULKALC_LIBRARY_UTILITIES_H

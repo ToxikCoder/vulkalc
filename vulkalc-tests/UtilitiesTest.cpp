@@ -23,53 +23,25 @@
 */
 
 /*!
- * \file Shader.hpp
- * \brief Contains Shader class
+ * \file UtilitiesTest.cpp
+ * \brief 
  * \author Lev Sizov
- * \date 02.06.2017
+ * \date 05.06.2017
  */
 
-#pragma once
+#include <Utilities.hpp>
+#include "catch.hpp"
 
-#ifndef VULKALC_LIBRARY_SHADER_H
-#define VULKALC_LIBRARY_SHADER_H
+using namespace std;
+using namespace Vulkalc;
 
-#include "Export.hpp"
-#include <string>
-
-/*!
- * \copydoc Vulkalc
- */
-namespace Vulkalc
+TEST_CASE("checkFileNameExtension()")
 {
-    /*!
-     * \class Shader
-     * \brief Shader class represents 1 compute shader on disk in specified directory
-     */
-    class VULKALC_API Shader
-    {
-    public:
-        /*!
-         * \brief Shader constructor
-         * \param name name of shader file
-         * \param path path to shader file
-         */
-        Shader(std::string name, std::string path) : m_name(name), m_path(path) {};
-
-        std::string getShaderName() const { return m_name; }
-
-        std::string getShaderPath() const { return m_path; }
-
-        std::string getShaderFullName() const;
-
-        /*!
-         * \brief Shader destructor
-         */
-        virtual ~Shader() {};
-    private:
-        std::string m_name;
-        std::string m_path;
-    };
+    REQUIRE(checkFileNameExtension("test.t", "t"));
+    REQUIRE_FALSE(checkFileNameExtension("test.t", "n"));
+    REQUIRE_FALSE(checkFileNameExtension("test.comp.txt", "comp"));
+    REQUIRE_FALSE(checkFileNameExtension("test.txt", ""));
+    REQUIRE_FALSE(checkFileNameExtension("", "txt"));
+    REQUIRE_FALSE(checkFileNameExtension("test.txt", ".txt"));
+    REQUIRE_FALSE(checkFileNameExtension("", ""));
 }
-
-#endif //VULKALC_LIBRARY_SHADER_H

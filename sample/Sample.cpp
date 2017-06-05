@@ -23,53 +23,36 @@
 */
 
 /*!
- * \file Shader.hpp
- * \brief Contains Shader class
+ * \file Sample.cpp
+ * \brief 
  * \author Lev Sizov
- * \date 02.06.2017
+ * \date 05.06.2017
  */
 
-#pragma once
+#include <Application.hpp>
 
-#ifndef VULKALC_LIBRARY_SHADER_H
-#define VULKALC_LIBRARY_SHADER_H
+using namespace Vulkalc;
+using namespace std;
 
-#include "Export.hpp"
-#include <string>
-
-/*!
- * \copydoc Vulkalc
- */
-namespace Vulkalc
+void main()
 {
-    /*!
-     * \class Shader
-     * \brief Shader class represents 1 compute shader on disk in specified directory
-     */
-    class VULKALC_API Shader
+    //creating and configuring Application
+    Application* application = new Application();
+    SharedConfiguration configuration = application->getConfigurator()->getConfiguration();
+    configuration->isErrorLoggingEnabled = false;
+    configuration->applicationName = "Vulkalc sample";
+    configuration->logStream = cout; //probably incorrect
+    application.configure(false);
+    //choosing device
+    auto devices = application->enumeratePhysicalDevices();
+    for(auto device : devices)
     {
-    public:
-        /*!
-         * \brief Shader constructor
-         * \param name name of shader file
-         * \param path path to shader file
-         */
-        Shader(std::string name, std::string path) : m_name(name), m_path(path) {};
+        cout << "Device: " << device->getDeviceName() << endl;
+    }
+    application->setPhysicalDevice(devices[0]);
+    //
 
-        std::string getShaderName() const { return m_name; }
-
-        std::string getShaderPath() const { return m_path; }
-
-        std::string getShaderFullName() const;
-
-        /*!
-         * \brief Shader destructor
-         */
-        virtual ~Shader() {};
-    private:
-        std::string m_name;
-        std::string m_path;
-    };
+    devices.clear();
+    configuration.reset();
+    delete application;
 }
-
-#endif //VULKALC_LIBRARY_SHADER_H

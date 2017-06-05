@@ -30,19 +30,26 @@
  */
 
 #include "include/ShaderProvider.hpp"
+#include "include/Utilities.hpp"
 #include <sstream>
 #include <fstream>
+
+#ifdef __GNUC__
+
+#include <dirent.h>
+
+#endif
 
 using namespace Vulkalc;
 
 
-std::vector<Shader> ShaderProvider::loadShaders(const char* directory)
+std::vector<Shader> ShaderProvider::loadShaders(const char* directory) const
 {
     std::vector<Shader> shaders;
-    return std::vector<Shader>();
+    return shaders;
 }
 
-std::vector<VerifiedShader> ShaderProvider::compileShaders(const std::vector<Shader>& shaders)
+std::vector<VerifiedShader> ShaderProvider::tryCompileShaders(const std::vector<Shader>& shaders) const
 {
     return std::vector<VerifiedShader>();
 }
@@ -73,22 +80,34 @@ std::vector<std::string> ShaderProvider::_discoverShaders(const char* directory)
     while (!file.eof())
     {
         std::getline(file, buf);
-        int extPos = buf.find(".comp");
-        if (extPos != std::string::npos)
-        {
-            //check that ".comp" is extension, not part of the name
-            std::string fileName = buf.substr(0, extPos); //it should be name, without extension
-            fileName.append(".comp"); //if buf is test.comp.test, then fileName will be test.comp
-            if (fileName == buf) //and this check will fail
-                shaderNames.push_back(buf);
-        }
+        if(checkFileNameExtension(buf, ".comp"))
+            shaderNames.push_back(buf);
     }
     file.close();
     std::system("del test");
 #else
+    DIR* d;
+    struct dirent* dir;
+    d = opendir(directory);
+    if(d)
+    {
+        while((dir = readdir(d)) != NULL)
+        {
+            std::string fileName = dir->d_name;
+            if(checkFileNameExtension(fileName, ".comp"))
+                shaderNames.push_back(fileName);
+        }
 
+        closedir(d);
+    }
 #endif
     return shaderNames;
+}
+
+VerifiedShader ShaderProvider::tryCompile(const Shader& shader) const
+{
+    VerifiedShader verifiedShader(shader);
+    return shader;
 }
 
 

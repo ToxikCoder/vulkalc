@@ -31,6 +31,8 @@
 
 #include "include/Utilities.hpp"
 
+using namespace Vulkalc;
+
 VULKALC_API const char* Vulkalc::getCurrentTimeString()
 {
     auto now = chrono::system_clock::now();
@@ -42,4 +44,22 @@ VULKALC_API const char* Vulkalc::getCurrentTimeString()
 #else
     return ctime(&now_time_t);
 #endif
+}
+
+VULKALC_API bool Vulkalc::checkFileNameExtension(std::string fileName, std::string extension)
+{
+    if(fileName == "" || extension == "" || extension.find_last_of(".") != std::string::npos)
+        return false;
+
+    std::string fullExtension = ".";
+    fullExtension.append(extension);
+    uint32_t extPos = static_cast<uint32_t>(fileName.find_last_of(fullExtension));
+    if(extPos != std::string::npos)
+    {
+        //check that "extension" is extension, not part of the name
+        std::string name = fileName.substr(0, extPos - 1); //it should be name, without extension
+        name.append(fullExtension); //if buf is test.comp.test, then fileName will be test.comp
+        return fileName == name;
+    }
+    return false;
 }

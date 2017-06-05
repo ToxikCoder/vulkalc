@@ -23,53 +23,18 @@
 */
 
 /*!
- * \file Shader.hpp
- * \brief Contains Shader class
+ * \file Shader.cpp
+ * \brief 
  * \author Lev Sizov
- * \date 02.06.2017
+ * \date 05.06.2017
  */
 
-#pragma once
+#include "include/Shader.hpp"
 
-#ifndef VULKALC_LIBRARY_SHADER_H
-#define VULKALC_LIBRARY_SHADER_H
+using namespace Vulkalc;
 
-#include "Export.hpp"
-#include <string>
-
-/*!
- * \copydoc Vulkalc
- */
-namespace Vulkalc
+std::string Shader::getShaderFullName() const
 {
-    /*!
-     * \class Shader
-     * \brief Shader class represents 1 compute shader on disk in specified directory
-     */
-    class VULKALC_API Shader
-    {
-    public:
-        /*!
-         * \brief Shader constructor
-         * \param name name of shader file
-         * \param path path to shader file
-         */
-        Shader(std::string name, std::string path) : m_name(name), m_path(path) {};
-
-        std::string getShaderName() const { return m_name; }
-
-        std::string getShaderPath() const { return m_path; }
-
-        std::string getShaderFullName() const;
-
-        /*!
-         * \brief Shader destructor
-         */
-        virtual ~Shader() {};
-    private:
-        std::string m_name;
-        std::string m_path;
-    };
+    std::string fullName = m_path;
+    
 }
-
-#endif //VULKALC_LIBRARY_SHADER_H
