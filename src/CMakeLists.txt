@@ -27,9 +27,9 @@ set(CMAKE_CXX_STANDARD 11)
 
 #treat all warnings as errors
 if (CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -fopenmp")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 elseif (${CMAKE_GENERATOR} MATCHES "^Visual")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall /openmp")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
 if (WIN32)

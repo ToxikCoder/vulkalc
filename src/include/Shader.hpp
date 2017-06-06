@@ -49,12 +49,13 @@ namespace Vulkalc
     class VULKALC_API Shader
     {
     public:
+        Shader() {};
         /*!
          * \brief Shader constructor
          * \param name name of shader file
          * \param path path to shader file
          */
-        Shader(std::string name, std::string path) : m_name(name), m_path(path) {};
+        Shader(std::string name, std::string path);
 
         std::string getShaderName() const { return m_name; }
 

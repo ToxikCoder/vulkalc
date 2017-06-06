@@ -64,21 +64,21 @@ namespace Vulkalc
          * \param shaders list of shaders to try and compile
          * \return compiled and loaded shaders
          */
-        std::vector<VerifiedShader> tryCompileShaders(const std::vector<Shader>& shaders) const;
+        std::vector<VerifiedShader> tryCompileShaders(const VkDevice& device, const std::vector<Shader>& shaders) const;
 
         /*!
          * \brief tries to compile one shader
          * \param shader shader to compile
-         * \return
+         * \return VerifiedShader object
          */
-        VerifiedShader tryCompile(const Shader& shader) const;
+        VerifiedShader tryCompile(const VkDevice& device, const Shader& shader) const;
 
         ShaderProvider();
 
         virtual ~ShaderProvider();
 
     private:
-        std::vector<std::string> _discoverShaders(const char* directory);
+        std::vector<std::string> _discoverShaders(const char* directory) const;
     };
 }
 

@@ -27,6 +27,8 @@ namespace Vulkalc
     class VULKALC_API VerifiedShader
     {
     public:
+        VerifiedShader() {};
+
         /*!
          * VerifiedShader constructor
          * \param shader Shader to verify and compile
@@ -42,16 +44,28 @@ namespace Vulkalc
          */
         bool isCompiled() const { return m_isCompiled; };
 
+        const SharedShaderModule getVkShaderModule() const { return m_spVkShaderModule; };
+
+        const Shader getBindedShader() const { return m_shader; };
+
+        std::string getShaderName() const { return m_shader.getShaderName(); };
+
+        std::string getShaderPath() const { return m_shader.getShaderPath(); };
+
+        std::string getShaderFullName() const { return m_shader.getShaderFullName(); };
+
         /*!
          * \brief VerifiedShader destructor
          */
         virtual ~VerifiedShader();
 
     private:
+        friend class ShaderProvider;
+
+        bool _tryCompile(const VkDevice& device);
         bool m_isCompiled = false;
         SharedShaderModule m_spVkShaderModule;
-
-        VerifiedShader() {};
+        Shader m_shader;
     };
 }
 

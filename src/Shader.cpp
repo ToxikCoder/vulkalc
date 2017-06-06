@@ -33,8 +33,23 @@
 
 using namespace Vulkalc;
 
+Shader::Shader(std::string name, std::string path) : m_name(name), m_path(path)
+{
+    if(m_path == "")
+        m_path = "./";
+#ifdef WIN32
+    char delimiter = '\\';
+#else
+    char delimiter = '/';
+#endif
+    if(m_path.back() != delimiter)
+        m_path.push_back(delimiter);
+
+}
+
 std::string Shader::getShaderFullName() const
 {
     std::string fullName = m_path;
-    
+    fullName.append(m_name);
+    return fullName;
 }
