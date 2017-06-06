@@ -37,8 +37,9 @@ using namespace Vulkalc;
 
 VerifiedShader::VerifiedShader(const Shader& shader)
 {
-    std::string compileCommand = "glslangValidator -V " + shader.m_path
-    std::system();
+    std::string compileCommand =
+            "glslangValidator -V " + shader.getShaderFullName() + " " + shader.getShaderFullName() + ".spv";
+    std::system(compileCommand.c_str());
 }
 
 VerifiedShader::~VerifiedShader()
