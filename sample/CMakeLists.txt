@@ -22,13 +22,8 @@
 # SOFTWARE.
 #
 
-project(vulkalc-tests)
+project(vulkalc-sample)
 set(CMAKE_CXX_STANDARD 11)
-include_directories(../src/include)
-if (WIN32)
-    include_directories($ENV{VULKAN_SDK}/Include/)
-elseif (UNIX)
-    include_directories($ENV{VULKAN_SDK}/include/)
-endif ()
-add_executable(vulkalc-test catch.hpp Test.cpp ApplicationTest.cpp ExceptionsTest.cpp UtilitiesTest.cpp)
-target_link_libraries(vulkalc-test vulkalc)
+include_directories(${VULKALC_HEADERS})
+add_executable(vulkalc-sample Samlpe.cpp)
+target_link_libraries(vulkalc-sample vulkalc)

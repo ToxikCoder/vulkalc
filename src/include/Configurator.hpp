@@ -36,6 +36,7 @@
 
 #include "Export.hpp"
 #include "Configuration.hpp"
+#include "Exceptions.hpp"
 
 /*!
  * \copydoc Vulkalc
@@ -47,23 +48,55 @@ namespace Vulkalc
      * \extends RAII
      * \brief Configurator class for configuring Application with Configuration.
      * \warning This class is not thread-safe.
+     * \warning Do not create or destroy Configurator object by hands
      */
     class VULKALC_API Configurator
     {
     public:
-        Configuration* const getConfiguration() { return m_spConfiguration; };
+        /*!
+         * \brief Returns constant shared pointer to Configuration
+         * \return constant shared pointer to Configuration
+         */
+        const SharedConfiguration getConfiguration() const { return m_spConfiguration; };
+
+        /*!
+         * \brief Resets Configuration to default values
+         */
+        inline void resetConfiguration()
+        {
+            m_spConfiguration.reset();
+            m_spConfiguration = std::make_shared<Configuration>();
+        }
 
         /*!
          * \brief Configurator constructor
          * \throws HostHostMemoryAllocationException - thrown if failed to allocate memory in heap for Configuration
          */
-        Configurator();
+        Configurator()
+        {
+            try
+            {
+                m_spConfiguration = std::make_shared<Configuration>();
+            }
+            catch(std::bad_alloc&)
+            {
+                throw HostMemoryAllocationException("Failed to allocate Configuration in Configurator");
+            }
+        };
 
-        ~Configurator();
-
+        virtual ~Configurator()
+        {
+            if (m_spConfiguration)
+            {
+                m_spConfiguration.reset();
+                m_spConfiguration = nullptr;
+            }
+        };
     private:
-        Configuration* m_spConfiguration;
+        SharedConfiguration m_spConfiguration;
     };
+
+    typedef std::shared_ptr<Configurator> SharedConfigurator;
 }
 
 

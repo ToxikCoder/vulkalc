@@ -23,32 +23,36 @@
 */
 
 /*!
- * \file Configuration.cpp
- * \brief This file contains Configuration class implementation
+ * \file Sample.cpp
+ * \brief 
  * \author Lev Sizov
- * \date 31.05.2017
+ * \date 05.06.2017
  */
 
-#include "include/Configuration.hpp"
+#include <Application.hpp>
 
 using namespace Vulkalc;
+using namespace std;
 
-Configuration::~Configuration()
+void main()
 {
-    if (devicePointer)
+    //creating and configuring Application
+    Application* application = new Application();
+    SharedConfiguration configuration = application->getConfigurator()->getConfiguration();
+    configuration->isErrorLoggingEnabled = false;
+    configuration->applicationName = "Vulkalc sample";
+    configuration->logStream = cout; //probably incorrect
+    application.configure(false);
+    //choosing device
+    auto devices = application->enumeratePhysicalDevices();
+    for(auto device : devices)
     {
-        //as pointer to VkPhysicalDevice is passed from another place, we woudln't want to free this memory,
-        //just removing the pointer
-        devicePointer = nullptr;
+        cout << "Device: " << device->getDeviceName() << endl;
     }
-    if (logStream)
-    {
-        //same as above
-        logStream = nullptr;
-    }
-    if (errorStream)
-    {
-        //same as above
-        errorStream = nullptr;
-    }
+    application->setPhysicalDevice(devices[0]);
+    //
+
+    devices.clear();
+    configuration.reset();
+    delete application;
 }

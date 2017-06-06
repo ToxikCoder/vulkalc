@@ -23,42 +23,25 @@
 */
 
 /*!
- * \file Utilities.hpp
- * \brief Contains utility functions
+ * \file VerifiedShader.cpp
+ * \brief 
  * \author Lev Sizov
- * \date 31.05.2017
+ * \date 05.06.2017
  */
 
-#ifndef VULKALC_LIBRARY_UTILITIES_H
-#define VULKALC_LIBRARY_UTILITIES_H
+#include <cstdlib>
+#include "include/VerifiedShader.hpp"
 
-#include "Export.hpp"
-#include <chrono>
-#include <time.h>
+using namespace Vulkalc;
 
-using namespace std;
 
-/*!
- * \copydoc Vulkalc
- */
-namespace Vulkalc
+VerifiedShader::VerifiedShader(const Shader& shader)
 {
-    /*!
-     * Returns string representation of current date and time
-     * \return current date and time as C string.
-     */
-    VULKALC_API const char* getCurrentTimeString()
-    {
-        auto now = chrono::system_clock::now();
-        auto now_time_t = chrono::system_clock::to_time_t(now);
-#ifdef _MSC_VER
-        char time[26];
-        ctime_s(time, sizeof(time), &now_time_t);
-        return time;
-#else
-        return ctime(&now_time_t);
-#endif
-    }
+    std::string compileCommand = "glslangValidator -V " + shader.m_path
+    std::system();
 }
 
-#endif //VULKALC_LIBRARY_UTILITIES_H
+VerifiedShader::~VerifiedShader()
+{
+
+}

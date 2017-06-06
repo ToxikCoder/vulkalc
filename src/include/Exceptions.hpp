@@ -39,13 +39,17 @@
 
 namespace Vulkalc
 {
+    /*!
+     * \class Excpetion
+     * \brief General exception is Vulkalc application
+     */
     class VULKALC_API Exception
     {
     public:
         /*!
          * \brief Exception constructor
          */
-        Exception() {};
+        Exception() : m_message(nullptr) {};
 
         /*!
          * \brief Exception constructor with exception message
@@ -53,7 +57,7 @@ namespace Vulkalc
          */
         explicit Exception(const char* message);
 
-        ~Exception() {};
+        virtual ~Exception() {};
 
         /*!
         * Returns the message of exception
@@ -67,6 +71,7 @@ namespace Vulkalc
     };
 
     /*!
+     * \class ApplicationNotInitializedException
      * \brief This exception is thrown, when Application is not initialized, but used.
      * \extends Exception
      *
@@ -81,11 +86,14 @@ namespace Vulkalc
         ApplicationNotInitializedException() : Exception("An instance of Application is not initialized. "
                                                                  "Call Application::init() first") {};
 
+        virtual ~ApplicationNotInitializedException() {};
+
     private:
         std::string m_exception_message = "ApplicationNotInitializedException in Vulkalc Application";
     };
 
     /*!
+     * \class ApplicationNotConfiguredException
      * \brief This exception is thrown, when Application is not configured
      * \extends Exception
      *
@@ -101,11 +109,15 @@ namespace Vulkalc
         ApplicationNotConfiguredException() : Exception("An instance of Application is not configured. "
                                                                 "Edit Configuration instance, then call "
                                                                 "Application::configure()") {};
+
+        virtual ~ApplicationNotConfiguredException() {};
+
     private:
         std::string m_exception_message = "ApplicationNotConfiguredException in Vulkalc Application";
     };
 
     /*!
+     * \class HostMemoryAllocationException
      * \brief This exception is thrown, when failed to allocate memory in host Vulkalc application
      * \extends Exception
      */
@@ -117,6 +129,8 @@ namespace Vulkalc
          */
         HostMemoryAllocationException() {};
 
+        virtual ~HostMemoryAllocationException() {};
+
         /*!
          * \brief HostMemoryAllocationException constructor with message parameter
          * \param message exception message
@@ -125,6 +139,31 @@ namespace Vulkalc
 
     private:
         std::string m_exception_message = "Failed to allocate memory in host application";
+    };
+
+    /*!
+     * \class VulkanOperationException
+     * \extends Exception
+     * \brief Thrown when Vulkan API calls return error code
+     */
+    class VULKALC_API VulkanOperationException : public Exception
+    {
+    public:
+        /*!
+         * VulkanOperationException constructor
+         */
+        VulkanOperationException() {};
+
+        virtual ~VulkanOperationException() {};
+
+        /*!
+         * \brief VulkanOperationException constructor with message parameter
+         * \param message exception message
+         */
+        explicit VulkanOperationException(const char* message) : Exception(message) {};
+
+    private:
+        std::string m_exception_message = "Vulkan API command failed: ";
     };
 }
 

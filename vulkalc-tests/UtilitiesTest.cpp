@@ -23,38 +23,25 @@
 */
 
 /*!
- * \file Verifier.hpp
- * \brief Verifier class which provides interface to verify various things
+ * \file UtilitiesTest.cpp
+ * \brief 
  * \author Lev Sizov
- * \date 28.05.17
- *
- * This file contains Verifier class which provides interface to verify Vulkan installation, library tools and shaders
- *
+ * \date 05.06.2017
  */
 
-#ifndef VULKALC_LIBRARY_VERIFIER_H
-#define VULKALC_LIBRARY_VERIFIER_H
+#include <Utilities.hpp>
+#include "catch.hpp"
 
-#include "Export.hpp"
+using namespace std;
+using namespace Vulkalc;
 
-/*!
- * \copydoc Vulkalc
- */
-namespace Vulkalc
+TEST_CASE("checkFileNameExtension()")
 {
-    /*!
-     * \class Verifier
-     * \brief Provides interface for specific verifiers
-     * \extends RAII
-     *
-     * \note Verifier class uses RAII pattern. Call \code init() before usage and \code release() after usage
-     *
-     * \warning This class is not thread-safe.
-     */
-    class VULKALC_API Verifier : public RAII
-    {
-
-    };
+    REQUIRE(checkFileNameExtension("test.t", "t"));
+    REQUIRE_FALSE(checkFileNameExtension("test.t", "n"));
+    REQUIRE_FALSE(checkFileNameExtension("test.comp.txt", "comp"));
+    REQUIRE_FALSE(checkFileNameExtension("test.txt", ""));
+    REQUIRE_FALSE(checkFileNameExtension("", "txt"));
+    REQUIRE_FALSE(checkFileNameExtension("test.txt", ".txt"));
+    REQUIRE_FALSE(checkFileNameExtension("", ""));
 }
-
-#endif //VULKALC_LIBRARY_VERIFIER_H

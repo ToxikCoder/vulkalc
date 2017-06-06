@@ -35,8 +35,9 @@
 #define VULKALC_LIBRARY_CONFIGURATION_H
 
 #include "Export.hpp"
+#include "Utilities.hpp"
 
-#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan.h>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -60,60 +61,58 @@ namespace Vulkalc
          * \brief Name of the application, which uses Vulkalc library. Feel free to change.
          */
         const char* applicationName = "Vulkalc Application";
+
         /*!
          * \brief Version of application. Feel free to change
          */
         uint32_t applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+
         /*!
          * \brief Engine name. Feel free to change.
          */
         const char* engineName = "Vulkalc";
+
         /*!
          * \brief Engine version. Feel free to change.
          */
         uint32_t engineVersion = VK_MAKE_VERSION(1, 0, 0);
+
         /*!
          * \brief Vulkan API version. Don't change until you know what you are doing.
          * \warning apiVersion must be equal to Vulkan SDK version.
          */
         uint32_t apiVersion = VK_MAKE_VERSION(1, 0, 39);
+
         /*!
          * \brief Vector of names of enabled Vulkan Layers. Feel free to add or remove them.
          */
         std::vector<const char*> enabledLayersNames = std::vector<const char*>();
+
         /*!
          * \brief Vector of names of enabled Vulkan extensions. Feel free to add or remove them.
          */
         std::vector<const char*> enabledExtensionsNames = std::vector<const char*>();
-        /*!
-         * \brief Index number of physical device to use. First device by default.
-         * \note Enumeration starts from 0.
-         * \note Either index number of device or devicePointer should be specified.
-         * \warning If deviceSetting is set, it overrides this setting.
-         */
-        uint32_t deviceToUse = 0;
-        /*!
-         * \brief Pointer to VkPhysicalDevice to use.
-         * \warning If set, this setting overrides deviceToUse.
-         */
-        VkPhysicalDevice* devicePointer = nullptr;
+
         /*!
          * \brief Boolean flag for general logging. Enabled by default.
          */
         bool isLoggingEnabled = true;
+
         /*!
          * \brief Boolean flag for error logging. Enabled by default.
          * \note This setting is ignored if isLoggingEnabled set to false.
          */
         bool isErrorLoggingEnabled = true;
+
         /*!
-         * \brief Output stream for general logging.
+         * \brief Shared pointer to output stream for general logging.
          */
-        std::iostream* logStream = nullptr;
+        SharedIOStream logStream;
+
         /*!
-         * \brief Output stream for error logging.
+         * \brief Shared pointer to output stream for error logging.
          */
-        std::iostream* errorStream = nullptr;
+        SharedIOStream errorStream;
 
         /*!
          * \brief Configuration constructor
@@ -123,13 +122,22 @@ namespace Vulkalc
         /*!
          * \brief Configuration destructor
          */
-        ~Configuration();
-
-    private:
-        Configuration(const Configuration&);
-
-        void operator=(const Configuration&);
+        virtual ~Configuration()
+        {
+            if(logStream)
+            {
+                logStream.reset();
+                logStream = nullptr;
+            }
+            if(errorStream)
+            {
+                errorStream.reset();
+                errorStream = nullptr;
+            }
+        };
     };
+
+    typedef std::shared_ptr<Configuration> SharedConfiguration;
 }
 
 #endif //VULKALC_LIBRARY_CONFIGURATION_H

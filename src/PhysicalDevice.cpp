@@ -23,38 +23,49 @@
 */
 
 /*!
- * \file Verifier.hpp
- * \brief Verifier class which provides interface to verify various things
+ * \file PhysicalDevice.cpp
+ * \brief 
  * \author Lev Sizov
- * \date 28.05.17
- *
- * This file contains Verifier class which provides interface to verify Vulkan installation, library tools and shaders
- *
+ * \date 03.06.2017
  */
 
-#ifndef VULKALC_LIBRARY_VERIFIER_H
-#define VULKALC_LIBRARY_VERIFIER_H
+#include "include/PhysicalDevice.hpp"
 
-#include "Export.hpp"
+using namespace Vulkalc;
 
-/*!
- * \copydoc Vulkalc
- */
-namespace Vulkalc
+PhysicalDevice::PhysicalDevice(const VkPhysicalDevice& device)
 {
-    /*!
-     * \class Verifier
-     * \brief Provides interface for specific verifiers
-     * \extends RAII
-     *
-     * \note Verifier class uses RAII pattern. Call \code init() before usage and \code release() after usage
-     *
-     * \warning This class is not thread-safe.
-     */
-    class VULKALC_API Verifier : public RAII
-    {
-
-    };
+    m_spDevice = std::make_shared<VkPhysicalDevice>(device);
+    VkPhysicalDeviceProperties properties;
+    vkGetPhysicalDeviceProperties(*m_spDevice, &properties);
+    m_spProperties = std::make_shared<VkPhysicalDeviceProperties>(properties);
+    VkPhysicalDeviceFeatures features;
+    vkGetPhysicalDeviceFeatures(*m_spDevice, &features);
+    m_spFeatures = std::make_shared<VkPhysicalDeviceFeatures>(features);
 }
 
-#endif //VULKALC_LIBRARY_VERIFIER_H
+bool PhysicalDevice::isSuitableForComputing() const
+{
+    return m_spProperties->deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
+}
+
+PhysicalDevice::~PhysicalDevice()
+{
+    if(m_spFeatures)
+        m_spFeatures.reset();
+
+    if(m_spProperties)
+        m_spProperties.reset();
+
+    if(m_spDevice)
+        m_spDevice.reset();
+}
+
+std::string PhysicalDevice::getDeviceName() const
+{
+    std::string name;
+    name = m_spProperties->deviceName;
+    return name;
+}
+
+

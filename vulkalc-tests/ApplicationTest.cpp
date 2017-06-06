@@ -24,77 +24,146 @@
 
 #include <Application.hpp>
 #include "catch.hpp"
-#include <sstream>
 
 using namespace Vulkalc;
 using namespace std;
 
-Application* application = nullptr;
-
 TEST_CASE("Application doesn't throw anything on init()")
 {
-    REQUIRE_NOTHROW(application = Application::getInstance());
+	Application* application = nullptr;
+    REQUIRE_NOTHROW(application = new Application());
+	delete application;
+	application = nullptr;
 }
 
-TEST_CASE("Only one Application instance exists")
+TEST_CASE("Every Application instance is unique")
 {
+	Application* application = new Application();
     Application* anotherApplication = nullptr;
-    REQUIRE_NOTHROW(anotherApplication = Application::getInstance());
-    REQUIRE(application == anotherApplication);
+    REQUIRE_NOTHROW(anotherApplication = new Application());
+    REQUIRE(application != anotherApplication);
+    delete anotherApplication;
     anotherApplication = nullptr;
     REQUIRE(application != nullptr);
+	delete application;
+    application = nullptr;
 }
 
-TEST_CASE("Application is initialized when created")
+TEST_CASE("Application is initialized")
 {
-    REQUIRE(application->isApplicationInitialized());
-    REQUIRE(application->getConfigurator() != nullptr);
-}
-
-TEST_CASE("Not configured Application calling log")
-{
-    REQUIRE_THROWS_AS(application->log("test", Application::LOG_INFO), ApplicationNotConfiguredException);
+	Application* application = new Application();
+	SECTION("Application is initialized when created")
+	{
+		REQUIRE(application->isApplicationInitialized());
+		REQUIRE(application->getConfigurator() != nullptr);
+	}
+	SECTION("Configurator, Configuration are created on init()")
+	{
+		REQUIRE(application->getConfigurator() != nullptr);
+		REQUIRE(application->getConfigurator()->getConfiguration() != nullptr);
+	}
+	SECTION("Calling log throws exception")
+	{
+		REQUIRE_THROWS_AS(application->log("test", Application::LOG_INFO), ApplicationNotConfiguredException);
+	}
+	SECTION("Initialized Application is destroyed without exceptions")
+	{
+		REQUIRE_NOTHROW(delete application);
+        application = nullptr; //-V773
+	}
 }
 
 TEST_CASE("Application is configured")
 {
-    stringstream* ss = new stringstream();
-    Configuration* configuration = application->getConfigurator()->getConfiguration();
-    SECTION("Configuration is created")
-    {
-        REQUIRE(configuration != nullptr);
-    }
+	Application* application = new Application();
+    shared_ptr<stringstream> ss = make_shared<stringstream>();
+    SharedConfiguration configuration = application->getConfigurator()->getConfiguration();
     configuration->logStream = ss;
+	configuration->errorStream = ss;
     SECTION("Calling configure() doesn't throw exception")
     {
-        REQUIRE_NOTHROW(application->configure());
+        REQUIRE_NOTHROW(application->configure(false));
         REQUIRE(application->isApplicationConfigured());
     }
+	SECTION("Streams are not NULL after configuring")
+	{
+        application->configure(false);
+		REQUIRE(application->getLoggingStream() != nullptr);
+		REQUIRE(application->getErrorStream() != nullptr);
+	}
     SECTION("Configured Application doesn't throw exceptions")
     {
+        application->configure(false);
         REQUIRE_NOTHROW(application->log("Test", Application::LOG_INFO));
     }
     SECTION("Calling log() on configured Application writes to stream")
     {
+        application->configure(false);
+		application->log("Test", Application::LOG_INFO);
         string stream_content;
-        *ss >> stream_content;
-        /*!
-         * \bug These tests fail - nothing is written(or read) to logging iostream
-         * \todo Research the source of this bug. Maybe it's just dumb me
+        getline(*ss, stream_content);
         REQUIRE(!stream_content.empty());
         REQUIRE(stream_content != "Test");
-        REQUIRE(stream_content == "Vulkalc Application from Vulkalc at  INFO: Test");*/
+		string str = stream_content.substr(0, 35);
+        REQUIRE(str == "Vulkalc Application from Vulkalc at");
     }
+    SECTION("Resetting Configuration resets Configuration")
+    {
+        configuration.reset();
+        application->getConfigurator()->resetConfiguration();
+        configuration = application->getConfigurator()->getConfiguration();
+        REQUIRE(configuration->logStream == nullptr);
+        REQUIRE(configuration->errorStream == nullptr);
+    }
+    SECTION("Calling configure(false) doesn't change configuration")
+    {
+        configuration->logStream = ss;
+        configuration->errorStream = ss;
+        application->configure(false);
+        configuration->logStream.reset();
+        application->configure(false);
+        REQUIRE(application->getLoggingStream() != nullptr);
+    }
+    SECTION("Calling configure(true) changes configuration")
+    {
+        configuration->logStream = ss;
+        configuration->errorStream = ss;
+        application->configure(false);
+        configuration->logStream.reset();
+        configuration->errorStream.reset();
+        application->configure(true);
+        REQUIRE(application->getLoggingStream() == nullptr);
+        REQUIRE(application->getErrorStream() == nullptr);
+    }
+	SECTION("Configured Application is safely destroyed")
+	{
+        application->configure(false);
+		REQUIRE_NOTHROW(delete application);
+	}
+    configuration.reset();
+    application = nullptr; //-V773
+    ss.reset();
 }
 
-TEST_CASE("Application is being destroyed")
+//This test expects at least one GPU to be installed
+TEST_CASE("Creating Device")
 {
-    REQUIRE_NOTHROW(delete application);
-    REQUIRE_THROWS(application->log("Application is deleted and this shouldn't be printed", Application::LOG_ERROR));
-    application = nullptr;
-}
-
-TEST_CASE("New instance of Application is possible to create after deleting old one")
-{
-    REQUIRE_NOTHROW(application = Application::getInstance());
+    Application* application = new Application();
+    SharedConfiguration configuration = application->getConfigurator()->getConfiguration();
+    shared_ptr<stringstream> ss = make_shared<stringstream>();
+    configuration->logStream = ss;
+    configuration->errorStream = ss;
+    application->configure(false);
+    std::vector<SharedPhysicalDevice> devices = application->enumeratePhysicalDevices();
+    REQUIRE(devices.size() != 0);
+    for(uint32_t i = 0; i < devices.size(); ++i)
+    {
+        cout << "Device " << i << ": " << devices[i]->getDeviceName() << endl;
+    }
+    REQUIRE_NOTHROW(application->setPhysicalDevice(devices[0]));
+    REQUIRE(application->getVkDevice() != nullptr);
+    devices.clear();
+    ss.reset();
+    configuration.reset();
+    delete application;
 }

@@ -23,34 +23,53 @@
 */
 
 /*!
- * \file Configurator.cpp
- * \brief This file contains Configurator implementation
+ * \file Shader.hpp
+ * \brief Contains Shader class
  * \author Lev Sizov
- * \date 30.05.2017
+ * \date 02.06.2017
  */
 
-#include "include/Configurator.hpp"
-#include "include/Exceptions.h"
+#pragma once
 
-using namespace Vulkalc;
+#ifndef VULKALC_LIBRARY_SHADER_H
+#define VULKALC_LIBRARY_SHADER_H
 
-Configurator::Configurator()
+#include "Export.hpp"
+#include <string>
+
+/*!
+ * \copydoc Vulkalc
+ */
+namespace Vulkalc
 {
-    try
+    /*!
+     * \class Shader
+     * \brief Shader class represents 1 compute shader on disk in specified directory
+     */
+    class VULKALC_API Shader
     {
-        m_spConfiguration = new Configuration();
-    }
-    catch(std::bad_alloc& e)
-    {
-        throw HostMemoryAllocationException("Failed to allocate Configuration in Configurator");
-    }
+    public:
+        /*!
+         * \brief Shader constructor
+         * \param name name of shader file
+         * \param path path to shader file
+         */
+        Shader(std::string name, std::string path) : m_name(name), m_path(path) {};
+
+        std::string getShaderName() const { return m_name; }
+
+        std::string getShaderPath() const { return m_path; }
+
+        std::string getShaderFullName() const;
+
+        /*!
+         * \brief Shader destructor
+         */
+        virtual ~Shader() {};
+    private:
+        std::string m_name;
+        std::string m_path;
+    };
 }
 
-Configurator::~Configurator()
-{
-    if (m_spConfiguration)
-    {
-        delete m_spConfiguration;
-        m_spConfiguration = nullptr;
-    }
-}
+#endif //VULKALC_LIBRARY_SHADER_H

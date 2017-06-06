@@ -22,7 +22,7 @@
 * SOFTWARE.
 */
 
-#include <Exceptions.h>
+#include <Exceptions.hpp>
 #include "catch.hpp"
 #include <cstring>
 

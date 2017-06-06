@@ -27,9 +27,9 @@ set(CMAKE_CXX_STANDARD 11)
 
 #treat all warnings as errors
 if (CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-elseif (${CMAKE_GENERATOR} MATCHES "Microsoft")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -fopenmp")
+elseif (${CMAKE_GENERATOR} MATCHES "^Visual")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall /openmp")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
 if (WIN32)
@@ -45,12 +45,12 @@ elseif (UNIX)
 else ()
     find_library(VULKAN vulkan)
 endif ()
-message(${VULKAN})
 
-set(SOURCE_FILES Application.cpp VulkanInfo.cpp Configurator.cpp Configuration.cpp Exceptions.cpp)
+set(SOURCE_FILES Application.cpp VulkanInfo.cpp Exceptions.cpp Utilities.cpp PhysicalDevice.cpp ShaderProvider.cpp VerifiedShader.cpp Shader.cpp)
 set(HEADER_FILES include/Application.hpp include/Configurator.hpp include/Export.hpp
-        include/InformationProvider.hpp include/RAII.hpp include/Verifier.hpp include/VulkanInfo.hpp
-        include/Configuration.hpp include/Utilities.h include/Exceptions.h)
+        include/InformationProvider.hpp include/Verifier.hpp include/VulkanInfo.hpp
+        include/Configuration.hpp include/Utilities.hpp include/Exceptions.hpp include/ShaderProvider.hpp
+        include/Shader.hpp include/VerifiedShader.hpp include/PhysicalDevice.hpp)
 
 if (VULKALC_BUILD_STATIC)
     add_library(vulkalc STATIC ${SOURCE_FILES} ${HEADER_FILES})
@@ -58,6 +58,7 @@ else ()
     add_library(vulkalc SHARED ${SOURCE_FILES} ${HEADER_FILES})
 endif (VULKALC_BUILD_STATIC)
 
+message(${VULKAN})
 target_link_libraries(vulkalc ${VULKAN})
 #TODO cmake install build artifacts and shaders
 #TODO copy headers to install folder

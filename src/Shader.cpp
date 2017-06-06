@@ -23,42 +23,18 @@
 */
 
 /*!
- * \file RAII.hpp
- * \brief RAII pattern interface
+ * \file Shader.cpp
+ * \brief 
  * \author Lev Sizov
- * \date 28.05.17
- *
- * This file contains RAII class which plays as interface for RAII pattern.
+ * \date 05.06.2017
  */
 
-#ifndef VULKALC_RAII_H
-#define VULKALC_RAII_H
+#include "include/Shader.hpp"
 
-#include "Export.hpp"
+using namespace Vulkalc;
 
-/*!
- * \copydoc Application
- */
-namespace Vulkalc
+std::string Shader::getShaderFullName() const
 {
-    /*!
-     * \brief RAII class which plays as interface for RAII pattern
-     *
-     * Abstract class RAII, which plays as interface to implement RAII pattern
-     */
-    class VULKALC_API RAII
-    {
-    protected:
-        /*!
-         * \brief Initializes a resource
-         */
-        virtual void init() = 0;
-
-        /*!
-         * \brief Releases a resource
-         */
-        virtual void release() = 0;
-    };
+    std::string fullName = m_path;
+    
 }
-
-#endif //VULKALC_RAII_H
