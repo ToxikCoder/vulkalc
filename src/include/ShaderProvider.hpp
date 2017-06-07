@@ -73,12 +73,19 @@ namespace Vulkalc
          */
         VerifiedShader tryCompile(const VkDevice& device, const Shader& shader) const;
 
-        ShaderProvider();
+        /*!
+         * \brief ShaderProvider default constructor
+         */
+        ShaderProvider() {};
 
-        virtual ~ShaderProvider();
+        /*!
+         * \brief ShaderProvider destructor
+         */
+        virtual ~ShaderProvider() {};
 
     private:
         std::vector<std::string> _discoverShaders(const char* directory) const;
+
     };
 }
 

@@ -68,16 +68,6 @@ ShaderProvider::tryCompileShaders(const VkDevice& device, const std::vector<Shad
     return verifiedShaders;
 }
 
-ShaderProvider::ShaderProvider()
-{
-
-}
-
-ShaderProvider::~ShaderProvider()
-{
-
-}
-
 std::vector<std::string> ShaderProvider::_discoverShaders(const char* directory) const
 {
     std::vector<std::string> shaderNames;

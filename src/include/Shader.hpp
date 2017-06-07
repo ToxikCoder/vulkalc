@@ -49,6 +49,9 @@ namespace Vulkalc
     class VULKALC_API Shader
     {
     public:
+        /*!
+         * \brief Default Shader constructor. Do not use
+         */
         Shader() {};
         /*!
          * \brief Shader constructor
@@ -57,19 +60,33 @@ namespace Vulkalc
          */
         Shader(std::string name, std::string path);
 
+        /*!
+         * \brief Returns shader name
+         * \return string containing shader name
+         */
         std::string getShaderName() const { return m_name; }
 
+        /*!
+         * \brief Returns path to shader
+         * \return string containing path to shader
+         */
         std::string getShaderPath() const { return m_path; }
 
+        /*!
+         * \brief Returns full path to shader
+         * \return string containing full path to shader
+         */
         std::string getShaderFullName() const;
 
         /*!
          * \brief Shader destructor
          */
         virtual ~Shader() {};
+
     private:
         std::string m_name;
         std::string m_path;
+
     };
 }
 

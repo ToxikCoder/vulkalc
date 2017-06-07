@@ -71,7 +71,7 @@ bool VerifiedShader::_tryCompile(const VkDevice& device)
     createInfo.pNext = nullptr;
     createInfo.flags = 0;
     createInfo.codeSize = size;
-    createInfo.pCode = static_cast<uint32_t*>(code);
+    createInfo.pCode = (uint32_t*) code;
 
     VkResult result = vkCreateShaderModule(device, &createInfo, nullptr, m_spVkShaderModule.get());
     if(result == VK_SUCCESS)

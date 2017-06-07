@@ -23,6 +23,7 @@
 */
 
 #include <Application.hpp>
+#include <Exceptions.hpp>
 #include "catch.hpp"
 
 using namespace Vulkalc;
@@ -162,6 +163,8 @@ TEST_CASE("Creating Device")
     }
     REQUIRE_NOTHROW(application->setPhysicalDevice(devices[0]));
     REQUIRE(application->getVkDevice() != nullptr);
+    REQUIRE_THROWS_AS(application->setPhysicalDevice(0), Exception);
+    REQUIRE_NOTHROW(application->setPhysicalDevice(devices[0]));
     devices.clear();
     ss.reset();
     configuration.reset();
