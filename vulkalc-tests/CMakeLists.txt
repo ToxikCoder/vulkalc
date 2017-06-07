@@ -24,6 +24,28 @@
 
 project(vulkalc-tests)
 set(CMAKE_CXX_STANDARD 11)
+
+#discovering GPUs
+if (WIN32)
+    execute_process(COMMAND wmic path win32_VideoController get name
+            OUTPUT_VARIABLE GPUS)
+    if (${GPUS} MATCHES "Name(.+\n)+")
+        message("At least one GPU exists, enabling GPU-dependant tests")
+        set(GPU_EXISTS 1)
+    endif ()
+else ()
+    execute_process(COMMAND lspci
+            OUTPUT_VARIABLE GPUS)
+    if (${GPUS} MATCHES ".*(VGA|3D|2D)+.*")
+        message("At least one GPU exists, enabling GPU-dependant tests")
+        set(GPU_EXISTS 1)
+    endif ()
+endif (WIN32)
+
+if (${GPU_EXISTS} EQUAL 1)
+    add_definitions("-DGPU_EXISTS")
+endif ()
+
 include_directories(../src/include)
 if (WIN32)
     include_directories($ENV{VULKAN_SDK}/Include/)

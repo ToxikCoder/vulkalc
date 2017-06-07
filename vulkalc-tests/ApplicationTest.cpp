@@ -145,7 +145,7 @@ TEST_CASE("Application is configured")
     ss.reset();
 }
 
-//This test expects at least one GPU to be installed
+#ifdef GPU_EXISTS
 TEST_CASE("Creating Device")
 {
     Application* application = new Application();
@@ -167,3 +167,5 @@ TEST_CASE("Creating Device")
     configuration.reset();
     delete application;
 }
+
+#endif
