@@ -30,6 +30,8 @@
  */
 
 #include "include/Application.hpp"
+#include "include/VulkalcVersion.hpp"
+#include <string>
 #include <stdlib.h>
 #include <cstring>
 
@@ -365,16 +367,45 @@ VkResult Application::_vkGetBestComputeQueueNPH(VkPhysicalDevice* physicalDevice
 
 void Application::_continueConfiguring()
 {
-    uint32_t queueFamilyIndex = 0;
+    _createDevice();
+
+    VkQueue computeQueue;
+    vkGetDeviceQueue(*getVkDevice(), m_queueFamilyIndex, 0, &computeQueue);
+    m_spQueue = std::make_shared<VkQueue>(computeQueue);
+
+    _createPipeline();
+}
+
+void
+Application::setPhysicalDevice(const SharedPhysicalDevice& physicalDevice) throw(Exception, VulkanOperationException)
+{
+    if(physicalDevice != nullptr)
+    {
+        m_spPhysicalDevice = physicalDevice;
+        _continueConfiguring();
+    }
+    else
+    {
+        throw Exception("Passed physical device is null");
+    }
+}
+
+bool Application::_allocateDeviceMemory()
+{
+    return false;
+}
+
+void Application::_createDevice()
+{
     const float queuePriority = 1.0f;
-    VkResult result = _vkGetBestComputeQueueNPH(m_spPhysicalDevice->getVkPhysicalDevice().get(), &queueFamilyIndex);
+    VkResult result = _vkGetBestComputeQueueNPH(m_spPhysicalDevice->getVkPhysicalDevice().get(), &m_queueFamilyIndex);
     if(result != VK_SUCCESS)
         throw VulkanOperationException("Failed to find QueueFamily suitable for computing");
 
     VkDeviceQueueCreateInfo vkDeviceQueueCreateInfo;
     vkDeviceQueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     vkDeviceQueueCreateInfo.pNext = nullptr;
-    vkDeviceQueueCreateInfo.queueFamilyIndex = queueFamilyIndex;
+    vkDeviceQueueCreateInfo.queueFamilyIndex = m_queueFamilyIndex;
     vkDeviceQueueCreateInfo.pQueuePriorities = &queuePriority;
     vkDeviceQueueCreateInfo.queueCount = 1;
     vkDeviceQueueCreateInfo.flags = 0;
@@ -409,16 +440,19 @@ void Application::_continueConfiguring()
     m_spDevice = std::make_shared<VkDevice>(device);
 }
 
-void
-Application::setPhysicalDevice(const SharedPhysicalDevice& physicalDevice) throw(Exception, VulkanOperationException)
+void Application::_createPipeline()
 {
-    if(physicalDevice != nullptr)
-    {
-        m_spPhysicalDevice = physicalDevice;
-        _continueConfiguring();
-    }
-    else
-    {
-        throw Exception("Passed physical device is null");
-    }
+
+}
+
+std::string Application::getVulkalcVersion() const
+{
+#ifndef __MINGW32_VERSION
+    std::string version =   std::to_string(VULKALC_MAJOR_VERSION) + "." +
+                            std::to_string(VULKALC_MINOR_VERSION) + "." +
+                            std::to_string(VULKALC_PATCH_VERSION);
+#else
+    std::string version = VULKALC_VERSION;
+#endif
+    return version;
 }

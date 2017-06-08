@@ -36,10 +36,6 @@
 #ifndef VULKALC_APPLICATION_H
 #define VULKALC_APPLICATION_H
 
-#define VULKALC_MAJOR_VERSION @PROJECT_VERSION_MAJOR@
-#define VULKALC_MINOR_VERSION @PROJECT_VRESION_MINOR@
-#define VULKALC_PATCH_VERSION @PROJECT_VERSION_PATCH@
-
 #include "Export.hpp"
 #include "Configurator.hpp"
 #include "Exceptions.hpp"
@@ -73,6 +69,12 @@ namespace Vulkalc
          * \throws HostMemoryAllocationException - is thrown if Application fails to allocate memory in heap
          */
         Application() throw(HostMemoryAllocationException);
+
+        /*!
+         * \brief Returns version of Vulkalc as a string
+         * \return string containing version of Vulkalc
+         */
+        std::string getVulkalcVersion() const;
 
         /*!
          * \brief Checks if Application is initialized with init().
@@ -171,6 +173,14 @@ namespace Vulkalc
         const SharedDevice getVkDevice() const { return m_spDevice; };
 
         /*!
+         * \brief Returns VkQueue object, wrapped into shared_ptr
+         * \return constant shared pointer to VkQueue
+         *
+         * \note Pointer will be NULL, if physical device isn't set
+         */
+        const SharedQueue getVkQueue() const { return m_spQueue; };
+
+        /*!
          * \brief Application destructor
          */
         virtual ~Application();
@@ -186,6 +196,12 @@ namespace Vulkalc
 
         void _continueConfiguring();
 
+        void _createDevice();
+
+        void _createPipeline();
+
+        bool _allocateDeviceMemory();
+
         //writes to queueFamilyIndex index of best queueFamilyIndex for transfering data
         VkResult _vkGetBestTransferQueueNPH(VkPhysicalDevice* physicalDevice, uint32_t* queueFamilyIndex);
 
@@ -198,6 +214,8 @@ namespace Vulkalc
         bool m_isLoggingEnabled;
         bool m_isErrorLoggingEnabled;
 
+        uint32_t m_queueFamilyIndex = 0;
+
         VkInstance m_VkInstance;
 
         SharedConfigurator m_spConfigurator;
@@ -207,6 +225,7 @@ namespace Vulkalc
         SharedInstanceCreateInfo m_spVkInstanceCreateInfo;
         SharedPhysicalDevice m_spPhysicalDevice;
         SharedDevice m_spDevice;
+        SharedQueue m_spQueue;
 
         std::vector<VkPhysicalDevice> m_devices;
 

@@ -73,9 +73,13 @@ bool VerifiedShader::_tryCompile(const VkDevice& device)
     createInfo.codeSize = size;
     createInfo.pCode = (uint32_t*) code;
 
-    VkResult result = vkCreateShaderModule(device, &createInfo, nullptr, m_spVkShaderModule.get());
+    VkShaderModule module;
+    VkResult result = vkCreateShaderModule(device, &createInfo, nullptr, &module);
     if(result == VK_SUCCESS)
+    {
         m_isCompiled = true;
+        m_spVkShaderModule = std::make_shared<VkShaderModule>(module);
+    }
 
     delete[] code;
 
