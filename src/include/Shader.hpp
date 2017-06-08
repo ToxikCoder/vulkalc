@@ -58,7 +58,7 @@ namespace Vulkalc
          * \param name name of shader file
          * \param path path to shader file
          */
-        Shader(std::string name, std::string path);
+        Shader(const std::string& name, const std::string& path);
 
         /*!
          * \brief Returns shader name

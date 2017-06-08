@@ -33,7 +33,7 @@
 
 using namespace Vulkalc;
 
-Shader::Shader(std::string name, std::string path) : m_name(name), m_path(path)
+Shader::Shader(const std::string& name, const std::string& path) : m_name(name), m_path(path)
 {
     if(m_path == "")
         m_path = "./";

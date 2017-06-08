@@ -36,7 +36,7 @@ namespace Vulkalc
          * Creating object with this constructor calls glslangValidator to try and compile specified shader.
          * If compilation was successful, isCompiled would return true
          */
-        VerifiedShader(const Shader& shader);
+        explicit VerifiedShader(const Shader& shader);
 
         /*!
          * Checks if bind shader is successfully compiled and ready to use

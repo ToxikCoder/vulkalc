@@ -84,12 +84,13 @@ namespace Vulkalc
          * \brief ApplicationNotInitializedException constructor
          */
         ApplicationNotInitializedException() : Exception("An instance of Application is not initialized. "
-                                                                 "Call Application::init() first") {};
+                                                                 "Call Application::init() first")
+        {
+            m_exception_message = "ApplicationNotInitializedException in Vulkalc Application";
+        };
 
         virtual ~ApplicationNotInitializedException() {};
 
-    private:
-        std::string m_exception_message = "ApplicationNotInitializedException in Vulkalc Application";
     };
 
     /*!
@@ -108,12 +109,13 @@ namespace Vulkalc
          */
         ApplicationNotConfiguredException() : Exception("An instance of Application is not configured. "
                                                                 "Edit Configuration instance, then call "
-                                                                "Application::configure()") {};
+                                                                "Application::configure()")
+        {
+            m_exception_message = "ApplicationNotConfiguredException in Vulkalc Application"
+        };
 
         virtual ~ApplicationNotConfiguredException() {};
 
-    private:
-        std::string m_exception_message = "ApplicationNotConfiguredException in Vulkalc Application";
     };
 
     /*!
@@ -127,7 +129,10 @@ namespace Vulkalc
         /*!
          * \brief HostMemoryAllocationException constructor
          */
-        HostMemoryAllocationException() {};
+        HostMemoryAllocationException()
+        {
+            m_exception_message = "Failed to allocate memory in host application"
+        };
 
         virtual ~HostMemoryAllocationException() {};
 
@@ -135,10 +140,9 @@ namespace Vulkalc
          * \brief HostMemoryAllocationException constructor with message parameter
          * \param message exception message
          */
-        explicit HostMemoryAllocationException(const char* message) : Exception(message) {};
+        explicit HostMemoryAllocationException(const char* message) : Exception(message),
+                                                                      HostMemoryAllocationException() {};
 
-    private:
-        std::string m_exception_message = "Failed to allocate memory in host application";
     };
 
     /*!
@@ -152,7 +156,10 @@ namespace Vulkalc
         /*!
          * VulkanOperationException constructor
          */
-        VulkanOperationException() {};
+        VulkanOperationException()
+        {
+            m_exception_message = "Vulkan API command failed: "
+        };
 
         virtual ~VulkanOperationException() {};
 
@@ -162,8 +169,6 @@ namespace Vulkalc
          */
         explicit VulkanOperationException(const char* message) : Exception(message) {};
 
-    private:
-        std::string m_exception_message = "Vulkan API command failed: ";
     };
 }
 

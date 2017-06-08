@@ -34,7 +34,7 @@ configuration: Release
 environment:
   VULKAN_SDK: C:\VulkanSDK\1.0.39.1\
   VULKALC_MAJOR: 0
-  VULKALC_MINOR: 0
+  VULKALC_MINOR: 1
   VULKALC_PATCH: 2
   appveyor_rdp_password:
       secure: gCM5roOouUwE5vdVxAiOnQ==

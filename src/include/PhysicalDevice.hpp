@@ -86,7 +86,7 @@ namespace Vulkalc
          * \brief PhysicalDevice constructor
          * \param physicalDevice Vulkan physical device to use
          */
-        PhysicalDevice(const VkPhysicalDevice& physicalDevice);
+        explicit PhysicalDevice(const VkPhysicalDevice& physicalDevice);
 
         /*!
          * \brief PhysicalDevice destructor
