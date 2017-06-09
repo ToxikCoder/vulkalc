@@ -36,7 +36,6 @@
 
 #include "Export.hpp"
 #include "Task.hpp"
-#include "TaskResult.hpp"
 #include "Utilities.hpp"
 
 /*!
@@ -48,23 +47,23 @@ namespace Vulkalc
     {
     public:
 
-        Runner();
+        Runner(const SharedQueue queue, uint32_t queueFamilyIndex) :
+                m_spQueue(queue), m_queueFamilyIndex(queueFamilyIndex) {};
 
-        const SharedTask createNewTask() const;
+        void queueTask(const SharedTask task) throw(Exception);
 
-        void queueTask(const SharedTask task);
-
-        const SharedTaskResult getLastTaskResult() const { return m_spTaskResult; };
+        TaskResult getLastTaskResult();
 
         virtual ~Runner();
 
     private:
-        friend class Application;
-
-        void _configure(const SharedQueue);
-
-        SharedTaskResult m_spTaskResult;
+        SharedTask m_spLastTask;
+        std::shared_ptr<VkDeviceMemory> m_spLastTaskOutMemory;
+        SharedQueue m_spQueue;
+        uint32_t m_queueFamilyIndex = 0;
     };
+
+    typedef std::shared_ptr<Runner> SharedRunner;
 }
 
 #endif //VULKALC_LIBRARY_RUNNER_HPP

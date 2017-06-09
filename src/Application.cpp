@@ -55,6 +55,9 @@ Application::~Application()
     if(m_spConfigurator)
         m_spConfigurator.reset();
 
+    if(m_spRunner)
+        m_spRunner.reset();
+
     if(m_spVkApplicationInfo)
         m_spVkApplicationInfo.reset();
 
@@ -75,7 +78,7 @@ Application::~Application()
 
     if(m_spDevice)
     {
-        VkDevice device = *m_spDevice;
+        VkDevice device = *(m_spDevice->getVkDevice());
         m_spDevice.reset();
         vkDestroyDevice(device, nullptr);
     }
@@ -373,10 +376,9 @@ void Application::_continueConfiguring()
     _createDevice();
 
     VkQueue computeQueue;
-    vkGetDeviceQueue(*getVkDevice(), m_queueFamilyIndex, 0, &computeQueue);
+    vkGetDeviceQueue(*(getDevice()->getVkDevice()), m_queueFamilyIndex, 0, &computeQueue);
     m_spQueue = std::make_shared<VkQueue>(computeQueue);
-
-    _createPipeline();
+    m_spRunner = std::make_shared<Runner>(m_spQueue, m_queueFamilyIndex);
 }
 
 void
@@ -391,11 +393,6 @@ Application::setPhysicalDevice(const SharedPhysicalDevice& physicalDevice) throw
     {
         throw Exception("Passed physical device is null");
     }
-}
-
-bool Application::_allocateDeviceMemory()
-{
-    return false;
 }
 
 void Application::_createDevice()
@@ -440,12 +437,7 @@ void Application::_createDevice()
     if(result != VK_SUCCESS)
         throw VulkanOperationException("Failed to create VkDevice");
 
-    m_spDevice = std::make_shared<VkDevice>(device);
-}
-
-void Application::_createPipeline()
-{
-
+    m_spDevice = std::make_shared<Device>(m_spPhysicalDevice, std::make_shared<VkDevice>(device));
 }
 
 std::string Application::getVulkalcVersion() const

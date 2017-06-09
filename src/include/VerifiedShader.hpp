@@ -13,6 +13,7 @@
 #include "Export.hpp"
 #include "Utilities.hpp"
 #include "Shader.hpp"
+#include "Device.hpp"
 #include <vulkan/vulkan.h>
 
 /*!

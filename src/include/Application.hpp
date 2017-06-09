@@ -41,6 +41,8 @@
 #include "Exceptions.hpp"
 #include "Utilities.hpp"
 #include "PhysicalDevice.hpp"
+#include "Device.hpp"
+#include "Runner.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -167,10 +169,10 @@ namespace Vulkalc
         void setPhysicalDevice(const SharedPhysicalDevice& physicalDevice) throw(Exception, VulkanOperationException);
 
         /*!
-         * \brief Returns VkDevice object, wrapped into shared_ptr
-         * \return constant shared pointer to VkDevice
+         * \brief Returns Device object, wrapped into shared_ptr
+         * \return constant shared pointer to Device
          */
-        const SharedDevice getVkDevice() const { return m_spDevice; };
+        const SharedDevice getDevice() const { return m_spDevice; };
 
         /*!
          * \brief Returns VkQueue object, wrapped into shared_ptr
@@ -179,6 +181,13 @@ namespace Vulkalc
          * \note Pointer will be NULL, if physical device isn't set
          */
         const SharedQueue getVkQueue() const { return m_spQueue; };
+
+        /*!
+         * \brief Returns Runner for running compute tasks
+         * @return constant shared pointer to Runner
+         * \note
+         */
+        const SharedRunner getRunner() const { return m_spRunner; };
 
         /*!
          * \brief Application destructor
@@ -198,10 +207,6 @@ namespace Vulkalc
 
         void _createDevice();
 
-        void _createPipeline();
-
-        bool _allocateDeviceMemory();
-
         //writes to queueFamilyIndex index of best queueFamilyIndex for transfering data
         VkResult _vkGetBestTransferQueueNPH(VkPhysicalDevice* physicalDevice, uint32_t* queueFamilyIndex);
 
@@ -219,6 +224,7 @@ namespace Vulkalc
         VkInstance m_VkInstance;
 
         SharedConfigurator m_spConfigurator;
+        SharedRunner m_spRunner;
         SharedIOStream m_spLogStream;
         SharedIOStream m_spErrorStream;
         SharedVkApplicationInfo m_spVkApplicationInfo;

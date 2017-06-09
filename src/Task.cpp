@@ -36,7 +36,7 @@ using namespace Vulkalc;
 
 Task::Task(const SharedDevice device, const VerifiedShader &shader) throw(Exception)
 {
-    if(device == nullptr || !shader.isCompiled())
+    if(m_spDevice == nullptr || !shader.isCompiled())
         throw Exception("VkDevice pointer is NULL or shader is not compiled");
 
     m_spDevice = device;
@@ -50,7 +50,8 @@ Task::Task(const SharedDevice device, const VerifiedShader &shader) throw(Except
             VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO, 0, 0, 3, layoutBinding
     };
     VkDescriptorSetLayout descriptorSetLayout;
-    VkResult result = vkCreateDescriptorSetLayout(*device, &layoutCreateInfo, nullptr, &descriptorSetLayout);
+    VkResult result = vkCreateDescriptorSetLayout(*(m_spDevice->getVkDevice()), &layoutCreateInfo, nullptr,
+                                                  &descriptorSetLayout);
     if(result != VK_SUCCESS)
         throw ("Failed to initialize DescriptorSet layout");
 
@@ -61,7 +62,7 @@ Task::Task(const SharedDevice device, const VerifiedShader &shader) throw(Except
     };
 
     VkPipelineLayout pipelineLayout;
-    result = vkCreatePipelineLayout(*device, &pipelineLayoutCreateInfo, nullptr, &pipelineLayout);
+    result = vkCreatePipelineLayout(*(m_spDevice->getVkDevice()), &pipelineLayoutCreateInfo, nullptr, &pipelineLayout);
     if(result != VK_SUCCESS)
         throw ("Failed to create pipeline layout");
 
@@ -81,7 +82,8 @@ Task::Task(const SharedDevice device, const VerifiedShader &shader) throw(Except
     };
 
     VkPipeline pipeline;
-    result = vkCreateComputePipelines(*device, 0, 1, &computePipelineCreateInfo, nullptr, &pipeline);
+    result = vkCreateComputePipelines(*(m_spDevice->getVkDevice()), 0, 1, &computePipelineCreateInfo, nullptr,
+                                      &pipeline);
     if(result != VK_SUCCESS)
         throw Exception("Failed to create compute pipeline");
 
@@ -93,19 +95,19 @@ Task::~Task()
     if(m_spPipeline) {
         VkPipeline pipeline = *m_spPipeline;
         m_spPipeline.reset();
-        vkDestroyPipeline(*m_spDevice, pipeline, 0);
+        vkDestroyPipeline(*(m_spDevice->getVkDevice()), pipeline, 0);
     }
 
     if(m_spPipelinelayout) {
         VkPipelineLayout layout = *m_spPipelinelayout;
         m_spPipelinelayout.reset();
-        vkDestroyPipelineLayout(*m_spDevice, layout, 0);
+        vkDestroyPipelineLayout(*(m_spDevice->getVkDevice()), layout, 0);
     }
 
     if(m_spDescriptorSetLayout) {
         VkDescriptorSetLayout descriptorSetLayout = *m_spDescriptorSetLayout;
         m_spDescriptorSetLayout.reset();
-        vkDestroyDescriptorSetLayout(*m_spDevice, descriptorSetLayout, 0);
+        vkDestroyDescriptorSetLayout(*(m_spDevice->getVkDevice()), descriptorSetLayout, 0);
     }
 
     if(m_spDevice)

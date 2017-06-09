@@ -24,7 +24,7 @@
 
 /*!
  * \file Exceptions.cpp
- * \brief Contains excpetions implementations
+ * \brief Contains exceptions definitions
  * \author Lev Sizov
  * \date 01.06.2017
  */

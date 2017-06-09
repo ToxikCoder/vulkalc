@@ -162,7 +162,7 @@ TEST_CASE("Creating Device")
         cout << "Device " << i << ": " << devices[i]->getDeviceName() << endl;
     }
     REQUIRE_NOTHROW(application->setPhysicalDevice(devices[0]));
-    REQUIRE(application->getVkDevice() != nullptr);
+    REQUIRE(application->getDevice() != nullptr);
     REQUIRE_THROWS_AS(application->setPhysicalDevice(0), Exception);
     REQUIRE_NOTHROW(application->setPhysicalDevice(devices[0]));
     devices.clear();

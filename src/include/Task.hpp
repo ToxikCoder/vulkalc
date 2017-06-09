@@ -38,6 +38,7 @@
 #include "VerifiedShader.hpp"
 #include "Exceptions.hpp"
 #include "Utilities.hpp"
+#include "Device.hpp"
 #include <memory>
 
 /*!
@@ -45,17 +46,66 @@
  */
 namespace Vulkalc
 {
-    class VULKALC_API Task
-    {
+
+    /*!
+     * \brief Contains computing results
+     */
+    typedef struct {
+        uint32_t buffer_size;
+        int32_t *out_buffer;
+    } TaskResult;
+
+    /*!
+     * \class Task
+     *
+     * Compute task, with bound shader and data
+     */
+    class VULKALC_API Task {
     public:
 
-        Task(const SharedDevice device, const VerifiedShader &shader) throw(Exception);
+        /*!
+         * Task constructor. Prepares device for computing with specified shader
+         * @param m_spDevice device to use for computing
+         * @param shader compute shader to use
+         */
+        Task(const SharedDevice m_spDevice, const VerifiedShader &shader) throw(Exception);
 
+        /*!
+         * This struct is example of data container for matrix summation
+         */
+        typedef struct {
+            uint32_t buffer_size;
+            int32_t *in_buffer1;
+            int32_t *in_buffer2;
+        } TaskBuffers;
+
+        /*!
+         * Sets input data buffers
+         * @param buffers TaskBuffers containing input data buffers
+         */
+        void setData(TaskBuffers &buffers) { m_buffers = buffers; };
+
+        /*!
+         * \brief Task destructor
+         */
         virtual ~Task();
 
     private:
+        friend class Runner;
+
         Task() {};
 
+        TaskBuffers _getTaskBuffers() const { return m_buffers; };
+
+        const SharedDevice _getDevice() const { return m_spDevice; };
+
+        const SharedPipeline _getPipeline() const { return m_spPipeline; };
+
+        const SharedPipelineLayout _getPipelineLayout() const { return m_spPipelinelayout; };
+
+        const SharedDescriptorSetlayout _getDescriptorSetLayout() { return m_spDescriptorSetLayout; };
+
+        TaskBuffers m_buffers;
         SharedDevice m_spDevice;
         SharedPipeline m_spPipeline;
         SharedPipelineLayout m_spPipelinelayout;

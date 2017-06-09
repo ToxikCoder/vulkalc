@@ -48,7 +48,7 @@ VerifiedShader::~VerifiedShader()
     if(m_spVkShaderModule) {
         VkShaderModule module = *m_spVkShaderModule;
         m_spVkShaderModule.reset();
-        vkDestroyShaderModule(*m_spDevice, module, 0);
+        vkDestroyShaderModule(*(m_spDevice->getVkDevice()), module, 0);
     }
 
     if(m_spDevice)
@@ -82,7 +82,7 @@ bool VerifiedShader::_tryCompile(const SharedDevice device)
     createInfo.pCode = (uint32_t*) code;
 
     VkShaderModule module;
-    VkResult result = vkCreateShaderModule(*device, &createInfo, nullptr, &module);
+    VkResult result = vkCreateShaderModule(*(device->getVkDevice()), &createInfo, nullptr, &module);
     if(result == VK_SUCCESS)
     {
         m_isCompiled = true;

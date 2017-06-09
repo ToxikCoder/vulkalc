@@ -51,10 +51,12 @@ else ()
     message(FATAL_ERROR "Failed to find Vulkan library")
 endif ()
 
-set(SOURCE_FILES Application.cpp Exceptions.cpp Utilities.cpp PhysicalDevice.cpp ShaderProvider.cpp VerifiedShader.cpp Shader.cpp Task.cpp)
+set(SOURCE_FILES Application.cpp Exceptions.cpp Utilities.cpp PhysicalDevice.cpp ShaderProvider.cpp VerifiedShader.cpp
+        Shader.cpp Task.cpp Runner.cpp)
 set(HEADER_FILES include/Application.hpp include/Configurator.hpp include/Export.hpp
         include/Configuration.hpp include/Utilities.hpp include/Exceptions.hpp include/ShaderProvider.hpp
-        include/Shader.hpp include/VerifiedShader.hpp include/PhysicalDevice.hpp include/VulkalcVersion.hpp include/Runner.hpp include/Task.hpp include/TaskResult.hpp)
+        include/Shader.hpp include/VerifiedShader.hpp include/PhysicalDevice.hpp include/VulkalcVersion.hpp
+        include/Runner.hpp include/Task.hpp include/Device.hpp)
 
 if (VULKALC_BUILD_STATIC)
     add_library(vulkalc STATIC ${SOURCE_FILES} ${HEADER_FILES})
