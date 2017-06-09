@@ -30,7 +30,6 @@
  */
 
 #include "include/ShaderProvider.hpp"
-#include "include/Utilities.hpp"
 #include <sstream>
 #include <fstream>
 
@@ -41,7 +40,6 @@
 #endif
 
 using namespace Vulkalc;
-
 
 std::vector<Shader> ShaderProvider::loadShaders(const char* directory) const
 {
@@ -57,7 +55,7 @@ std::vector<Shader> ShaderProvider::loadShaders(const char* directory) const
 }
 
 std::vector<VerifiedShader>
-ShaderProvider::tryCompileShaders(const VkDevice& device, const std::vector<Shader>& shaders) const
+ShaderProvider::tryCompileShaders(const SharedDevice device, const std::vector<Shader> &shaders) const
 {
     std::vector<VerifiedShader> verifiedShaders = std::vector<VerifiedShader>(shaders.size());
     for(Shader shader : shaders)
@@ -108,11 +106,11 @@ std::vector<std::string> ShaderProvider::_discoverShaders(const char* directory)
     return shaderNames;
 }
 
-VerifiedShader ShaderProvider::tryCompile(const VkDevice& device, const Shader& shader) const
+VerifiedShader ShaderProvider::tryCompile(const SharedDevice device, const Shader shader) const
 {
-    VerifiedShader verifiedShader(shader);
+    VerifiedShader verifiedShader(device, shader);
     verifiedShader._tryCompile(device);
-    return shader;
+    return verifiedShader;
 }
 
 

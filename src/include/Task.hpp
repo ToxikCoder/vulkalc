@@ -34,9 +34,11 @@
 #ifndef VULKALC_LIBRARY_TASK_HPP
 #define VULKALC_LIBRARY_TASK_HPP
 
-#include <memory>
 #include "Export.hpp"
 #include "VerifiedShader.hpp"
+#include "Exceptions.hpp"
+#include "Utilities.hpp"
+#include <memory>
 
 /*!
  * \copydoc Vulkalc
@@ -47,12 +49,17 @@ namespace Vulkalc
     {
     public:
 
-        Task(const VerifiedShader& shader);
+        Task(const SharedDevice device, const VerifiedShader &shader) throw(Exception);
 
         virtual ~Task();
 
     private:
-        Task();
+        Task() {};
+
+        SharedDevice m_spDevice;
+        SharedPipeline m_spPipeline;
+        SharedPipelineLayout m_spPipelinelayout;
+        SharedDescriptorSetlayout m_spDescriptorSetLayout;
 
     };
 

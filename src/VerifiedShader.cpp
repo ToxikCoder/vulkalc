@@ -36,18 +36,26 @@
 using namespace Vulkalc;
 
 
-VerifiedShader::VerifiedShader(const Shader& shader) : m_shader(shader)
+VerifiedShader::VerifiedShader(const SharedDevice device, const Shader shader) : m_shader(shader)
 {
+    m_spDevice = device;
     VkShaderModule shaderModule;
     m_spVkShaderModule = std::make_shared<VkShaderModule>(shaderModule);
 }
 
 VerifiedShader::~VerifiedShader()
 {
-    m_spVkShaderModule.reset();
+    if(m_spVkShaderModule) {
+        VkShaderModule module = *m_spVkShaderModule;
+        m_spVkShaderModule.reset();
+        vkDestroyShaderModule(*m_spDevice, module, 0);
+    }
+
+    if(m_spDevice)
+        m_spDevice.reset();
 }
 
-bool VerifiedShader::_tryCompile(const VkDevice& device)
+bool VerifiedShader::_tryCompile(const SharedDevice device)
 {
     std::string compileCommand =
             "glslangValidator -V " + m_shader.getShaderFullName() + " " + m_shader.getShaderFullName() + ".spv";
@@ -74,7 +82,7 @@ bool VerifiedShader::_tryCompile(const VkDevice& device)
     createInfo.pCode = (uint32_t*) code;
 
     VkShaderModule module;
-    VkResult result = vkCreateShaderModule(device, &createInfo, nullptr, &module);
+    VkResult result = vkCreateShaderModule(*device, &createInfo, nullptr, &module);
     if(result == VK_SUCCESS)
     {
         m_isCompiled = true;

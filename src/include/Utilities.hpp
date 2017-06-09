@@ -57,6 +57,9 @@ namespace Vulkalc
     typedef std::shared_ptr<VkPhysicalDeviceFeatures> SharedPhysicalDeviceFeatures;
     typedef std::shared_ptr<VkShaderModule> SharedShaderModule;
     typedef std::shared_ptr<VkQueue> SharedQueue;
+    typedef std::shared_ptr<VkPipeline> SharedPipeline;
+    typedef std::shared_ptr<VkPipelineLayout> SharedPipelineLayout;
+    typedef std::shared_ptr<VkDescriptorSetLayout> SharedDescriptorSetlayout;
 
     /*!
      * Returns string representation of current date and time

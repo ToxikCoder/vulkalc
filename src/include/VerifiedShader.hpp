@@ -36,7 +36,7 @@ namespace Vulkalc
          * Creating object with this constructor calls glslangValidator to try and compile specified shader.
          * If compilation was successful, isCompiled would return true
          */
-        explicit VerifiedShader(const Shader& shader);
+        explicit VerifiedShader(const SharedDevice device, const Shader shader);
 
         /*!
          * Checks if bind shader is successfully compiled and ready to use
@@ -82,8 +82,9 @@ namespace Vulkalc
     private:
         friend class ShaderProvider;
 
-        bool _tryCompile(const VkDevice& device);
+        bool _tryCompile(const SharedDevice device);
         bool m_isCompiled = false;
+        SharedDevice m_spDevice;
         SharedShaderModule m_spVkShaderModule;
         Shader m_shader;
     };

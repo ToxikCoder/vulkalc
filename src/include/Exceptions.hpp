@@ -111,7 +111,7 @@ namespace Vulkalc
                                                                 "Edit Configuration instance, then call "
                                                                 "Application::configure()")
         {
-            m_exception_message = "ApplicationNotConfiguredException in Vulkalc Application"
+            m_exception_message = "ApplicationNotConfiguredException in Vulkalc Application";
         };
 
         virtual ~ApplicationNotConfiguredException() {};
@@ -131,7 +131,7 @@ namespace Vulkalc
          */
         HostMemoryAllocationException()
         {
-            m_exception_message = "Failed to allocate memory in host application"
+            m_exception_message = "Failed to allocate memory in host application";
         };
 
         virtual ~HostMemoryAllocationException() {};
@@ -140,8 +140,9 @@ namespace Vulkalc
          * \brief HostMemoryAllocationException constructor with message parameter
          * \param message exception message
          */
-        explicit HostMemoryAllocationException(const char* message) : Exception(message),
-                                                                      HostMemoryAllocationException() {};
+        explicit HostMemoryAllocationException(const char *message) : Exception(message) {
+            m_exception_message = "Failed to allocate memory in host application";
+        };
 
     };
 
@@ -158,7 +159,7 @@ namespace Vulkalc
          */
         VulkanOperationException()
         {
-            m_exception_message = "Vulkan API command failed: "
+            m_exception_message = "Vulkan API command failed: ";
         };
 
         virtual ~VulkanOperationException() {};

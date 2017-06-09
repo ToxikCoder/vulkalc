@@ -70,6 +70,9 @@ Application::~Application()
     if(m_spPhysicalDevice)
         m_spPhysicalDevice.reset();
 
+    if(m_spQueue)
+        m_spQueue.reset();
+
     if(m_spDevice)
     {
         VkDevice device = *m_spDevice;

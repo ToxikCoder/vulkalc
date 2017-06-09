@@ -78,7 +78,7 @@ TEST_CASE("Exception messages are polymorphic")
         }
         catch(HostMemoryAllocationException& e)
         {
-            REQUIRE(strcmp(e.what(), "Failed to allocate memory in host application"));
+            REQUIRE(strcmp(e.what(), "Failed to allocate memory in host application") == 0);
         }
         try
         {
