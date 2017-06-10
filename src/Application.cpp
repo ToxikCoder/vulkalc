@@ -46,6 +46,7 @@ Application::Application() throw(HostMemoryAllocationException)
     m_isLoggingEnabled = false;
     m_isErrorLoggingEnabled = false;
     m_spConfigurator = std::make_shared<Configurator>();
+    m_spShaderProvider = std::make_shared<ShaderProvider>();
 }
 
 Application::~Application()
@@ -384,15 +385,11 @@ void Application::_continueConfiguring()
 void
 Application::setPhysicalDevice(const SharedPhysicalDevice& physicalDevice) throw(Exception, VulkanOperationException)
 {
-    if(physicalDevice != nullptr)
-    {
-        m_spPhysicalDevice = physicalDevice;
-        _continueConfiguring();
-    }
-    else
-    {
-        throw Exception("Passed physical device is null");
-    }
+    if(physicalDevice == nullptr || m_spPhysicalDevice != nullptr)
+        throw Exception("Passed physical device is null or PhysicalDevice is already configured");
+
+    m_spPhysicalDevice = physicalDevice;
+    _continueConfiguring();
 }
 
 void Application::_createDevice()

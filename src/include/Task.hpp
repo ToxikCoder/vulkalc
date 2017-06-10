@@ -52,7 +52,7 @@ namespace Vulkalc
      */
     typedef struct {
         uint32_t buffer_size;
-        int32_t *out_buffer;
+        int32_t* out_buffer;
     } TaskResult;
 
     /*!
@@ -75,8 +75,8 @@ namespace Vulkalc
          */
         typedef struct {
             uint32_t buffer_size;
-            int32_t *in_buffer1;
-            int32_t *in_buffer2;
+            int32_t* in_buffer1;
+            int32_t* in_buffer2;
         } TaskBuffers;
 
         /*!

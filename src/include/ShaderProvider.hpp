@@ -88,6 +88,8 @@ namespace Vulkalc
         std::vector<std::string> _discoverShaders(const char* directory) const;
 
     };
+
+    typedef std::shared_ptr<ShaderProvider> SharedShaderProvider;
 }
 
 #endif //VULKALC_LIBRARY_SHADERPROVIDER_H

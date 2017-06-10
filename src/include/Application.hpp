@@ -43,6 +43,7 @@
 #include "PhysicalDevice.hpp"
 #include "Device.hpp"
 #include "Runner.hpp"
+#include "ShaderProvider.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -185,9 +186,16 @@ namespace Vulkalc
         /*!
          * \brief Returns Runner for running compute tasks
          * @return constant shared pointer to Runner
-         * \note
+         * \note Runner is initialized only after setting physical device
          */
         const SharedRunner getRunner() const { return m_spRunner; };
+
+        /*!
+         * \brief Returns ShaderProvider for loading shaders
+         * @return constant shared pointer to ShaderProvider
+         */
+        const SharedShaderProvider getShaderProvider() const
+        { return m_spShaderProvider; };
 
         /*!
          * \brief Application destructor
@@ -225,6 +233,7 @@ namespace Vulkalc
 
         SharedConfigurator m_spConfigurator;
         SharedRunner m_spRunner;
+        SharedShaderProvider m_spShaderProvider;
         SharedIOStream m_spLogStream;
         SharedIOStream m_spErrorStream;
         SharedVkApplicationInfo m_spVkApplicationInfo;

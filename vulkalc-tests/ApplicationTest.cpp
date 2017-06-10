@@ -57,7 +57,12 @@ TEST_CASE("Application is initialized")
 	{
 		REQUIRE(application->isApplicationInitialized());
 		REQUIRE(application->getConfigurator() != nullptr);
+        REQUIRE(application->getShaderProvider() != nullptr);
 	}
+    SECTION("Runner is not initialized straight away")
+    {
+        REQUIRE(application->getRunner() == nullptr);
+    }
 	SECTION("Configurator, Configuration are created on init()")
 	{
 		REQUIRE(application->getConfigurator() != nullptr);
@@ -156,15 +161,27 @@ TEST_CASE("Creating Device")
     configuration->errorStream = ss;
     application->configure(false);
     std::vector<SharedPhysicalDevice> devices = application->enumeratePhysicalDevices();
-    REQUIRE(devices.size() != 0);
-    for(uint32_t i = 0; i < devices.size(); ++i)
+    SECTION("At least one GPU exists")
     {
-        cout << "Device " << i << ": " << devices[i]->getDeviceName() << endl;
+        REQUIRE(devices.size() != 0);
     }
-    REQUIRE_NOTHROW(application->setPhysicalDevice(devices[0]));
-    REQUIRE(application->getDevice() != nullptr);
-    REQUIRE_THROWS_AS(application->setPhysicalDevice(0), Exception);
-    REQUIRE_NOTHROW(application->setPhysicalDevice(devices[0]));
+    SECTION("Setting PhysicalDevice continues configuring")
+    {
+        REQUIRE_NOTHROW(application->setPhysicalDevice(devices[0]));
+        REQUIRE(application->getDevice() != nullptr);
+    }
+    SECTION("PhysicalDevice cannot be changed once set")
+    {
+        REQUIRE_NOTHROW(application->setPhysicalDevice(devices[0]));
+        REQUIRE(application->getDevice() != nullptr);
+        REQUIRE_THROWS_AS(application->setPhysicalDevice(0), Exception);
+        REQUIRE_THROWS_AS(application->setPhysicalDevice(devices[0]), Exception);
+    }
+    SECTION("Runner is created after PhysicalDevice is set")
+    {
+        application->setPhysicalDevice(devices[0]);
+        REQUIRE(application->getRunner() != nullptr);
+    }
     devices.clear();
     ss.reset();
     configuration.reset();

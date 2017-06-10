@@ -36,7 +36,7 @@
 using namespace Vulkalc;
 
 
-VerifiedShader::VerifiedShader(const SharedDevice device, const Shader shader) : m_shader(shader)
+VerifiedShader::VerifiedShader(const SharedDevice& device, const Shader& shader) : m_shader(shader)
 {
     m_spDevice = device;
     VkShaderModule shaderModule;
