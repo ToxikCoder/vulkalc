@@ -50,6 +50,8 @@ namespace Vulkalc
         Runner(const SharedQueue queue, uint32_t queueFamilyIndex) :
                 m_spQueue(queue), m_queueFamilyIndex(queueFamilyIndex) {};
 
+        Task createTaskForShader(const VerifiedShader&) const;
+
         void queueTask(const SharedTask task) throw(Exception);
 
         TaskResult getLastTaskResult();

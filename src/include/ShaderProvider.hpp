@@ -65,19 +65,19 @@ namespace Vulkalc
          * \return compiled and loaded shaders
          */
         std::vector<VerifiedShader>
-        tryCompileShaders(const SharedDevice device, const std::vector<Shader> &shaders) const;
+        tryCompileShaders(const std::vector<Shader>& shaders) const;
 
         /*!
          * \brief tries to compile one shader
          * \param shader shader to compile
          * \return VerifiedShader object
          */
-        VerifiedShader tryCompile(const SharedDevice device, const Shader shader) const;
+        VerifiedShader tryCompile(const Shader shader) const;
 
         /*!
          * \brief ShaderProvider default constructor
          */
-        ShaderProvider() {};
+        ShaderProvider(const SharedDevice device) : m_spDevice(device) {};
 
         /*!
          * \brief ShaderProvider destructor
@@ -87,6 +87,7 @@ namespace Vulkalc
     private:
         std::vector<std::string> _discoverShaders(const char* directory) const;
 
+        SharedDevice m_spDevice;
     };
 
     typedef std::shared_ptr<ShaderProvider> SharedShaderProvider;

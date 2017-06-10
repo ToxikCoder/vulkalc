@@ -194,8 +194,7 @@ namespace Vulkalc
          * \brief Returns ShaderProvider for loading shaders
          * @return constant shared pointer to ShaderProvider
          */
-        const SharedShaderProvider getShaderProvider() const
-        { return m_spShaderProvider; };
+        const SharedShaderProvider getShaderProvider() const { return m_spShaderProvider; };
 
         /*!
          * \brief Application destructor

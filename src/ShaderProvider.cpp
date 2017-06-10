@@ -55,12 +55,12 @@ std::vector<Shader> ShaderProvider::loadShaders(const char* directory) const
 }
 
 std::vector<VerifiedShader>
-ShaderProvider::tryCompileShaders(const SharedDevice device, const std::vector<Shader> &shaders) const
+ShaderProvider::tryCompileShaders(const std::vector<Shader>& shaders) const
 {
     std::vector<VerifiedShader> verifiedShaders = std::vector<VerifiedShader>(shaders.size());
     for(Shader shader : shaders)
     {
-        VerifiedShader verifiedShader = this->tryCompile(device, shader);
+        VerifiedShader verifiedShader = this->tryCompile(shader);
         verifiedShaders.push_back(verifiedShader);
     }
     return verifiedShaders;
@@ -106,10 +106,10 @@ std::vector<std::string> ShaderProvider::_discoverShaders(const char* directory)
     return shaderNames;
 }
 
-VerifiedShader ShaderProvider::tryCompile(const SharedDevice device, const Shader shader) const
+VerifiedShader ShaderProvider::tryCompile(const Shader shader) const
 {
-    VerifiedShader verifiedShader(device, shader);
-    verifiedShader._tryCompile(device);
+    VerifiedShader verifiedShader(m_spDevice, shader);
+    verifiedShader._tryCompile();
     return verifiedShader;
 }
 

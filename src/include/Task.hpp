@@ -85,6 +85,7 @@ namespace Vulkalc
          */
         void setData(TaskBuffers &buffers) { m_buffers = buffers; };
 
+        Task() {};
         /*!
          * \brief Task destructor
          */
@@ -92,9 +93,6 @@ namespace Vulkalc
 
     private:
         friend class Runner;
-
-        Task() {};
-
         TaskBuffers _getTaskBuffers() const { return m_buffers; };
 
         const SharedDevice _getDevice() const { return m_spDevice; };

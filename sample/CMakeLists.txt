@@ -24,6 +24,11 @@
 
 project(vulkalc-sample)
 set(CMAKE_CXX_STANDARD 11)
-include_directories(${VULKALC_HEADERS})
+include_directories(../src/include)
+if (WIN32)
+    include_directories($ENV{VULKAN_SDK}/Include/)
+elseif (UNIX)
+    include_directories($ENV{VULKAN_SDK}/include/)
+endif ()
 add_executable(vulkalc-sample ${CMAKE_CURRENT_SOURCE_DIR}/Sample.cpp)
 target_link_libraries(vulkalc-sample vulkalc)

@@ -57,7 +57,7 @@ TEST_CASE("Application is initialized")
 	{
 		REQUIRE(application->isApplicationInitialized());
 		REQUIRE(application->getConfigurator() != nullptr);
-        REQUIRE(application->getShaderProvider() != nullptr);
+        REQUIRE(application->getShaderProvider() == nullptr);
 	}
     SECTION("Runner is not initialized straight away")
     {
@@ -177,10 +177,22 @@ TEST_CASE("Creating Device")
         REQUIRE_THROWS_AS(application->setPhysicalDevice(0), Exception);
         REQUIRE_THROWS_AS(application->setPhysicalDevice(devices[0]), Exception);
     }
+    SECTION("Runner and ShaderProvider are null before setting PhysicalDevice")
+    {
+        REQUIRE(application->getRunner() == nullptr);
+        REQUIRE(application->getShaderProvider() == nullptr);
+    }
     SECTION("Runner is created after PhysicalDevice is set")
     {
         application->setPhysicalDevice(devices[0]);
         REQUIRE(application->getRunner() != nullptr);
+        REQUIRE(application->getShaderProvider() != nullptr);
+    }
+    SECTION("Device is created after setting VkPhysicalDevice")
+    {
+        application->setPhysicalDevice(devices[0]);
+        REQUIRE(application->getDevice() != nullptr);
+        REQUIRE(application->getDevice()->getVkDevice() != nullptr);
     }
     devices.clear();
     ss.reset();

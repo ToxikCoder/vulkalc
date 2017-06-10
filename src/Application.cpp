@@ -46,7 +46,6 @@ Application::Application() throw(HostMemoryAllocationException)
     m_isLoggingEnabled = false;
     m_isErrorLoggingEnabled = false;
     m_spConfigurator = std::make_shared<Configurator>();
-    m_spShaderProvider = std::make_shared<ShaderProvider>();
 }
 
 Application::~Application()
@@ -380,6 +379,7 @@ void Application::_continueConfiguring()
     vkGetDeviceQueue(*(getDevice()->getVkDevice()), m_queueFamilyIndex, 0, &computeQueue);
     m_spQueue = std::make_shared<VkQueue>(computeQueue);
     m_spRunner = std::make_shared<Runner>(m_spQueue, m_queueFamilyIndex);
+    m_spShaderProvider = std::make_shared<ShaderProvider>(m_spDevice);
 }
 
 void

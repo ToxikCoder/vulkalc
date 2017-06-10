@@ -28,8 +28,7 @@ namespace Vulkalc
     class VULKALC_API VerifiedShader
     {
     public:
-        VerifiedShader()
-        {};
+        VerifiedShader() {};
 
         /*!
          * VerifiedShader constructor
@@ -44,43 +43,37 @@ namespace Vulkalc
          * Checks if bind shader is successfully compiled and ready to use
          * \return is shader compiled
          */
-        bool isCompiled() const
-        { return m_isCompiled; };
+        bool isCompiled() const { return m_isCompiled; };
 
         /*!
          * \brief Returns VkShaderModule, created from compiled shader
          * \return shared pointer to VkShaderModule
          */
-        const SharedShaderModule getVkShaderModule() const
-        { return m_spVkShaderModule; };
+        const SharedShaderModule getVkShaderModule() const { return m_spVkShaderModule; };
 
         /*!
          * \brief Returns bound Shader, which should be verified
          * \return binded Shader
          */
-        const Shader& getBoundShader() const
-        { return m_shader; };
+        const Shader& getBoundShader() const { return m_shader; };
 
         /*!
          * \copydoc Shader::getShaderName()
          * \return string containing shader name
          */
-        std::string getShaderName() const
-        { return m_shader.getShaderName(); };
+        std::string getShaderName() const { return m_shader.getShaderName(); };
 
         /*!
          * \copydoc Shader::getShaderPath()
          * \return string containing path to shader
          */
-        std::string getShaderPath() const
-        { return m_shader.getShaderPath(); };
+        std::string getShaderPath() const { return m_shader.getShaderPath(); };
 
         /*!
          * \copydoc Shader::getShaderFullName()
          * \return string containing full path to shader
          */
-        std::string getShaderFullName() const
-        { return m_shader.getShaderFullName(); };
+        std::string getShaderFullName() const { return m_shader.getShaderFullName(); };
 
         /*!
          * \brief VerifiedShader destructor
@@ -90,7 +83,7 @@ namespace Vulkalc
     private:
         friend class ShaderProvider;
 
-        bool _tryCompile(const SharedDevice device);
+        bool _tryCompile();
 
         bool m_isCompiled = false;
         SharedDevice m_spDevice;

@@ -55,7 +55,7 @@ VerifiedShader::~VerifiedShader()
         m_spDevice.reset();
 }
 
-bool VerifiedShader::_tryCompile(const SharedDevice device)
+bool VerifiedShader::_tryCompile()
 {
     std::string compileCommand =
             "glslangValidator -V " + m_shader.getShaderFullName() + " " + m_shader.getShaderFullName() + ".spv";
@@ -82,7 +82,7 @@ bool VerifiedShader::_tryCompile(const SharedDevice device)
     createInfo.pCode = (uint32_t*) code;
 
     VkShaderModule module;
-    VkResult result = vkCreateShaderModule(*(device->getVkDevice()), &createInfo, nullptr, &module);
+    VkResult result = vkCreateShaderModule(*(m_spDevice->getVkDevice()), &createInfo, nullptr, &module);
     if(result == VK_SUCCESS)
     {
         m_isCompiled = true;
