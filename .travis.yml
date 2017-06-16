@@ -44,7 +44,7 @@ compiler:
   - gcc
 script:
   - cd $ROOT
-  - cmake -D VULKALC_GENERATE_DOC=0 CMAKE_CONFIGURATION_TYPES="Release" .
+  - cmake -D VULKALC_GENERATE_DOC=0 VULKALC_INCLUDE_SAMPLE=0 CMAKE_CONFIGURATION_TYPES="Release" .
   - make vulkalc && make vulkalc-test
   - ./vulkalc-tests/vulkalc-test
 notifications:
