@@ -60,8 +60,8 @@ bool VerifiedShader::_tryCompile()
     std::string compileCommand =
             "glslangValidator -V " + m_shader.getShaderFullName() + " " + m_shader.getShaderFullName() + ".spv";
     std::system(compileCommand.c_str());
-    std::ifstream shaderFile = std::ifstream(m_shader.getShaderFullName(),
-                                             std::ios::binary | std::ios::in | std::ios::ate);
+    std::ifstream shaderFile;
+    shaderFile.open(m_shader.getShaderFullName(), std::ios::binary | std::ios::in | std::ios::ate);
     if(!shaderFile.is_open())
     {
         m_isCompiled = false;

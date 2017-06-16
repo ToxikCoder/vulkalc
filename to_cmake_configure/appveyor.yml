@@ -47,7 +47,7 @@ install:
   - cmd: VulkanRT-1.0.39.1-Installer.exe /S
 before_build:
 - cmd: cd C:\projects\vulkalc
-- cmd: cmake -D VULKALCTOOLS_INCLUDE_TOOLS=0 VULKALCDOC_GENERATE_DOC=0 VULKALCDOC_GENERATE_HTML=0 CMAKE_CONFIGURATION_TYPES="Release" .
+- cmd: cmake -D VULKALC_GENERATE_DOC=0 VULKALC_GENERATE_HTML=0 VULKALC_INCLUDE_SAMPLE=0 CMAKE_CONFIGURATION_TYPES="Release" .
 build:
   project: vulkalc-library.sln
   parallel: true
