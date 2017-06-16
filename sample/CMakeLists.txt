@@ -23,6 +23,7 @@
 #
 
 project(vulkalc-sample)
+enable_language(CXX)
 set(CMAKE_CXX_STANDARD 11)
 include_directories(../src/include)
 if (WIN32)
