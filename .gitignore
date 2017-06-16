@@ -12,4 +12,3 @@ CMakeCache.txt
 /vsbuild/
 /cmake-build-debug/
 /cmake-build-release/
-src/include/VulkalcVersion.hpp
