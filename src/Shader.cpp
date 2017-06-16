@@ -24,7 +24,7 @@
 
 /*!
  * \file Shader.cpp
- * \brief 
+ * \brief This file contains Shader class definition
  * \author Lev Sizov
  * \date 05.06.2017
  */
@@ -33,8 +33,23 @@
 
 using namespace Vulkalc;
 
+Shader::Shader(const std::string& name, const std::string& path) : m_name(name), m_path(path)
+{
+    if(m_path == "")
+        m_path = "./";
+#ifdef WIN32
+    char delimiter = '\\';
+#else
+    char delimiter = '/';
+#endif
+    if(m_path.back() != delimiter)
+        m_path.push_back(delimiter);
+
+}
+
 std::string Shader::getShaderFullName() const
 {
     std::string fullName = m_path;
-    
+    fullName.append(m_name);
+    return fullName;
 }

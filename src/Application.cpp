@@ -24,12 +24,14 @@
 
 /*!
  * \file Application.cpp
- * \brief Contains Application class implementation
+ * \brief Contains Application class definition
  * \author Lev Sizov
  * \date 28.05.2017
  */
 
 #include "include/Application.hpp"
+#include "include/VulkalcVersion.hpp"
+#include <string>
 #include <stdlib.h>
 #include <cstring>
 
@@ -53,6 +55,9 @@ Application::~Application()
     if(m_spConfigurator)
         m_spConfigurator.reset();
 
+    if(m_spRunner)
+        m_spRunner.reset();
+
     if(m_spVkApplicationInfo)
         m_spVkApplicationInfo.reset();
 
@@ -68,9 +73,12 @@ Application::~Application()
     if(m_spPhysicalDevice)
         m_spPhysicalDevice.reset();
 
+    if(m_spQueue)
+        m_spQueue.reset();
+
     if(m_spDevice)
     {
-        VkDevice device = *m_spDevice;
+        VkDevice device = *(m_spDevice->getVkDevice());
         m_spDevice.reset();
         vkDestroyDevice(device, nullptr);
     }
@@ -124,7 +132,10 @@ void Application::_configure() throw(HostMemoryAllocationException, VulkanOperat
     m_isConfigured = true;
 }
 
-void Application::log(const char* message, Application::LOG_LEVEL level) const
+void Application::log(const char* message, Application::LOG_LEVEL level) const throw(
+ApplicationNotInitializedException,
+ApplicationNotConfiguredException
+)
 {
     if (!m_isInitialized)
         throw ApplicationNotInitializedException();
@@ -365,16 +376,36 @@ VkResult Application::_vkGetBestComputeQueueNPH(VkPhysicalDevice* physicalDevice
 
 void Application::_continueConfiguring()
 {
-    uint32_t queueFamilyIndex = 0;
+    _createDevice();
+
+    VkQueue computeQueue;
+    vkGetDeviceQueue(*(getDevice()->getVkDevice()), m_queueFamilyIndex, 0, &computeQueue);
+    m_spQueue = std::make_shared<VkQueue>(computeQueue);
+    m_spRunner = std::make_shared<Runner>(m_spQueue, m_queueFamilyIndex);
+    m_spShaderProvider = std::make_shared<ShaderProvider>(m_spDevice);
+}
+
+void
+Application::setPhysicalDevice(const SharedPhysicalDevice& physicalDevice) throw(Exception, VulkanOperationException)
+{
+    if(physicalDevice == nullptr || m_spPhysicalDevice != nullptr)
+        throw Exception("Passed physical device is null or PhysicalDevice is already configured");
+
+    m_spPhysicalDevice = physicalDevice;
+    _continueConfiguring();
+}
+
+void Application::_createDevice()
+{
     const float queuePriority = 1.0f;
-    VkResult result = _vkGetBestComputeQueueNPH(m_spPhysicalDevice->getVkPhysicalDevice().get(), &queueFamilyIndex);
+    VkResult result = _vkGetBestComputeQueueNPH(m_spPhysicalDevice->getVkPhysicalDevice().get(), &m_queueFamilyIndex);
     if(result != VK_SUCCESS)
         throw VulkanOperationException("Failed to find QueueFamily suitable for computing");
 
     VkDeviceQueueCreateInfo vkDeviceQueueCreateInfo;
     vkDeviceQueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     vkDeviceQueueCreateInfo.pNext = nullptr;
-    vkDeviceQueueCreateInfo.queueFamilyIndex = queueFamilyIndex;
+    vkDeviceQueueCreateInfo.queueFamilyIndex = m_queueFamilyIndex;
     vkDeviceQueueCreateInfo.pQueuePriorities = &queuePriority;
     vkDeviceQueueCreateInfo.queueCount = 1;
     vkDeviceQueueCreateInfo.flags = 0;
@@ -406,19 +437,17 @@ void Application::_continueConfiguring()
     if(result != VK_SUCCESS)
         throw VulkanOperationException("Failed to create VkDevice");
 
-    m_spDevice = std::make_shared<VkDevice>(device);
+    m_spDevice = std::make_shared<Device>(m_spPhysicalDevice, std::make_shared<VkDevice>(device));
 }
 
-void
-Application::setPhysicalDevice(const SharedPhysicalDevice& physicalDevice) throw(Exception, VulkanOperationException)
+std::string Application::getVulkalcVersion() const
 {
-    if(physicalDevice != nullptr)
-    {
-        m_spPhysicalDevice = physicalDevice;
-        _continueConfiguring();
-    }
-    else
-    {
-        throw Exception("Passed physical device is null");
-    }
+#ifndef __MINGW32_VERSION
+    std::string version =   std::to_string(VULKALC_MAJOR_VERSION) + "." +
+                            std::to_string(VULKALC_MINOR_VERSION) + "." +
+                            std::to_string(VULKALC_PATCH_VERSION);
+#else
+    std::string version = VULKALC_VERSION;
+#endif
+    return version;
 }

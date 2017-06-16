@@ -24,24 +24,72 @@
 
 /*!
  * \file VerifiedShader.cpp
- * \brief 
+ * \brief This file contains VerifiedShader class definition
  * \author Lev Sizov
  * \date 05.06.2017
  */
 
 #include <cstdlib>
+#include <fstream>
 #include "include/VerifiedShader.hpp"
 
 using namespace Vulkalc;
 
 
-VerifiedShader::VerifiedShader(const Shader& shader)
+VerifiedShader::VerifiedShader(const SharedDevice& device, const Shader& shader) : m_shader(shader)
 {
-    std::string compileCommand = "glslangValidator -V " + shader.m_path
-    std::system();
+    m_spDevice = device;
+    VkShaderModule shaderModule;
+    m_spVkShaderModule = std::make_shared<VkShaderModule>(shaderModule);
 }
 
 VerifiedShader::~VerifiedShader()
 {
+    if(m_spVkShaderModule) {
+        VkShaderModule module = *m_spVkShaderModule;
+        m_spVkShaderModule.reset();
+        vkDestroyShaderModule(*(m_spDevice->getVkDevice()), module, 0);
+    }
 
+    if(m_spDevice)
+        m_spDevice.reset();
+}
+
+bool VerifiedShader::_tryCompile()
+{
+    std::string compileCommand =
+            "glslangValidator -V " + m_shader.getShaderFullName() + " " + m_shader.getShaderFullName() + ".spv";
+    std::system(compileCommand.c_str());
+    std::ifstream shaderFile = std::ifstream(m_shader.getShaderFullName(),
+                                             std::ios::binary | std::ios::in | std::ios::ate);
+    if(!shaderFile.is_open())
+    {
+        m_isCompiled = false;
+        return m_isCompiled;
+    }
+
+    size_t size = shaderFile.tellg();
+    shaderFile.seekg(0, std::ios::beg);
+    char* code = new char[size];
+    shaderFile.read(code, size);
+    shaderFile.close();
+
+    VkShaderModuleCreateInfo createInfo;
+    createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    createInfo.pNext = nullptr;
+    createInfo.flags = 0;
+    createInfo.codeSize = size;
+    createInfo.pCode = (uint32_t*) code;
+
+    VkShaderModule module;
+    VkResult result = vkCreateShaderModule(*(m_spDevice->getVkDevice()), &createInfo, nullptr, &module);
+    if(result == VK_SUCCESS)
+    {
+        m_isCompiled = true;
+        m_spVkShaderModule = std::make_shared<VkShaderModule>(module);
+    }
+
+    delete[] code;
+
+    return m_isCompiled;
 }

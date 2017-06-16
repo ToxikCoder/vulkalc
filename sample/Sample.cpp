@@ -29,30 +29,47 @@
  * \date 05.06.2017
  */
 
+#include <iostream>
 #include <Application.hpp>
 
 using namespace Vulkalc;
 using namespace std;
 
-void main()
+int main()
 {
     //creating and configuring Application
     Application* application = new Application();
     SharedConfiguration configuration = application->getConfigurator()->getConfiguration();
     configuration->isErrorLoggingEnabled = false;
     configuration->applicationName = "Vulkalc sample";
-    configuration->logStream = cout; //probably incorrect
-    application.configure(false);
+    shared_ptr<stringstream> ss = make_shared<stringstream>();
+    configuration->logStream = ss;
+    application->configure(false);
     //choosing device
     auto devices = application->enumeratePhysicalDevices();
-    for(auto device : devices)
-    {
-        cout << "Device: " << device->getDeviceName() << endl;
-    }
     application->setPhysicalDevice(devices[0]);
-    //
-
+    //compiling shaders
+    SharedShaderProvider shaderProvider = application->getShaderProvider();
+    vector<Shader> shaders = shaderProvider->loadShaders("../shaders/");
+    vector<VerifiedShader> verifiedShaders = shaderProvider->tryCompileShaders(shaders);
+    SharedTask task = make_shared<Task>(application->getRunner()->createTaskForShader(verifiedShaders[0]));
+    //settings data
+    Task::TaskBuffers buffer;
+    buffer.buffer_size = 5;
+    int32_t array1[5] = {0, 1, 2, 3, 4};
+    int32_t array2[5] = {5, 6, 7, 8, 9};
+    buffer.in_buffer1 = array1;
+    buffer.in_buffer2 = array2;
+    task->setData(buffer);
+    //running task
+    application->getRunner()->queueTask(task);
+    //getting task
+    TaskResult result = application->getRunner()->getLastTaskResult();
+    for(uint32_t i = 0; i < result.buffer_size; ++i)
+        cout << result.out_buffer[i] << " ";
+    cout << endl;
     devices.clear();
     configuration.reset();
     delete application;
+    return 0;
 }

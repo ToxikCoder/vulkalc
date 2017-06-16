@@ -1,6 +1,7 @@
 /.idea/workspace.xml
 /.idea/.name
 /.idea/vcs.xml
+.idea/*.iml_*
 /doc/GeneratedDoxyfile
 /doc/README.md
 /doc/doc
@@ -10,3 +11,5 @@ CMakeCache.txt
 *.tmp
 /vsbuild/
 /cmake-build-debug/
+/cmake-build-release/
+src/include/VulkalcVersion.hpp

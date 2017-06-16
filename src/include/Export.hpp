@@ -41,8 +41,6 @@
 #define VULKALC_API __attribute__ ((dllexport))
 #else
 #define VULKALC_API __declspec( dllexport )
-#include <vector>
-#include <string>
 //disabling warning about the need to have dll-interface for every used stl class
 #pragma warning(disable:4251)
 //disabling warning about inoring throw(T) in function declaration, because Visual C++ haven't implemented it yet

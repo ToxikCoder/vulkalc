@@ -43,19 +43,67 @@
 
 using namespace std;
 
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc
 {
+    /*!
+     * Shorter form of shared pointer to iostream
+     */
     typedef std::shared_ptr<std::iostream> SharedIOStream;
+
+    /*!
+     * Shorter form of shared pointer to VkApplicationInfo
+     */
     typedef std::shared_ptr<VkApplicationInfo> SharedVkApplicationInfo;
+
+    /*!
+     * Shorter form of shared pointer to VkInstanceCreateInfo
+     */
     typedef std::shared_ptr<VkInstanceCreateInfo> SharedInstanceCreateInfo;
+
+    /*!
+     * Shorter form of shared pointer to VkPhysicalDevice
+     */
     typedef std::shared_ptr<VkPhysicalDevice> SharedVkPhysicalDevice;
-    typedef std::shared_ptr<VkDevice> SharedDevice;
+
+    /*!
+     * Shorter form of shared pointer to VkPhysicalDeviceProperties
+     */
     typedef std::shared_ptr<VkPhysicalDeviceProperties> SharedPhysicalDeviceProperties;
+
+    /*!
+     * Shorter form of shared pointer to VkPhysicalDeviceFeatures
+     */
     typedef std::shared_ptr<VkPhysicalDeviceFeatures> SharedPhysicalDeviceFeatures;
+
+    /*!
+     * Shorter form of shared pointer to VkShaderModule
+     */
     typedef std::shared_ptr<VkShaderModule> SharedShaderModule;
+
+    /*!
+     * Shorter form of shared pointer to VkQueue
+     */
+    typedef std::shared_ptr<VkQueue> SharedQueue;
+
+    /*!
+     * Shorter form of shared pointer to VkPipeline
+     */
+    typedef std::shared_ptr<VkPipeline> SharedPipeline;
+
+    /*!
+     * Shorter form of shared pointer to VkPipelineLayout
+     */
+    typedef std::shared_ptr<VkPipelineLayout> SharedPipelineLayout;
+
+    /*!
+     * Shorter form of shared pointer to VkDescriptorSetLayout
+     */
+    typedef std::shared_ptr<VkDescriptorSetLayout> SharedDescriptorSetlayout;
+
+    /*!
+     * Shorter form of shared pointer to VkDevice
+     */
+    typedef std::shared_ptr<VkDevice> SharedVkDevice;
 
     /*!
      * Returns string representation of current date and time
@@ -66,7 +114,7 @@ namespace Vulkalc
     /*!
      * Checks if extension is really extension in fileName, not part of the name
      * \param fileName just a string with name of file
-     * \param extenstion string without dot, which specifies extension
+     * \param extension string without dot, which specifies extension
      * \return is extension really extension in fileName, not part of the name.
      * Returns false, if any of parameters is empty
      * \note this function doesn't read any files, just works with strings

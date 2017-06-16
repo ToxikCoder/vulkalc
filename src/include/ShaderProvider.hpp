@@ -23,7 +23,7 @@
 */
 
 /*!
- * \file ShaderProvider.h
+ * \file ShaderProvider.hpp
  * \brief This file contains ShaderProvider class declaration
  * \author Lev Sizov
  * \date 02.06.2017
@@ -40,9 +40,6 @@
 #include <vector>
 #include <string>
 
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc
 {
     /*!
@@ -64,22 +61,37 @@ namespace Vulkalc
          * \param shaders list of shaders to try and compile
          * \return compiled and loaded shaders
          */
-        std::vector<VerifiedShader> tryCompileShaders(const std::vector<Shader>& shaders) const;
+        std::vector<VerifiedShader>
+        tryCompileShaders(const std::vector<Shader>& shaders) const;
 
         /*!
          * \brief tries to compile one shader
          * \param shader shader to compile
-         * \return
+         * \return VerifiedShader object
          */
-        VerifiedShader tryCompile(const Shader& shader) const;
+        VerifiedShader tryCompile(const Shader shader) const;
 
-        ShaderProvider();
+        /*!
+         * ShaderProvider default constructor
+         * \param device Device to use for creating Vulkan shader modules
+         */
+        ShaderProvider(const SharedDevice device) : m_spDevice(device) {};
 
-        virtual ~ShaderProvider();
+        /*!
+         * ShaderProvider destructor
+         */
+        virtual ~ShaderProvider() {};
 
     private:
-        std::vector<std::string> _discoverShaders(const char* directory);
+        std::vector<std::string> _discoverShaders(const char* directory) const;
+
+        SharedDevice m_spDevice;
     };
+
+    /*!
+     * Shorter form of shared pointer to ShaderProvider
+     */
+    typedef std::shared_ptr<ShaderProvider> SharedShaderProvider;
 }
 
 #endif //VULKALC_LIBRARY_SHADERPROVIDER_H

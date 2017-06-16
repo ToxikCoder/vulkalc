@@ -27,6 +27,9 @@
  * \brief Contains Configuration class declaration
  * \author Lev Sizov
  * \date 31.05.2017
+ *
+ * Contains Configuration class declaration. Object of this class is used to configure Application. See sample project
+ * for usage example.
  */
 
 #pragma once
@@ -43,9 +46,6 @@
 #include <iostream>
 #include <memory>
 
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc
 {
     /*!
@@ -59,68 +59,97 @@ namespace Vulkalc
     public:
         /*!
          * \brief Name of the application, which uses Vulkalc library. Feel free to change.
+         *
+         * Specifies the name of Application. Used in VkApplicationInfo.
          */
         const char* applicationName = "Vulkalc Application";
 
         /*!
          * \brief Version of application. Feel free to change
+         *
+         * Specifies the version of application to be used in VkApplicationInfo
          */
         uint32_t applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 
         /*!
          * \brief Engine name. Feel free to change.
+         *
+         * Specifies engine name, if there is any. Default value is "Vulkalc". Used in VkApplicationInfo
          */
         const char* engineName = "Vulkalc";
 
         /*!
          * \brief Engine version. Feel free to change.
+         *
+         * Specifies the version of engine to be used in VkApplicationInfo
          */
         uint32_t engineVersion = VK_MAKE_VERSION(1, 0, 0);
 
         /*!
          * \brief Vulkan API version. Don't change until you know what you are doing.
          * \warning apiVersion must be equal to Vulkan SDK version.
+         *
+         * Specifies used Vulkan API version. Change only if you have SDK version higher, than 1.0.39.1
          */
         uint32_t apiVersion = VK_MAKE_VERSION(1, 0, 39);
 
         /*!
          * \brief Vector of names of enabled Vulkan Layers. Feel free to add or remove them.
+         *
+         * This vector contains the names of Vulkan layers. VkInstance tries to enable them for latter usage.
          */
         std::vector<const char*> enabledLayersNames = std::vector<const char*>();
 
         /*!
          * \brief Vector of names of enabled Vulkan extensions. Feel free to add or remove them.
+         *
+         * This vector contains the names of Vulkan extensions. Some of them can be unsupported by physical device.
          */
         std::vector<const char*> enabledExtensionsNames = std::vector<const char*>();
 
         /*!
-         * \brief Boolean flag for general logging. Enabled by default.
+         * \brief Boolean flag for general logging.
+         *
+         * This flag enables or disables logging inside the Vulkalc library. Enabled by default
+         *
+         * \note Reserved for future usage
          */
         bool isLoggingEnabled = true;
 
         /*!
          * \brief Boolean flag for error logging. Enabled by default.
          * \note This setting is ignored if isLoggingEnabled set to false.
+         * \note Reserved for future usage
+         *
+         * This flag enables or disables loggin inside the Vulkalc library. Enabled by default
          */
         bool isErrorLoggingEnabled = true;
 
         /*!
          * \brief Shared pointer to output stream for general logging.
+         *
+         * Shared pointer to logging iostream. Vulkalc writes logs to this stream, if isLoggingEnabled is true
+         * \note Reserved for future usage
          */
         SharedIOStream logStream;
 
         /*!
          * \brief Shared pointer to output stream for error logging.
+         * Shared pointer to logging iostream. Vulkalc writes error to this stream, if isLoggingEnabled and isErrorLoggingEnabled are true
+         * \note Reserved for future usage
          */
         SharedIOStream errorStream;
 
         /*!
          * \brief Configuration constructor
+         * Configuration constructor. Please, do not use it to create Configuration object, use Configurator::getConfiguration()
          */
         Configuration() {};
 
         /*!
          * \brief Configuration destructor
+         *
+         * Configuration destructor
          */
         virtual ~Configuration()
         {
@@ -137,6 +166,9 @@ namespace Vulkalc
         };
     };
 
+    /*!
+     * Shorter form of shared pointer to Configuration
+     */
     typedef std::shared_ptr<Configuration> SharedConfiguration;
 }
 

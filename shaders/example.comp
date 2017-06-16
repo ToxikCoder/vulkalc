@@ -1,0 +1,30 @@
+#version 450
+
+#extension GL_ARB_shading_language_420pack : enable
+
+layout(push_constant) uniform PushConsts {
+	int size;
+} pushConsts;
+
+layout(set = 0, binding = 0) in buffer input1
+{
+    int data[size];
+};
+
+layout(set = 0, binding = 1) in buffer input2
+{
+    int data[size];
+};
+
+layout(set = 0, binding = 2) out buffer result
+{
+    int data[size];
+};
+
+void main()
+{
+	for(int i = 0; i < size; ++i)
+	{
+	    result.data[i] = input1.data[i] + input2.data[i];
+	}
+}

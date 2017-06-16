@@ -27,6 +27,8 @@
  * \brief This file contains Configurator class declaration
  * \author Lev Sizov
  * \date 30.05.2017
+ *
+ * This file contains Configurator class declaration. See sample project for usage example.
  */
 
 #pragma once
@@ -38,17 +40,13 @@
 #include "Configuration.hpp"
 #include "Exceptions.hpp"
 
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc
 {
     /*!
      * \class Configurator
-     * \extends RAII
-     * \brief Configurator class for configuring Application with Configuration.
-     * \warning This class is not thread-safe.
      * \warning Do not create or destroy Configurator object by hands
+     *
+     * Configurator class for managing Configuration object and Configuring Application with Configuration.
      */
     class VULKALC_API Configurator
     {
@@ -56,11 +54,15 @@ namespace Vulkalc
         /*!
          * \brief Returns constant shared pointer to Configuration
          * \return constant shared pointer to Configuration
+         * Returns shared pointer to Configuration object.
          */
         const SharedConfiguration getConfiguration() const { return m_spConfiguration; };
 
         /*!
          * \brief Resets Configuration to default values
+         * Resets configuration values by recrerating Configuration object. If there are pointers to old configuration,
+         * then there will be no point changing configuration via these pointers. Please dispose of other pointers to
+         * Configuration before calling this method.
          */
         inline void resetConfiguration()
         {
@@ -71,6 +73,7 @@ namespace Vulkalc
         /*!
          * \brief Configurator constructor
          * \throws HostHostMemoryAllocationException - thrown if failed to allocate memory in heap for Configuration
+         * Configurator constructor. Please, do not use it to create Configurator, use Application::getConfigurator()
          */
         Configurator()
         {
@@ -84,6 +87,9 @@ namespace Vulkalc
             }
         };
 
+        /*!
+         * Configurator destructor
+         */
         virtual ~Configurator()
         {
             if (m_spConfiguration)
@@ -96,6 +102,9 @@ namespace Vulkalc
         SharedConfiguration m_spConfiguration;
     };
 
+    /*!
+     * Shorter form of shared pointer to Configurator
+     */
     typedef std::shared_ptr<Configurator> SharedConfigurator;
 }
 

@@ -24,13 +24,12 @@
 
 /*!
  * \file ShaderProvider.cpp
- * \brief 
+ * \brief This file contains ShaderProvider class definition
  * \author Lev Sizov
  * \date 04.06.2017
  */
 
 #include "include/ShaderProvider.hpp"
-#include "include/Utilities.hpp"
 #include <sstream>
 #include <fstream>
 
@@ -42,29 +41,32 @@
 
 using namespace Vulkalc;
 
-
 std::vector<Shader> ShaderProvider::loadShaders(const char* directory) const
 {
-    std::vector<Shader> shaders;
+    std::vector<std::string> shaderNames = _discoverShaders(directory);
+    std::vector<Shader> shaders = std::vector<Shader>(shaderNames.size());
+    for(std::string name : shaderNames)
+    {
+        Shader shader(name, directory);
+        shaders.push_back(shader);
+    }
+
     return shaders;
 }
 
-std::vector<VerifiedShader> ShaderProvider::tryCompileShaders(const std::vector<Shader>& shaders) const
+std::vector<VerifiedShader>
+ShaderProvider::tryCompileShaders(const std::vector<Shader>& shaders) const
 {
-    return std::vector<VerifiedShader>();
+    std::vector<VerifiedShader> verifiedShaders = std::vector<VerifiedShader>(shaders.size());
+    for(Shader shader : shaders)
+    {
+        VerifiedShader verifiedShader = this->tryCompile(shader);
+        verifiedShaders.push_back(verifiedShader);
+    }
+    return verifiedShaders;
 }
 
-ShaderProvider::ShaderProvider()
-{
-
-}
-
-ShaderProvider::~ShaderProvider()
-{
-
-}
-
-std::vector<std::string> ShaderProvider::_discoverShaders(const char* directory)
+std::vector<std::string> ShaderProvider::_discoverShaders(const char* directory) const
 {
     std::vector<std::string> shaderNames;
 #ifdef _MSC_VER
@@ -104,10 +106,11 @@ std::vector<std::string> ShaderProvider::_discoverShaders(const char* directory)
     return shaderNames;
 }
 
-VerifiedShader ShaderProvider::tryCompile(const Shader& shader) const
+VerifiedShader ShaderProvider::tryCompile(const Shader shader) const
 {
-    VerifiedShader verifiedShader(shader);
-    return shader;
+    VerifiedShader verifiedShader(m_spDevice, shader);
+    verifiedShader._tryCompile();
+    return verifiedShader;
 }
 
 

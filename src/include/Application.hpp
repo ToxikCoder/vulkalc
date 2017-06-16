@@ -28,7 +28,7 @@
  * \author Lev Sizov
  * \date 28.05.17
  *
- * This file contains Application class definition which is the entry point for the Vulkalc library
+ * This file contains Application class declaration which is the entry point for the Vulkalc library
  */
 
 #pragma once
@@ -36,15 +36,14 @@
 #ifndef VULKALC_APPLICATION_H
 #define VULKALC_APPLICATION_H
 
-#define VULKALC_MAJOR_VERSION @PROJECT_VERSION_MAJOR@
-#define VULKALC_MINOR_VERSION @PROJECT_VRESION_MINOR@
-#define VULKALC_PATCH_VERSION @PROJECT_VERSION_PATCH@
-
 #include "Export.hpp"
 #include "Configurator.hpp"
 #include "Exceptions.hpp"
 #include "Utilities.hpp"
 #include "PhysicalDevice.hpp"
+#include "Device.hpp"
+#include "Runner.hpp"
+#include "ShaderProvider.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -75,6 +74,12 @@ namespace Vulkalc
         Application() throw(HostMemoryAllocationException);
 
         /*!
+         * \brief Returns version of Vulkalc as a string
+         * \return string containing version of Vulkalc
+         */
+        std::string getVulkalcVersion() const;
+
+        /*!
          * \brief Checks if Application is initialized with init().
          * \return is initialized flag.
          */
@@ -91,7 +96,7 @@ namespace Vulkalc
          *
          * Configures Application with Configuration, fetched from Configurator.
          * \param reconfigure flag for allowing or not allowing to reconfigure Application
-         * \note You should explicitly call \code configure() after creating Application and before anything else.
+         * \note You should explicitly call configure() after creating Application and before anything else.
          * \note This method uses Configuration available at the moment. So you have to change your Configuration
          * before-hand, otherwise default values will be used.
          * \warning calling configure(true) recreates almost everything inside Application
@@ -115,15 +120,17 @@ namespace Vulkalc
          * \param level logging level
          * \throws ApplicationNotInitializedException - thrown if Application instance is not initialized
          * \throws ApplicationNotConfiguredException - thrown if Application is not explicitly configured by
-         * calling \code Application::configure()
+         * calling Application::configure()
          */
-        void log(const char* message, LOG_LEVEL level) const;
+        void log(const char* message, LOG_LEVEL level) const throw(
+        ApplicationNotInitializedException,
+        ApplicationNotConfiguredException);
 
         /*!
          * \brief Returns shared pointer to Configurator
          *
          * Returns shared pointer to Configurator, which should be used to acquire Configuration
-         * and configure Application before calling \code Application::configure()
+         * and configure Application before calling Application::configure()
          * \return shared pointer to Configurator
          */
         const SharedConfigurator getConfigurator() const { return m_spConfigurator; }
@@ -132,7 +139,7 @@ namespace Vulkalc
          * \brief Returns shared pointer to logging stream.
          * \return shared pointer to logging stream
          *
-         * \note This stream is equal to Configuration.logStream after calling \code Application::configure()
+         * \note This stream is equal to Configuration.logStream after calling Application::configure()
          */
         const SharedIOStream getLoggingStream() const { return m_spLogStream; }
 
@@ -140,7 +147,7 @@ namespace Vulkalc
          * \brief Returns constant shared pointer to error logging stream.
          * \return constant shared pointer to error logging stream
          *
-         * \note This stream is equal to Configuration.errorStream after calling \code Application::configure()
+         * \note This stream is equal to Configuration.errorStream after calling Application::configure()
          */
         const SharedIOStream getErrorStream() const { return m_spErrorStream; }
 
@@ -165,13 +172,39 @@ namespace Vulkalc
         void setPhysicalDevice(const SharedPhysicalDevice& physicalDevice) throw(Exception, VulkanOperationException);
 
         /*!
-         * \brief Returns VkDevice object, wrapped into shared_ptr
-         * \return constant shared pointer to VkDevice
+         * \brief Returns Device object, wrapped into shared_ptr
+         * \return constant shared pointer to Device
          */
-        const SharedDevice getVkDevice() const { return m_spDevice; };
+        const SharedDevice getDevice() const { return m_spDevice; };
 
         /*!
-         * \brief Application destructor
+         * \brief Returns VkQueue object, wrapped into shared_ptr
+         * \return constant shared pointer to VkQueue
+         *
+         * \note Pointer will be nullptr, if physical device isn't set because VkQueue is initialized with VkPhysicalDevice.
+         * Set VkPhysicalDevice first.
+         */
+        const SharedQueue getVkQueue() const { return m_spQueue; };
+
+        /*!
+         * \brief Returns Runner
+         * @return constant shared pointer to Runner
+         * \note Runner is initialized only after setting physical device
+         *
+         * Returns Runner for creating and running compute tasks
+         */
+        const SharedRunner getRunner() const { return m_spRunner; };
+
+        /*!
+         * \brief Returns ShaderProvider
+         * @return constant shared pointer to ShaderProvider
+         *
+         * Returns ShaderProvider for loading shaders
+         */
+        const SharedShaderProvider getShaderProvider() const { return m_spShaderProvider; };
+
+        /*!
+         * Application destructor
          */
         virtual ~Application();
 
@@ -186,10 +219,10 @@ namespace Vulkalc
 
         void _continueConfiguring();
 
-        //writes to queueFamilyIndex index of best queueFamilyIndex for transfering data
+        void _createDevice();
+
         VkResult _vkGetBestTransferQueueNPH(VkPhysicalDevice* physicalDevice, uint32_t* queueFamilyIndex);
 
-        //writes to queueFamilyIndex index of best queueFamilyIndex for computing
         VkResult _vkGetBestComputeQueueNPH(VkPhysicalDevice* physicalDevice, uint32_t* queueFamilyIndex);
 
         bool m_isInitialized = false;
@@ -198,15 +231,20 @@ namespace Vulkalc
         bool m_isLoggingEnabled;
         bool m_isErrorLoggingEnabled;
 
+        uint32_t m_queueFamilyIndex = 0;
+
         VkInstance m_VkInstance;
 
         SharedConfigurator m_spConfigurator;
+        SharedRunner m_spRunner;
+        SharedShaderProvider m_spShaderProvider;
         SharedIOStream m_spLogStream;
         SharedIOStream m_spErrorStream;
         SharedVkApplicationInfo m_spVkApplicationInfo;
         SharedInstanceCreateInfo m_spVkInstanceCreateInfo;
         SharedPhysicalDevice m_spPhysicalDevice;
         SharedDevice m_spDevice;
+        SharedQueue m_spQueue;
 
         std::vector<VkPhysicalDevice> m_devices;
 

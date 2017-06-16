@@ -37,38 +37,57 @@
 #include "Export.hpp"
 #include <string>
 
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc
 {
     /*!
      * \class Shader
      * \brief Shader class represents 1 compute shader on disk in specified directory
+     *
+     * Shader objects are created by calling ShaderProvider::loadShaders(). Do not use contructors
      */
     class VULKALC_API Shader
     {
     public:
+
         /*!
-         * \brief Shader constructor
+         * Default Shader constructor. Do not use it to create Shader object, use ShaderProvider::loadShaders().
+         */
+        Shader() {};
+
+        /*!
+         * Shader constructor. Do not use it to create Shader object, use ShaderProvider::loadShaders()
          * \param name name of shader file
          * \param path path to shader file
          */
-        Shader(std::string name, std::string path) : m_name(name), m_path(path) {};
+        Shader(const std::string& name, const std::string& path);
 
+        /*!
+         * Returns shader name
+         * \return string containing shader name
+         */
         std::string getShaderName() const { return m_name; }
 
+        /*!
+         * Returns path to shader
+         * \return string containing path to shader
+         */
         std::string getShaderPath() const { return m_path; }
 
+        /*!
+         * Returns full path to shader
+         * \return string containing full path to shader
+         */
         std::string getShaderFullName() const;
 
         /*!
-         * \brief Shader destructor
+         * Shader destructor
          */
         virtual ~Shader() {};
+
     private:
         std::string m_name;
         std::string m_path;
+
     };
 }
 
