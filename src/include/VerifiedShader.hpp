@@ -16,14 +16,15 @@
 #include "Device.hpp"
 #include <vulkan/vulkan.h>
 
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc
 {
     /*!
      * \class VerifiedShader
      * \brief Represents compiled compute shader
+     *
+     * VerifiedShader class, which represents compute shader compiled with glslangValidator.
+     * VerifiedShader objects are created by calling ShaderProvider::tryCompile() and ShaderProvider::tryCompileShader().
+     * Do not use constructors to create VerifiedShader.
      */
     class VULKALC_API VerifiedShader
     {
@@ -32,12 +33,18 @@ namespace Vulkalc
 
         /*!
          * VerifiedShader constructor
-         * \param shader Shader to verify and compile
-         *
          * Creating object with this constructor calls glslangValidator to try and compile specified shader.
-         * If compilation was successful, isCompiled would return true
+         * If compilation was successful, isCompiled would return true.
+         * \param device Device to use to create shader module for Vulkan
+         * \param shader Shader to verify and compile
          */
         explicit VerifiedShader(const SharedDevice& device, const Shader& shader);
+
+        /*!
+         * Returns Device, used to create shader module
+         * \return shared pointer to Device
+         */
+        const SharedDevice getDevice() const { return m_spDevice; };
 
         /*!
          * Checks if bind shader is successfully compiled and ready to use
@@ -46,7 +53,7 @@ namespace Vulkalc
         bool isCompiled() const { return m_isCompiled; };
 
         /*!
-         * \brief Returns VkShaderModule, created from compiled shader
+         * Returns VkShaderModule, created from compiled shader
          * \return shared pointer to VkShaderModule
          */
         const SharedShaderModule getVkShaderModule() const { return m_spVkShaderModule; };
@@ -76,7 +83,7 @@ namespace Vulkalc
         std::string getShaderFullName() const { return m_shader.getShaderFullName(); };
 
         /*!
-         * \brief VerifiedShader destructor
+         * VerifiedShader destructor
          */
         virtual ~VerifiedShader();
 

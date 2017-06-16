@@ -1,7 +1,7 @@
 /*
 * The MIT License (MIT)
 *
-* Copyright (c) 2017 Lev Sizov a.k.a "ToxikCoder"
+* Copyright (c) 2017 Lev Sizov
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,13 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
+
+/*!
+ * \file detect_arch.c
+ * \brief This file contains macros for discovering target architecture
+ * \author Lev Sizov
+ * \date 28.05.17
+ */
 
 //This trick to find out system architecture is based on https://github.com/axr/solar-cmake/blob/master/TargetArch.cmake
 #if defined(i386) || defined(__i386) || defined(__i386__) || defined(_M_IX86) || defined(_X86_) || defined(__386) || defined(__X86__) || defined(__I86__)

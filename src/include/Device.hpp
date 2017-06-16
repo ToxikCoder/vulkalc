@@ -27,6 +27,8 @@
  * \brief Contains Device class declaration
  * \author Lev Sizov
  * \date 09.06.17
+ *
+ * This file contains Device class declaration
  */
 
 #pragma once
@@ -39,10 +41,8 @@
 #include <vulkan/vulkan.h>
 #include <memory>
 
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc {
+
     /*!
      * \class Device
      *
@@ -51,13 +51,30 @@ namespace Vulkalc {
     class VULKALC_API Device {
     public:
 
+        /*!
+         * Device constructor. Please, do not use it to create Device. Use Application::getDevice() instead.
+         * \note Device is created after setting VkPhysicalDevice by calling Application::setPhysicalDevice()
+         * \param physicalDevice used VkPhysicalDevice
+         * \param device VkDevice created from used VkPhysicalDevice
+         */
         Device(const SharedPhysicalDevice physicalDevice, const SharedVkDevice device) :
                 m_pPhysicalDevice(physicalDevice), m_pDevice(device) {};
 
+        /*!
+         * Returns PhysicalDevice
+         * \return shared pointer to PhysicalDevice
+         */
         const SharedPhysicalDevice getPhysicalDevice() const { return m_pPhysicalDevice; }
 
+        /*!
+         * Returns VkDevice
+         * \return shared pointer to VkDevice
+         */
         const SharedVkDevice getVkDevice() const { return m_pDevice; };
 
+        /*!
+         * Device destructor
+         */
         virtual ~Device() {
             m_pDevice.reset();
             m_pPhysicalDevice.reset();
@@ -68,6 +85,10 @@ namespace Vulkalc {
         SharedVkDevice m_pDevice;
     };
 
+    /*!
+     * Shorter form for shared pointer to Device.
+     * \warning do not mix up with SharedVkDevice, which is shared pointer to VkDevice.
+     */
     typedef std::shared_ptr<Device> SharedDevice;
 }
 

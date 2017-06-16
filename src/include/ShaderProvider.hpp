@@ -23,7 +23,7 @@
 */
 
 /*!
- * \file ShaderProvider.h
+ * \file ShaderProvider.hpp
  * \brief This file contains ShaderProvider class declaration
  * \author Lev Sizov
  * \date 02.06.2017
@@ -40,9 +40,6 @@
 #include <vector>
 #include <string>
 
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc
 {
     /*!
@@ -75,12 +72,13 @@ namespace Vulkalc
         VerifiedShader tryCompile(const Shader shader) const;
 
         /*!
-         * \brief ShaderProvider default constructor
+         * ShaderProvider default constructor
+         * \param device Device to use for creating Vulkan shader modules
          */
         ShaderProvider(const SharedDevice device) : m_spDevice(device) {};
 
         /*!
-         * \brief ShaderProvider destructor
+         * ShaderProvider destructor
          */
         virtual ~ShaderProvider() {};
 
@@ -90,6 +88,9 @@ namespace Vulkalc
         SharedDevice m_spDevice;
     };
 
+    /*!
+     * Shorter form of shared pointer to ShaderProvider
+     */
     typedef std::shared_ptr<ShaderProvider> SharedShaderProvider;
 }
 

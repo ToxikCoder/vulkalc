@@ -24,7 +24,7 @@
 
 /*!
  * \file Utilities.cpp
- * \brief 
+ * \brief This class contains utility functions definitions
  * \author Lev Sizov
  * \date 03.06.2017
  */

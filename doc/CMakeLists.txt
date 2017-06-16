@@ -29,7 +29,7 @@ if (DOXYGEN_FOUND)
     set(DOC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
     set(ROOT_DIR ${CMAKE_SOURCE_DIR})
     configure_file(${ROOT_DIR}/GeneratedDoxyfile ${DOC_DIR} @ONLY)
-    configure_file(${ROOT_DIR}/README.md ${DOC_DIR} COPYONLY)
+    #configure_file(${ROOT_DIR}/README.md ${DOC_DIR} COPYONLY)
 
     if (VULKALC_GENERATE_HTML)
         file(APPEND ${DOC_DIR}/GeneratedDoxyfile "GENERATE_HTML          = YES\n")

@@ -24,7 +24,7 @@
 
 /*!
  * \file Shader.cpp
- * \brief 
+ * \brief This file contains Shader class definition
  * \author Lev Sizov
  * \date 05.06.2017
  */

@@ -28,7 +28,7 @@
  * \author Lev Sizov
  * \date 28.05.17
  *
- * This file contains Application class definition which is the entry point for the Vulkalc library
+ * This file contains Application class declaration which is the entry point for the Vulkalc library
  */
 
 #pragma once
@@ -96,7 +96,7 @@ namespace Vulkalc
          *
          * Configures Application with Configuration, fetched from Configurator.
          * \param reconfigure flag for allowing or not allowing to reconfigure Application
-         * \note You should explicitly call \code configure() after creating Application and before anything else.
+         * \note You should explicitly call configure() after creating Application and before anything else.
          * \note This method uses Configuration available at the moment. So you have to change your Configuration
          * before-hand, otherwise default values will be used.
          * \warning calling configure(true) recreates almost everything inside Application
@@ -120,15 +120,17 @@ namespace Vulkalc
          * \param level logging level
          * \throws ApplicationNotInitializedException - thrown if Application instance is not initialized
          * \throws ApplicationNotConfiguredException - thrown if Application is not explicitly configured by
-         * calling \code Application::configure()
+         * calling Application::configure()
          */
-        void log(const char* message, LOG_LEVEL level) const;
+        void log(const char* message, LOG_LEVEL level) const throw(
+        ApplicationNotInitializedException,
+        ApplicationNotConfiguredException);
 
         /*!
          * \brief Returns shared pointer to Configurator
          *
          * Returns shared pointer to Configurator, which should be used to acquire Configuration
-         * and configure Application before calling \code Application::configure()
+         * and configure Application before calling Application::configure()
          * \return shared pointer to Configurator
          */
         const SharedConfigurator getConfigurator() const { return m_spConfigurator; }
@@ -137,7 +139,7 @@ namespace Vulkalc
          * \brief Returns shared pointer to logging stream.
          * \return shared pointer to logging stream
          *
-         * \note This stream is equal to Configuration.logStream after calling \code Application::configure()
+         * \note This stream is equal to Configuration.logStream after calling Application::configure()
          */
         const SharedIOStream getLoggingStream() const { return m_spLogStream; }
 
@@ -145,7 +147,7 @@ namespace Vulkalc
          * \brief Returns constant shared pointer to error logging stream.
          * \return constant shared pointer to error logging stream
          *
-         * \note This stream is equal to Configuration.errorStream after calling \code Application::configure()
+         * \note This stream is equal to Configuration.errorStream after calling Application::configure()
          */
         const SharedIOStream getErrorStream() const { return m_spErrorStream; }
 
@@ -179,25 +181,30 @@ namespace Vulkalc
          * \brief Returns VkQueue object, wrapped into shared_ptr
          * \return constant shared pointer to VkQueue
          *
-         * \note Pointer will be NULL, if physical device isn't set
+         * \note Pointer will be nullptr, if physical device isn't set because VkQueue is initialized with VkPhysicalDevice.
+         * Set VkPhysicalDevice first.
          */
         const SharedQueue getVkQueue() const { return m_spQueue; };
 
         /*!
-         * \brief Returns Runner for running compute tasks
+         * \brief Returns Runner
          * @return constant shared pointer to Runner
          * \note Runner is initialized only after setting physical device
+         *
+         * Returns Runner for creating and running compute tasks
          */
         const SharedRunner getRunner() const { return m_spRunner; };
 
         /*!
-         * \brief Returns ShaderProvider for loading shaders
+         * \brief Returns ShaderProvider
          * @return constant shared pointer to ShaderProvider
+         *
+         * Returns ShaderProvider for loading shaders
          */
         const SharedShaderProvider getShaderProvider() const { return m_spShaderProvider; };
 
         /*!
-         * \brief Application destructor
+         * Application destructor
          */
         virtual ~Application();
 
@@ -214,10 +221,8 @@ namespace Vulkalc
 
         void _createDevice();
 
-        //writes to queueFamilyIndex index of best queueFamilyIndex for transfering data
         VkResult _vkGetBestTransferQueueNPH(VkPhysicalDevice* physicalDevice, uint32_t* queueFamilyIndex);
 
-        //writes to queueFamilyIndex index of best queueFamilyIndex for computing
         VkResult _vkGetBestComputeQueueNPH(VkPhysicalDevice* physicalDevice, uint32_t* queueFamilyIndex);
 
         bool m_isInitialized = false;

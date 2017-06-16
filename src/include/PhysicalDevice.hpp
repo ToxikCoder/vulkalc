@@ -23,10 +23,12 @@
 */
 
 /*!
- * \file PhysicalDevice.h
- * \brief 
+ * \file PhysicalDevice.hpp
+ * \brief Contains PhysicalDevice declaration
  * \author Lev Sizov
  * \date 03.06.2017
+ *
+ * Contains PhysicalDevice class declaration.
  */
 
 #pragma once
@@ -38,14 +40,13 @@
 #include "Utilities.hpp"
 #include <vulkan/vulkan.h>
 
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc
 {
     /*!
      * \class PhysicalDevice
      * \brief Data structure containing Vulkan physical device, properties and features
+     *
+     * PhysicalDevice class encapsulates VkPhysicalDevice, VkPhysicalDeviceProperties and VkPhysicalDeviceFeatures
      */
     class VULKALC_API PhysicalDevice
     {
@@ -61,35 +62,43 @@ namespace Vulkalc
         /*!
          * \brief Returns properties of this device
          * \return data structure with properties of this devices
+         *
+         * Returns VkPhysicalDeviceProperties structure with properties of physical device
          */
         const SharedPhysicalDeviceProperties getPhysicalDeviceProperties() const { return m_spProperties; };
 
         /*!
          * \brief Returns features of this device
          * \return data structure with features of this devices
+         *
+         * Returns VkPhysicalDeviceFeatures structure with physical device features
          */
         const SharedPhysicalDeviceFeatures getPhysicalDeviceFeatures() const { return m_spFeatures; };
 
         /*!
          * \brief Returns VkPhysicalDevice for internal use
          * \return shared pointer to VkPhysicalDevice
+         *
+         * Returns shared pointer to VkPhysicalDevice for usage inside the Vulkalc library
          */
         const SharedVkPhysicalDevice getVkPhysicalDevice() const { return m_spDevice; };
 
         /*!
-         * \brief Returns C-style string with a name of this GPU
+         * \brief Returns name of this GPU
          * \return C-style string with the name of this GPU
+         *
+         * Returns C-style string with a name of this GPU
          */
         std::string getDeviceName() const;
 
         /*!
-         * \brief PhysicalDevice constructor
+         * PhysicalDevice constructor
          * \param physicalDevice Vulkan physical device to use
          */
         explicit PhysicalDevice(const VkPhysicalDevice& physicalDevice);
 
         /*!
-         * \brief PhysicalDevice destructor
+         * PhysicalDevice destructor
          */
         virtual ~PhysicalDevice();
 
@@ -100,6 +109,9 @@ namespace Vulkalc
 
     };
 
+    /*!
+     * Shorter form of shared pointer to PhysicalDevice
+     */
     typedef std::shared_ptr<PhysicalDevice> SharedPhysicalDevice;
 }
 

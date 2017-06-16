@@ -27,6 +27,8 @@
  * \brief Contains Runner class
  * \author Lev Sizov
  * \date 09.06.2017
+ *
+ * Contains Runner class declaration, which is used to run compute Task and resolve task results
  */
 
 #pragma once
@@ -38,24 +40,48 @@
 #include "Task.hpp"
 #include "Utilities.hpp"
 
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc
 {
+    /*!
+     * \class Runner
+     * \brief Runner class for running tasks
+     *
+     * Runner class is used to create new compute Tasks, queue compute Tasks and get results of computing
+     */
     class VULKALC_API Runner
     {
     public:
 
+        /*!
+         * Runner constructor. Please, do not use it to create Runner object, call Application::getRunner() instead
+         * \param queue
+         * \param queueFamilyIndex
+         */
         Runner(const SharedQueue queue, uint32_t queueFamilyIndex) :
                 m_spQueue(queue), m_queueFamilyIndex(queueFamilyIndex) {};
 
+        /*!
+         * Creates new compute Task for specified shader object VerifiedShader
+         * \return new compute Task
+         */
         Task createTaskForShader(const VerifiedShader&) const;
 
+        /*!
+         * Queues compute Task for execution
+         * \param task shared pointer to compute Task
+         */
         void queueTask(const SharedTask task) throw(Exception);
 
+        /*!
+         * Returns the result of computing of last Task
+         * \return TaskResult structure, containing buffer with compute results data
+         */
         TaskResult getLastTaskResult();
 
+        /*!
+         * Runner destructor.
+         * \note Runner is destroyed inside the Application class.
+         */
         virtual ~Runner();
 
     private:
@@ -65,6 +91,9 @@ namespace Vulkalc
         uint32_t m_queueFamilyIndex = 0;
     };
 
+    /*!
+     * Shorter form for shared pointer to Runner
+     */
     typedef std::shared_ptr<Runner> SharedRunner;
 }
 

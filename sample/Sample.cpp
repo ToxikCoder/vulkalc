@@ -29,6 +29,7 @@
  * \date 05.06.2017
  */
 
+#include <iostream>
 #include <Application.hpp>
 
 using namespace Vulkalc;

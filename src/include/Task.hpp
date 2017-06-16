@@ -24,7 +24,7 @@
 
 /*!
  * \file Task.hpp
- * \brief 
+ * \brief Contains compute task Task class definition
  * \author Lev Sizov
  * \date 09.06.2017
  */
@@ -39,21 +39,11 @@
 #include "Exceptions.hpp"
 #include "Utilities.hpp"
 #include "Device.hpp"
+#include "Task.hpp"
 #include <memory>
 
-/*!
- * \copydoc Vulkalc
- */
 namespace Vulkalc
 {
-
-    /*!
-     * \brief Contains computing results
-     */
-    typedef struct {
-        uint32_t buffer_size;
-        int32_t* out_buffer;
-    } TaskResult;
 
     /*!
      * \class Task
@@ -64,9 +54,10 @@ namespace Vulkalc
     public:
 
         /*!
-         * Task constructor. Prepares device for computing with specified shader
-         * @param m_spDevice device to use for computing
-         * @param shader compute shader to use
+         * Task constructor. Prepares device for computing with specified shader. Do not use it to create Task,
+         * use Runner::createTaskForShader() instead.
+         * \param m_spDevice device to use for computing
+         * \param shader compute shader to use
          */
         Task(const SharedDevice m_spDevice, const VerifiedShader &shader) throw(Exception);
 
@@ -81,18 +72,23 @@ namespace Vulkalc
 
         /*!
          * Sets input data buffers
-         * @param buffers TaskBuffers containing input data buffers
+         * \param buffers TaskBuffers containing input data buffers
          */
         void setData(TaskBuffers &buffers) { m_buffers = buffers; };
 
-        Task() {};
         /*!
-         * \brief Task destructor
+         * Task constructor. Do not use it to create Task, use Runner::createTaskForShader() instead.
+         */
+        Task() {};
+
+        /*!
+         * Task destructor
          */
         virtual ~Task();
 
     private:
         friend class Runner;
+
         TaskBuffers _getTaskBuffers() const { return m_buffers; };
 
         const SharedDevice _getDevice() const { return m_spDevice; };
@@ -111,7 +107,20 @@ namespace Vulkalc
 
     };
 
+    /*!
+     * Shorter form for shared pointer to Task
+     */
     typedef std::shared_ptr<Task> SharedTask;
+
+    /*!
+     * Contains computing results
+     */
+    typedef struct
+    {
+        uint32_t buffer_size;
+        int32_t* out_buffer;
+        Task* task;
+    } TaskResult;
 }
 
 #endif //VULKALC_LIBRARY_TASK_HPP

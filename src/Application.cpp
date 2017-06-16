@@ -24,7 +24,7 @@
 
 /*!
  * \file Application.cpp
- * \brief Contains Application class implementation
+ * \brief Contains Application class definition
  * \author Lev Sizov
  * \date 28.05.2017
  */
@@ -132,7 +132,10 @@ void Application::_configure() throw(HostMemoryAllocationException, VulkanOperat
     m_isConfigured = true;
 }
 
-void Application::log(const char* message, Application::LOG_LEVEL level) const
+void Application::log(const char* message, Application::LOG_LEVEL level) const throw(
+ApplicationNotInitializedException,
+ApplicationNotConfiguredException
+)
 {
     if (!m_isInitialized)
         throw ApplicationNotInitializedException();

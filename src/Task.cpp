@@ -24,7 +24,7 @@
 
 /*!
  * \file Task.cpp
- * \brief Contains Task class definition
+ * \brief This file contains Task class definition
  * \author Lev Sizov
  * \date 09.06.2017
  */
@@ -32,7 +32,6 @@
 #include "include/Task.hpp"
 
 using namespace Vulkalc;
-
 
 Task::Task(const SharedDevice device, const VerifiedShader &shader) throw(Exception)
 {

@@ -24,7 +24,7 @@
 
 /*!
  * \file ShaderProvider.cpp
- * \brief 
+ * \brief This file contains ShaderProvider class definition
  * \author Lev Sizov
  * \date 04.06.2017
  */

@@ -24,7 +24,7 @@
 
 /*!
  * \file VerifiedShader.cpp
- * \brief 
+ * \brief This file contains VerifiedShader class definition
  * \author Lev Sizov
  * \date 05.06.2017
  */

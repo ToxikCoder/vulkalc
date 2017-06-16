@@ -24,7 +24,7 @@
 
 /*!
  * \file Runner.cpp
- * \brief Contains Runner definition
+ * \brief This file contains Runner class definition
  * \author Lev Sizov
  * \date 09.06.2017
  */
@@ -42,8 +42,6 @@ Runner::~Runner() {
 
     if(m_spLastTask)
         m_spLastTask.reset();
-
-
 }
 
 void Runner::queueTask(const SharedTask task) throw(Exception) {
@@ -238,4 +236,9 @@ TaskResult Runner::getLastTaskResult() {
     memcpy(taskResult.out_buffer, payload, memorySize);
     taskResult.buffer_size = m_spLastTask->_getTaskBuffers().buffer_size;
     return taskResult;
+}
+
+Task Runner::createTaskForShader(const VerifiedShader& shader) const
+{
+    return Task(shader.getDevice(), shader);
 }

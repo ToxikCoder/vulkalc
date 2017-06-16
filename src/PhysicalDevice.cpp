@@ -24,7 +24,7 @@
 
 /*!
  * \file PhysicalDevice.cpp
- * \brief 
+ * \brief This file contains PhysicalDevice class definition
  * \author Lev Sizov
  * \date 03.06.2017
  */
